@@ -1,0 +1,181 @@
+# ==============================
+# Fichiers spécifiques à Spring Boot
+# ==============================
+
+# Fichiers de propriétés locales
+application-local.properties
+application-local.yml
+application-local.yaml
+application-dev.properties
+application-dev.yml
+application-dev.yaml
+
+# Fichiers de configuration personnels
+src/main/resources/*-personal.*
+src/main/resources/config/*-personal.*
+
+# ==============================
+# Build & Compilation
+# ==============================
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+build/
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# ==============================
+# IDE - IntelliJ IDEA
+# ==============================
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# ==============================
+# IDE - Eclipse
+# ==============================
+.classpath
+.project
+.settings/
+bin/
+.metadata/
+.springBeans
+*.springBeans
+
+# ==============================
+# IDE - Visual Studio Code
+# ==============================
+.vscode/
+*.code-workspace
+
+# ==============================
+# IDE - NetBeans
+# ==============================
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# ==============================
+# IDE - Spring Tool Suite (STS)
+# ==============================
+.apt_generated
+.factorypath
+.springBeans
+
+# ==============================
+# OS Specific
+# ==============================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ==============================
+# Logs
+# ==============================
+logs/
+*.log
+*.log.*
+spring.log
+
+# ==============================
+# Environnement & Configuration sensible
+# ==============================
+.env
+.env.local
+.env.*.local
+*.env
+application-secret.properties
+application-secret.yml
+
+# ==============================
+# Base de données
+# ==============================
+*.db
+*.sqlite
+*.sqlite3
+
+# ==============================
+# Fichiers temporaires
+# ==============================
+*.tmp
+*.bak
+*.swp
+*.swo
+*~.nib
+~$*
+
+# ==============================
+# Node.js (si frontend intégré)
+# ==============================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+package-lock.json
+yarn.lock
+
+# ==============================
+# Docker
+# ==============================
+docker-compose.override.yml
+
+# ==============================
+# Tests & Couverture
+# ==============================
+jacoco.exec
+coverage/
+.nyc_output/
+*.coveralls.yml
+
+# ==============================
+# Certificats & Clés
+# ==============================
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.truststore
+!src/test/resources/*.jks
+!src/test/resources/*.p12
+
+# ==============================
+# Dépendances système
+# ==============================
+vendor/
+bower_components/
+lib/
+
+# ==============================
+# Outils divers
+# ==============================
+.lock-wscript
+*.pyc
+__pycache__/
+
+Workspace/
+.vscode/
