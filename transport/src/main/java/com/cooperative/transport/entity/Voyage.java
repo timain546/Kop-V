@@ -31,6 +31,7 @@ public class Voyage {
 
     @ManyToOne
     @JoinColumn(name = "id_chauffeur")
+    //!! la tableu utilisateur ou user doit etre définie
     private Utilisateur chauffeur;
 
     @Column(name = "date_heure_depart")
