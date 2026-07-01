@@ -18,6 +18,7 @@
             <th>ID</th>
             <th>Nom</th>
             <th>Semestre</th>
+            <th>Email</th>
         </tr>
         <% for(Etudiants etudiant : etudiants) { %>
             <tr>
