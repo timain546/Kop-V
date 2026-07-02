@@ -55,7 +55,6 @@ public class SessionInterceptor implements HandlerInterceptor {
     // Petite méthode utilitaire pour éviter de répéter le code de redirection
     private boolean redirigerAvecErreur(HttpServletRequest request, HttpServletResponse response, HttpSession session, String message) throws Exception {
         session.setAttribute("erreur", message);
-        // On le renvoie vers son propre dashboard légitime au lieu de le déconnecter
         Utilisateurs user = (Utilisateurs) session.getAttribute("utilisateur");
         String redirectionTarget = "/" + user.getRole().getLibelle().toLowerCase() + "/";
         
