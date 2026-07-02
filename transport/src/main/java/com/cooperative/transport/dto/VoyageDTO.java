@@ -8,6 +8,8 @@ public interface VoyageDTO {
 
     String getHeureDepart();
 
+    String getHeureArrivee();
+
     String getGareDepart();
 
     String getGareArrivee();

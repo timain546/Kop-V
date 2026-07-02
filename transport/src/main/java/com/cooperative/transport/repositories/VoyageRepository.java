@@ -6,25 +6,27 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface VoyageRepository extends JpaRepository<Voyage, Integer> {
 
     @Query(value = """
         SELECT
-            v.id                                              AS id,
-            v.date_heure_depart::DATE                         AS dateDepart,
-            TO_CHAR(v.date_heure_depart, 'HH24:MI')           AS heureDepart,
-            g_dep.nom                                         AS gareDepart,
-            g_arr.nom                                         AS gareArrivee,
-            v.duree_estimee_minutes                           AS duree,
-            t.distance_km                                     AS distance,
-            vh.immatriculation                                AS immatriculationVehicule,
-            vh.modele                                         AS modeleVehicule,
-            cat.libelle                                       AS categorieVehicule,
+            v.id                                                                                    AS id,
+            v.date_heure_depart::DATE                                                               AS dateDepart,
+            TO_CHAR(v.date_heure_depart, 'HH24:MI')                                                 AS heureDepart,
+            TO_CHAR(v.date_heure_depart + v.duree_estimee_minutes * INTERVAL '1 minute', 'HH24:MI') AS heureArrivee,
+            g_dep.nom                                                                               AS gareDepart,
+            g_arr.nom                                                                               AS gareArrivee,
+            v.duree_estimee_minutes                                                                 AS duree,
+            t.distance_km                                                                           AS distance,
+            vh.immatriculation                                                                      AS immatriculationVehicule,
+            vh.modele                                                                               AS modeleVehicule,
+            cat.libelle                                                                             AS categorieVehicule,
             v.tarif,
-            COUNT(DISTINCT p.id)                              AS nbPlacesTotales,
-            COUNT(DISTINCT p.id) - COUNT(DISTINCT rf.id)      AS nbPlacesDisponibles
+            COUNT(DISTINCT p.id)                                                                    AS nbPlacesTotales,
+            COUNT(DISTINCT p.id) - COUNT(DISTINCT rf.id)                                            AS nbPlacesDisponibles
 
         FROM voyages v
 
@@ -54,8 +56,8 @@ public interface VoyageRepository extends JpaRepository<Voyage, Integer> {
            AND rm.id_voyage = v.id
 
         WHERE v.date_heure_depart::DATE
-              BETWEEN CAST(:date1 AS DATE)
-              AND CAST(:date2 AS DATE)
+              BETWEEN :date1
+              AND :date2
 
           AND g_dep.ville = :villeDepart
 
@@ -78,11 +80,11 @@ public interface VoyageRepository extends JpaRepository<Voyage, Integer> {
         ORDER BY v.date_heure_depart ASC
         """, nativeQuery = true)
 
-    List<VoyageDTO> findByDateBetween(
+    List<VoyageDTO> findByDateBetweenAndVilleAndNbPlaces(
 
-            @Param("date1") String date1,
+            @Param("date1") LocalDate date1,
 
-            @Param("date2") String date2,
+            @Param("date2") LocalDate date2,
 
             @Param("villeDepart") String villeDepart,
 

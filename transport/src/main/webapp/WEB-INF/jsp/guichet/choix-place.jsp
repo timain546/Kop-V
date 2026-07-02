@@ -7,7 +7,7 @@
 
     <title>Choix des places — KOP-V</title>
 
-    <link rel="stylesheet" href="css/places.css">
+    <link rel="stylesheet" href="/css/places.css">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
