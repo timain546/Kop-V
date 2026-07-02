@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+
 import java.util.List;
 
 @Controller
@@ -22,4 +23,5 @@ public class EtudiantsController {
         model.addAttribute("listeEtudiants", etudiants);
         return "list-etudiants";
     }
+    
 }
