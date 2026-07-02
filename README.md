@@ -5,7 +5,7 @@ Projet Mme Baovola S4
 # Modifier les en-tete des controllers :
 
 @Controller
-@RequestMapping("/admin") // Toutes les routes de ce contrôleur commenceront par /admin
+@RequestMapping("/admin") 
 public class AdminController {
 
     @GetMapping("/dashboard")
