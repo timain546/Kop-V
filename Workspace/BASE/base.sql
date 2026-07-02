@@ -1,4 +1,6 @@
 CREATE DATABASE kopv;
+
+\c kopv;
 -- ============================================================
 -- Schéma PostgreSQL — Module Chauffeur
 -- Périmètre : Mes voyages, Signaler une panne, Signaler arrivée
