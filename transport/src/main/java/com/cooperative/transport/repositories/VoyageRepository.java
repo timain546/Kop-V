@@ -1,6 +1,6 @@
-package com.cooperative.transport.repository;
+package com.cooperative.transport.repositories;
 
-import com.cooperative.transport.entity.Voyage;
+import com.cooperative.transport.entities.Voyage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
