@@ -4,7 +4,8 @@ Projet Mme Baovola S4
 
 # Modifier les en-tete des controllers :
 
-@Controller
+{
+    @Controller
 @RequestMapping("/admin") 
 public class AdminController {
 
@@ -12,4 +13,5 @@ public class AdminController {
     public String adminDashboard() {
         return "admin-dashboard"; // Renvoie vers WEB-INF/jsp/admin-dashboard.jsp
     }
+}
 }
