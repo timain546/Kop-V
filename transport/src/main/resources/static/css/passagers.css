@@ -1,0 +1,239 @@
+/* ===========================
+   PASSAGERS.CSS
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#f5faf7;
+    font-family:"Segoe UI",sans-serif;
+    color:#2d3436;
+}
+
+/* HEADER */
+
+.header{
+    background:#eef8f2;
+    border-bottom:1px solid #dce8df;
+    padding:20px 0;
+}
+
+.header-content{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:30px;
+    font-weight:700;
+}
+
+.logo i{
+    color:#1e9b4c;
+    font-size:34px;
+}
+
+.logo strong{
+    color:#1e9b4c;
+}
+
+/* ETAPES */
+
+.steps{
+    display:flex;
+    align-items:center;
+}
+
+.step{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.step span{
+    font-size:14px;
+    font-weight:600;
+    color:#5f6b66;
+}
+
+.circle{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#d8eadf;
+    color:#1e9b4c;
+}
+
+.completed .circle{
+    background:#d8eadf;
+}
+
+.active .circle{
+    background:#1e9b4c;
+    color:white;
+}
+
+.active span{
+    color:#1e9b4c;
+}
+
+.line{
+    width:45px;
+    height:2px;
+    background:#bdd9c5;
+    margin:0 15px;
+}
+
+/* AIDE */
+
+.help{
+    color:#6f7d76;
+    font-size:14px;
+}
+
+/* CONTENU */
+
+.empty-box{
+    background:white;
+    border-radius:25px;
+    min-height:420px;
+    border:1px solid #e2e8e4;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.empty-content{
+    text-align:center;
+}
+
+.empty-content h2{
+    font-size:34px;
+    font-weight:700;
+    margin-bottom:35px;
+}
+
+.btn-retour{
+    background:#1e9b4c;
+    color:white;
+    padding:14px 35px;
+    border-radius:35px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-retour:hover{
+    background:#177b3d;
+    color:white;
+}
+
+/* CARTE */
+
+.resume{
+    background:white;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+}
+
+.resume-header{
+    background:#1e9b4c;
+    color:white;
+    padding:25px;
+}
+
+.resume-header small{
+    opacity:.8;
+    letter-spacing:2px;
+}
+
+.resume-header h4{
+    margin-top:8px;
+    font-weight:700;
+}
+
+.resume-body{
+    padding:25px;
+}
+
+.resume-item{
+    display:flex;
+    gap:15px;
+    margin-bottom:30px;
+}
+
+.resume-item i{
+    color:#1e9b4c;
+    font-size:22px;
+}
+
+.label{
+    display:block;
+    color:#808080;
+    text-transform:uppercase;
+    font-size:11px;
+    margin-bottom:4px;
+}
+
+.info-box{
+    margin-top:20px;
+    background:#eef8f2;
+    border-radius:15px;
+    padding:18px;
+    color:#6f7d76;
+    font-size:14px;
+}
+
+.resume-footer{
+    border-top:1px solid #ececec;
+    padding:18px 25px;
+    font-size:13px;
+    color:#7b7b7b;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:992px){
+
+    .header-content{
+        flex-direction:column;
+        gap:20px;
+    }
+
+    .steps{
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+
+    .resume{
+        margin-top:30px;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .empty-box{
+        min-height:300px;
+    }
+
+    .empty-content h2{
+        font-size:26px;
+    }
+
+    .line{
+        width:20px;
+    }
+
+}

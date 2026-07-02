@@ -1,0 +1,368 @@
+/* ===========================
+   KOP-V Reservation
+===========================*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+body{
+
+    background:#f5fbf6;
+
+    color:#1d1d1d;
+
+}
+
+/*=========================
+NAVBAR
+=========================*/
+
+.navbar{
+
+    height:82px;
+
+    border-bottom:1px solid #e8efea;
+
+}
+
+.navbar-brand{
+
+    font-size:30px;
+
+    font-weight:800;
+
+}
+
+.nav-link{
+
+    color:#555;
+
+    margin-left:15px;
+
+    margin-right:15px;
+
+    font-weight:500;
+
+}
+
+.nav-link.active{
+
+    background:#22a652;
+
+    color:white!important;
+
+    padding:8px 20px;
+
+    border-radius:25px;
+
+}
+
+/*=========================
+TITRES
+=========================*/
+
+h1{
+
+    font-size:50px;
+
+    font-weight:800;
+
+    margin-bottom:12px;
+
+}
+
+.text-uppercase{
+
+    letter-spacing:2px;
+
+    font-size:13px;
+
+}
+
+/*=========================
+FORMULAIRE
+=========================*/
+
+.search-card{
+
+    background:white;
+
+    padding:28px;
+
+    border-radius:24px;
+
+    box-shadow:0 8px 35px rgba(0,0,0,.05);
+
+    border:1px solid #e9efea;
+
+}
+
+.form-label{
+
+    font-size:12px;
+
+    text-transform:uppercase;
+
+    color:#6c757d;
+
+    font-weight:700;
+
+}
+
+.form-control,
+.form-select{
+
+    height:58px;
+
+    border-radius:15px;
+
+    border:1px solid #dbe7df;
+
+    font-size:15px;
+
+    box-shadow:none;
+
+}
+
+.form-control:focus,
+.form-select:focus{
+
+    border-color:#22a652;
+
+    box-shadow:0 0 0 .2rem rgba(34,166,82,.15);
+
+}
+
+.btn-success{
+
+    background:#22a652;
+
+    border:none;
+
+    height:60px;
+
+    border-radius:15px;
+
+    font-size:18px;
+
+    font-weight:600;
+
+}
+
+.btn-success:hover{
+
+    background:#1d9549;
+
+}
+
+/*=========================
+POPULAR
+=========================*/
+
+.popular-card{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+    border:1px solid #e9efea;
+
+    transition:.25s;
+
+    cursor:pointer;
+
+}
+
+.popular-card:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+}
+
+.popular-card h6{
+
+    font-weight:700;
+
+}
+
+.popular-card p{
+
+    color:#7a7a7a;
+
+    margin-top:10px;
+
+}
+
+/*=========================
+FEATURE
+=========================*/
+
+.feature-card{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:28px;
+
+    text-align:left;
+
+    border:1px solid #e8ece9;
+
+    transition:.3s;
+
+}
+
+.feature-card:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:0 10px 25px rgba(0,0,0,.06);
+
+}
+
+.feature-card i{
+
+    margin-bottom:15px;
+
+}
+
+.feature-card h5{
+
+    font-size:19px;
+
+    font-weight:700;
+
+}
+
+.feature-card p{
+
+    color:#6f6f6f;
+
+}
+
+/*=========================
+SUMMARY
+=========================*/
+
+.summary-card{
+
+    background:white;
+
+    border-radius:24px;
+
+    overflow:hidden;
+
+    box-shadow:0 10px 35px rgba(0,0,0,.05);
+
+    border:1px solid #e8efea;
+
+}
+
+.summary-header{
+
+    background:#22a652;
+
+    color:white;
+
+    padding:25px;
+
+}
+
+.summary-header h4{
+
+    margin:0;
+
+    font-weight:700;
+
+}
+
+.summary-body{
+
+    padding:25px;
+
+}
+
+.summary-body p{
+
+    font-size:16px;
+
+    margin-bottom:18px;
+
+}
+
+.summary-body i{
+
+    color:#22a652;
+
+    margin-right:8px;
+
+}
+
+.alert-success{
+
+    background:#eef9f1;
+
+    border:none;
+
+    color:#2d6b40;
+
+    border-radius:15px;
+
+}
+
+/*=========================
+RESPONSIVE
+=========================*/
+
+@media(max-width:992px){
+
+.summary-card{
+
+    margin-top:40px;
+
+}
+
+h1{
+
+    font-size:36px;
+
+}
+
+.navbar{
+
+    height:auto;
+
+    padding:15px;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.search-card{
+
+    padding:20px;
+
+}
+
+.btn-success{
+
+    height:55px;
+
+}
+
+}
