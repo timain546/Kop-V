@@ -12,6 +12,7 @@
     <groupId>com.cooperative</groupId>
     <artifactId>transport</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
 
     <properties>
         <java.version>17</java.version>
@@ -37,7 +38,6 @@
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
