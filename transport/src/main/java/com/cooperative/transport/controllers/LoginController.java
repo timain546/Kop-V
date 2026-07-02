@@ -58,6 +58,10 @@ public String login(
     model.addAttribute("erreur", "Email ou mot de passe incorrect.");
     return "login";
 }
+    @GetMapping("/dashboard")
+    public String dashboard(HttpSession session) {
+        return "dashboard";
+    }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
