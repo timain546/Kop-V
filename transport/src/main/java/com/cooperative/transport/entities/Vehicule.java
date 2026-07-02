@@ -1,4 +1,4 @@
-package com.cooperative.transport.entity;
+package com.cooperative.transport.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.cooperative.transport.entity;
+package com.cooperative.transport.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,17 +7,20 @@ import lombok.AllArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "categorie_vehicule")
+@Table(name = "gares")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategorieVehicule {
+public class Gare {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, length = 50)
-    private String libelle;
+    @Column(length = 150)
+    private String nom;
+
+    @Column(length = 100)
+    private String ville;
 }

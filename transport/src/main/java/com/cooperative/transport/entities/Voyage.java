@@ -1,4 +1,4 @@
-package com.cooperative.transport.entity;
+package com.cooperative.transport.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -31,8 +31,7 @@ public class Voyage {
 
     @ManyToOne
     @JoinColumn(name = "id_chauffeur")
-    //!! la tableu utilisateur ou user doit etre définie
-    private Utilisateur chauffeur;
+    private Employes chauffeur;
 
     @Column(name = "date_heure_depart")
     private LocalDateTime dateHeureDepart;

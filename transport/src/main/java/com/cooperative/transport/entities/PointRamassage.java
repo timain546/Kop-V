@@ -1,4 +1,4 @@
-package com.cooperative.transport.entity;
+package com.cooperative.transport.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,12 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "gares")
+@Table(name = "point_ramassage")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Gare {
+public class PointRamassage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,4 @@ public class Gare {
 
     @Column(length = 150)
     private String nom;
-
-    @Column(length = 100)
-    private String ville;
 }
