@@ -13,11 +13,11 @@ public class PlaceStatut {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "id", insertable = false, updatable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Place place;
 
     @ManyToOne
-    @JoinColumn(name = "id_voyage", nullable = false)
+    @JoinColumn(name = "id_voyage", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Voyage voyage;
 
     @Column(name = "occupee", nullable = false)
