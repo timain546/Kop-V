@@ -23,6 +23,22 @@ CREATE TABLE salaires(
     id SERIAL PRIMARY KEY,
     id_employe INT REFERENCES utilisateurs(id),
     salaire DECIMAL(10, 2),
+    date_modification 
+);
+CREATE TABLE contrats_employes(
+    id SERIAL PRIMARY KEY,
+    id_employe INT REFERENCES utilisateurs(id),
+    date_embauche date,
+    date_renvoie date
+);
+create TABLE statut_employe(
+    id SERIAL PRIMARY KEY,
+    libelle VARCHAR(50)
+);
+create TABLE employe_statut(
+    id SERIAL PRIMARY KEY,
+    id_employe INT REFERENCES utilisateurs(id),
+    id_statut INT REFERENCES statut_employe(id),
     date_modification date
 );
 
@@ -39,3 +55,18 @@ insert into salaires(id_employe, salaire, date_modification) values(1, 1500.00, 
 insert into salaires(id_employe, salaire, date_modification) values(2, 2000.00, '2024-02-01');
 insert into salaires(id_employe, salaire, date_modification) values(3, 2500.00, '2024-03-01');
 insert into salaires(id_employe, salaire, date_modification) values(1, 2600.00, '2024-04-01');
+
+insert into statut_employe(libelle) values('Engagé');
+insert into statut_employe(libelle) values('Renvoyé');
+insert into statut_employe(libelle) values('Reambauché');
+
+insert into employe_statut(id_employe, id_statut, date_modification) values(1, 1, '2024-01-01');
+insert into employe_statut(id_employe, id_statut, date_modification) values(2, 1, '2024-02-01');
+insert into employe_statut(id_employe, id_statut, date_modification) values(3, 1, '2024-03-01');
+insert into employe_statut(id_employe, id_statut, date_modification) values(4, 1, '2024-04-01');
+
+
+insert into contrats_employes(id_employe, date_embauche, date_renvoie) values(1, '2024-01-01', null);
+insert into contrats_employes(id_employe, date_embauche, date_renvoie) values(2, '2024-02-01', null);
+insert into contrats_employes(id_employe, date_embauche, date_renvoie) values(3, '2024-03-01', null);
+insert into contrats_employes(id_employe, date_embauche, date_renvoie) values(4, '2024-04-01', null);

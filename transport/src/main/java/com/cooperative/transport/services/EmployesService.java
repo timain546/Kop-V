@@ -13,4 +13,13 @@ public class EmployesService {
     public List<Object[]> findEmp() {
         return employesRepo.findEmploye();
     }
+    public List<Object[]> findByid(Long id) {
+        return employesRepo.findEmployeById(id);
+    }
+    public Employes findempById(Long id) {
+        return employesRepo.findById(id).orElse(null);
+    }
+    public void updateEmploye(Employes employe) {
+        employesRepo.save(employe);
+    }
 }
