@@ -1,5 +1,7 @@
 package com.cooperative.transport.entities;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -18,6 +20,9 @@ public class ReservationStatut {
     @JoinColumn(name = "id_statut", nullable = false)
     private StatutReservation statut;
 
+    @Column(name = "date_modification")
+    private LocalDateTime dateModification;
+
     public ReservationStatut() {}
 
     public Integer getId() { return id; }
@@ -28,4 +33,7 @@ public class ReservationStatut {
 
     public StatutReservation getStatut() { return statut; }
     public void setStatut(StatutReservation statut) { this.statut = statut; }
+
+    public LocalDateTime getDateModification() { return dateModification; }
+    public void setDateModification(LocalDateTime dateModification) { this.dateModification = dateModification; }
 }
