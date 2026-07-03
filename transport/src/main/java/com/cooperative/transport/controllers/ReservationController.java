@@ -165,4 +165,22 @@ public class ReservationController {
 
         return "redirect:/guichet/reservation/" + idReservation + "/paiement";
     }
+
+    @GetMapping("/guichet/reservation/{idReservation}/annulation")
+    public String annulation(Model model, @PathVariable Long idReservation) {
+        ReservationMere reservation = reservationMereRepository.findById(idReservation).get();
+
+        model.addAttribute("reservation", reservation);
+
+        return "guichet/annulation";
+    }
+
+    @PostMapping("/guichet/reservation/{idReservation}/annulation")
+    public String postAnnulation(@PathVariable Long idReservation, @RequestParam BigDecimal frais, @RequestParam String motif) {
+        ReservationMere reservation = reservationMereRepository.findById(idReservation).get();
+
+        reservationService.annulerReservation(reservation, frais, motif);
+
+        return "redirect:/guichet/reservation/";
+    }
 }

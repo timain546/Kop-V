@@ -23,7 +23,7 @@ public class Annulation {
     @Column(name = "frais_annulation", nullable = false)
     private BigDecimal fraisAnnulation;
 
-    @Column(name = "libelle", nullable = false, length = 200)
+    @Column(name = "motif", nullable = false, length = 200)
     private String motif;
 
     public Annulation() {}
