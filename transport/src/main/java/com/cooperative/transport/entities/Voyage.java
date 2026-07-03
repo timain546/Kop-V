@@ -3,6 +3,7 @@ package com.cooperative.transport.entities;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "voyages")
@@ -54,4 +55,12 @@ public class Voyage {
 
     public BigDecimal getTarif() { return tarif; }
     public void setTarif(BigDecimal tarif) { this.tarif = tarif; }
+
+    public String getHeureDepart() {
+        return dateHeureDepart.format(DateTimeFormatter.ofPattern("HH:mm"));
+    }
+
+    public String getHeureArrivee() {
+        return dateHeureDepart.plusMinutes(dureeEstimeeMinutes).format(DateTimeFormatter.ofPattern("HH:mm"));
+    }
 }

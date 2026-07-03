@@ -28,9 +28,12 @@ public class PlaceStatut {
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
+    public Place getPlace() { return place; }
+    public void setPlace(Place place) { this.place = place; }
+
     public Voyage getVoyage() { return voyage; }
     public void setVoyage(Voyage voyage) { this.voyage = voyage; }
 
-    public Boolean isOccupee() { return occupee; }
+    public Boolean getOccupee() { return occupee; }
     public void setOccupee(Boolean occupee) { this.occupee = occupee; }
 }

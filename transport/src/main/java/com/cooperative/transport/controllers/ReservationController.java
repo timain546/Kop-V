@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cooperative.transport.dto.VoyageDTO;
 import com.cooperative.transport.entities.Gare;
+import com.cooperative.transport.entities.ModePaiement;
 import com.cooperative.transport.entities.Place;
+import com.cooperative.transport.entities.PlaceStatut;
 import com.cooperative.transport.entities.Voyage;
 import com.cooperative.transport.models.InfoNewReservation;
 import com.cooperative.transport.models.ReservationNewPaiementForm;
 import com.cooperative.transport.repositories.GareRepository;
+import com.cooperative.transport.repositories.ModePaiementRepository;
 import com.cooperative.transport.repositories.PlaceRepository;
 import com.cooperative.transport.repositories.PlaceStatutRepository;
 import com.cooperative.transport.services.ReservationService;
@@ -37,6 +40,9 @@ public class ReservationController {
     private GareRepository gareRepository;
 
     @Autowired
+    private ModePaiementRepository modePaiementRepository;
+
+    @Autowired
     private PlaceStatutRepository placeStatutRepository;
 
     @Autowired
@@ -47,7 +53,7 @@ public class ReservationController {
         List<Gare> gares = gareRepository.findAll();
         model.addAttribute("gares", gares);
 
-        return "guichet/index";
+        return "guichet/new-reservation";
     }
 
     @PostMapping("/guichet/reservation/new")
@@ -83,15 +89,18 @@ public class ReservationController {
     @GetMapping("/guichet/reservation/new/choix-place")
     public String newChoixPlace(HttpSession session, Model model) {
         InfoNewReservation info = (InfoNewReservation) session.getAttribute("infoNewReservation");
+        List<PlaceStatut> places = placeStatutRepository.findByVoyage(info.getVoyage());
+        int maxY = places.stream().mapToInt(p -> p.getPlace().getY()).max().getAsInt();
 
         model.addAttribute("info", info);
-        model.addAttribute("places", placeStatutRepository.findByVoyage(info.getVoyage()));
+        model.addAttribute("places", places);
+        model.addAttribute("maxY", maxY);
 
         return "guichet/choix-place";
     }
 
     @PostMapping("/guichet/reservation/new/choix-place")
-    public String postNewChoixPlace(HttpSession session, List<Long> idPlaces) {
+    public String postNewChoixPlace(HttpSession session, @RequestParam List<Long> idPlaces) {
         InfoNewReservation info = (InfoNewReservation) session.getAttribute("infoNewReservation");
 
         List<Place> places = placeRepository.findAllById(idPlaces);
@@ -103,8 +112,11 @@ public class ReservationController {
     @GetMapping("/guichet/reservation/new/paiement")
     public String newPaiement(HttpSession session, Model model) {
         InfoNewReservation info = (InfoNewReservation) session.getAttribute("infoNewReservation");
+        List<ModePaiement> modesPaiements = modePaiementRepository.findAll();
 
         model.addAttribute("info", info);
+        model.addAttribute("modesPaiements", modesPaiements);
+
         return "guichet/paiement";
     }
 
