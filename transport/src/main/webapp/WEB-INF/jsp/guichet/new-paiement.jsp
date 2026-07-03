@@ -11,7 +11,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Paiement — KOP-V</title>
+    <title>Informations paiements — KOP-V</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/guichet/paiement.css" />
@@ -31,6 +31,16 @@
             <div class="brand-title"><span class="kop">KOP</span><span class="dash">—</span><span class="v">V</span></div>
           </a>
 
+          <nav class="top-steps" aria-label="Étapes">
+            <div class="step step-done"><svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg><span>Recherche</span></div>
+            <div class="step-divider step-divider-active"></div>
+            <div class="step step-done"><svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg><span>Voyages</span></div>
+            <div class="step-divider step-divider-active"></div>
+            <div class="step step-done"><svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"></path></svg><span>Places</span></div>
+            <div class="step-divider step-divider-active"></div>
+            <div class="step active"><svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20a6 6 0 0 0-12 0"></path><circle cx="12" cy="10" r="4"></circle><circle cx="12" cy="12" r="10"></circle></svg><span>Passagers</span></div>
+          </nav>
+
           <div class="help-text">Aide ? <strong>+261 34 00 000 00</strong></div>
         </div>
       </header>
@@ -40,8 +50,9 @@
           <form action="#" method="post" class="passenger-section">
             <div class="passenger-head">
               <div>
-                <h1 class="passenger-title">Paiement de la réservation #${reservation.id}</h1>
-                <p class="passenger-subtitle">Le paiement peut se faire par tranche.</p>
+                <p class="hero-kicker">Étape 4 / 4</p>
+                <h1 class="passenger-title">Informations additionnelles</h1>
+                <p class="passenger-subtitle">Ces informations figureront sur vos billets et seront vérifiées à l'embarquement.</p>
               </div>
             </div>
 
@@ -55,7 +66,7 @@
                       </svg>
                       Nom complet
                     </span>
-                    <input class="field-input" type="text" value="${reservation.client.nom}" disabled />
+                    <input name="nomClient" class="field-input" type="text" placeholder="Ex. Rakoto Andrianina" />
                   </label>
 
                   <label class="field">
@@ -65,7 +76,7 @@
                       </svg>
                       Téléphone
                     </span>
-                    <input class="field-input" type="tel" value="${reservation.client.telephone}" disabled />
+                    <input name="telephoneClient" class="field-input" type="tel" placeholder="034 00 000 00" />
                   </label>
 
                   <label class="field">
@@ -102,42 +113,60 @@
             </div>
 
             <div class="passenger-actions">
-              <a href="${pageContext.request.contextPath}/guichet/reservation" class="back-btn">← Retour aux réservations</a>
-              <button type="submit" class="next-btn">Payer</button>
+              <a href="${pageContext.request.contextPath}/guichet/reservation/new/choix-place" class="back-btn">← Retour aux places</a>
+              <button type="submit" class="next-btn">Confirmer et payer</button>
             </div>
           </form>
         </main>
 
         <aside class="summary-col">
           <div class="summary-card">
-            <div class="summary-head"><p class="summary-kicker">Récapitulatif</p><p class="summary-title">L’historique des paiements</p></div>
+            <div class="summary-head"><p class="summary-kicker">Récapitulatif</p><p class="summary-title">Votre voyage</p></div>
             <div class="summary-body">
-              <c:forEach var="paiement" items="${paiements}">
-                <div class="summary-item">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-md icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
-                  <div>
-                    <p class="summary-item-label">Date</p>
-                    <p class="summary-item-value">${paiement.date.format(DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.FRENCH))}</p>
-                  </div>
+              <div class="summary-item">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon-md icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <div>
+                  <p class="summary-item-label">Trajet</p>
+                  <p class="summary-item-value">${info.gareDepart.ville} → ${info.gareArrivee.ville}</p>
                 </div>
-                <div class="summary-item">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm icon-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote-icon lucide-banknote"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
-                  <div>
-                    <p class="summary-item-label">Montant</p>
-                    <p class="summary-item-value"><fmt:formatNumber value="${paiement.montant}" pattern="#,##0"/> Ar</p>
-                  </div>
+              </div>
+              <div class="summary-item">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon-md icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
+                <div>
+                  <p class="summary-item-label">Date</p>
+                  <p class="summary-item-value">${info.voyage.dateHeureDepart.format(DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.FRENCH))}</p>
                 </div>
+              </div>
+              <div class="summary-item">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon-md icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                <div>
+                  <p class="summary-item-label">Passagers</p>
+                  <p class="summary-item-value">${info.nbPlaces} personne${info.nbPlaces > 1 ? 's' : ''}</p>
+                </div>
+              </div>
 
-                <div class="summary-divider"></div>
-              </c:forEach>
-
+              <div class="summary-divider"></div>
+            <div>
+              <p class="summary-item-label">Compagnie</p>
+              <p class="summary-item-value">KOP-V</p>
+              <p class="trip-mini">
+                ${info.voyage.heureDepart}
+                → ${info.voyage.heureArrivee}
+                · ${info.voyage.vehicule.categorieVehicule.libelle}
+              </p>
+            </div>
+              <div>
+                <p class="summary-item-label">Sièges</p>
+                <div class="selected-list">
+                  <c:forEach var="place" items="${info.places}">
+                    <span class="selected-seat">${place.numero}</span>
+                  </c:forEach>
+                </div>
+              </div>
+              <div class="summary-divider"></div>
               <div class="summary-total">
                 <span>Total</span>
-                <strong><fmt:formatNumber value="${montantPayeTotal}" pattern="#,##0"/> Ar</strong>
-              </div>
-              <div class="summary-total">
-                <span>Reste à payer</span>
-                <strong><fmt:formatNumber value="${reservation.voyage.tarif - montantPayeTotal}" pattern="#,##0"/> Ar</strong>
+                <strong><fmt:formatNumber value="${info.voyage.tarif * info.places.size()}" pattern="#,##0"/> Ar</strong>
               </div>
             </div>
             <div class="summary-foot">Place garantie · Paiement sécurisé · Annulation possible jusqu'à 24h avant départ.</div>

@@ -1,5 +1,6 @@
 package com.cooperative.transport.controllers;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,21 +8,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cooperative.transport.dto.VoyageDTO;
 import com.cooperative.transport.entities.Gare;
 import com.cooperative.transport.entities.ModePaiement;
+import com.cooperative.transport.entities.Paiement;
 import com.cooperative.transport.entities.Place;
 import com.cooperative.transport.entities.PlaceStatut;
+import com.cooperative.transport.entities.ReservationMere;
 import com.cooperative.transport.entities.Voyage;
 import com.cooperative.transport.models.InfoNewReservation;
 import com.cooperative.transport.models.ReservationNewPaiementForm;
+import com.cooperative.transport.models.ReservationPaiementForm;
 import com.cooperative.transport.repositories.GareRepository;
 import com.cooperative.transport.repositories.ModePaiementRepository;
+import com.cooperative.transport.repositories.PaiementRepository;
 import com.cooperative.transport.repositories.PlaceRepository;
 import com.cooperative.transport.repositories.PlaceStatutRepository;
+import com.cooperative.transport.repositories.ReservationMereRepository;
 import com.cooperative.transport.services.ReservationService;
 import com.cooperative.transport.services.VoyageService;
 
@@ -41,6 +48,12 @@ public class ReservationController {
 
     @Autowired
     private ModePaiementRepository modePaiementRepository;
+
+    @Autowired
+    private ReservationMereRepository reservationMereRepository;
+
+    @Autowired
+    private PaiementRepository paiementRepository;
 
     @Autowired
     private PlaceStatutRepository placeStatutRepository;
@@ -117,15 +130,39 @@ public class ReservationController {
         model.addAttribute("info", info);
         model.addAttribute("modesPaiements", modesPaiements);
 
-        return "guichet/paiement";
+        return "guichet/new-paiement";
     }
 
     @PostMapping("/guichet/reservation/new/paiement")
-    public String postNewPaiement(HttpSession session, ReservationNewPaiementForm form) {
+    public String postNewPaiement(HttpSession session, @ModelAttribute ReservationNewPaiementForm form) {
         InfoNewReservation info = (InfoNewReservation) session.getAttribute("infoNewReservation");
 
         reservationService.saveReservation(info, form);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/guichet/reservation/{idReservation}/paiement")
+    public String paiement(Model model, @PathVariable Long idReservation) {
+        ReservationMere reservation = reservationMereRepository.findById(idReservation).get();
+        List<ModePaiement> modesPaiements = modePaiementRepository.findAll();
+        List<Paiement> paiements = paiementRepository.findByReservation(reservation);
+        BigDecimal montantPayeTotal = paiementRepository.getPaiementTotal(reservation);
+
+        model.addAttribute("reservation", reservation);
+        model.addAttribute("modesPaiements", modesPaiements);
+        model.addAttribute("paiements", paiements);
+        model.addAttribute("montantPayeTotal", montantPayeTotal);
+
+        return "guichet/paiement";
+    }
+
+    @PostMapping("/guichet/reservation/{idReservation}/paiement")
+    public String postPaiement(@PathVariable Long idReservation, @ModelAttribute ReservationPaiementForm form) {
+        ReservationMere reservation = reservationMereRepository.findById(idReservation).get();
+
+        reservationService.payerReservation(reservation, form.getMontant(), form.getModePaiement(), form.getReference());
+
+        return "redirect:/guichet/reservation/" + idReservation + "/paiement";
     }
 }
