@@ -67,7 +67,11 @@
             <div>
               <p class="hero-kicker">Étape 3 / 4</p>
               <h1 class="seats-title">Choisissez vos places</h1>
-              <p class="seats-subtitle">KOP-V Express · Bus 45 places · départ 05:30</p>
+              <p class="seats-subtitle">
+                KOP-V ${info.voyage.vehicule.categorieVehicule.libelle}
+                · Véhicule à ${places.size()} places
+                · départ ${info.voyage.heureDepart}
+              </p>
             </div>
 
             <div class="seat-layout-grid">
@@ -100,8 +104,9 @@
                                     type="checkbox"
                                     name="idPlaces"
                                     value="${place.id}"
+                                    data-numero="${place.place.numero}"
                                     ${place.occupee ? 'disabled' : ''}>
-                                <span>${place.id}</span>
+                                <span>${place.place.numero}</span>
                               </label>
                             </c:when>
                             <c:otherwise>
@@ -124,8 +129,9 @@
               <div class="seat-side">
                 <div class="side-card">
                   <p class="side-kicker">Sélection</p>
-                  <p class="side-value">1 / 1 place</p>
-                  <div class="selected-list"><span class="selected-seat">6</span></div>
+                  <p class="side-value"><span id="selected-seat-count">0</span> / ${info.nbPlaces} place${info.nbPlaces > 1 ? 's' : ''}</p>
+                  <div class="selected-list">
+                  </div>
                 </div>
 
                 <div class="side-meta">
@@ -140,7 +146,7 @@
             </div>
 
             <div class="seat-actions">
-              <a href="${pageContext.request.contextPath}/guichet/reservation/new/choix-voyage" class="back-btn">← Retour</button>
+              <a href="${pageContext.request.contextPath}/guichet/reservation/new/choix-voyage" class="back-btn">← Retour</a>
               <button type="submit" class="next-btn">
                 Continuer
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
@@ -185,16 +191,9 @@
                   · ${info.voyage.vehicule.categorieVehicule.libelle}
                 </p>
               </div>
-              <div>
-                <p class="summary-item-label">Sièges</p>
-                <div class="selected-list">
-                  <%-- TODO --%>
-                  <span class="selected-seat">6</span>
-                </div>
-              </div>
               <div class="summary-divider"></div>
               <%-- TODO --%>
-              <div class="summary-total"><span>Total</span><strong>25 000 Ar</strong></div>
+              <div class="summary-total"><span>Total</span><strong id="total-price">0 Ar</strong></div>
             </div>
             <div class="summary-foot">Place garantie · Paiement sécurisé · Annulation possible jusqu'à 24h avant départ.</div>
           </div>
@@ -202,4 +201,41 @@
       </div>
     </div>
   </body>
+
+  <script>
+    const maxSeatCount = ${info.nbPlaces};
+    const price = ${info.voyage.tarif};
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const totalPriceSpan = document.getElementById('total-price');
+        const selectedSeatCount = document.getElementById('selected-seat-count');
+        const selectedListDiv = document.querySelector('.selected-list');
+        const nextBtn = document.querySelector('.next-btn');
+
+        document.querySelectorAll('input[name="idPlaces"]').forEach(cb => {
+            cb.addEventListener("change", () => {
+                const selected = [...document.querySelectorAll('input[name="idPlaces"]:checked')];
+
+                if (selected.length > maxSeatCount) {
+                    cb.checked = false;
+                    cb.dispatchEvent(new Event("change"));
+                    return;
+                }
+
+                selectedSeatCount.textContent = selected.length;
+                totalPriceSpan.textContent = (price * selected.length).toLocaleString("fr-FR") + " Ar";
+
+                selectedListDiv.innerHTML = "";
+                selected.forEach(seat => {
+                    const span = document.createElement("span");
+                    span.className = "selected-seat";
+                    span.textContent = seat.dataset.numero;
+                    selectedListDiv.appendChild(span);
+                });
+
+                nextBtn.disabled = ! (selected.length == maxSeatCount);
+            });
+        });
+    });
+  </script>
 </html>

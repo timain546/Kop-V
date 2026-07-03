@@ -1,10 +1,12 @@
 package com.cooperative.transport.dto;
 
+import java.time.LocalDate;
+
 public interface VoyageDTO {
 
     Integer getId();
 
-    String getDateDepart();
+    LocalDate getDateDepart();
 
     String getHeureDepart();
 
