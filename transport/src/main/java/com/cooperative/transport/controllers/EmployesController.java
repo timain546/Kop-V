@@ -1,5 +1,7 @@
 package com.cooperative.transport.controllers;
+import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,20 +9,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.cooperative.transport.entities.ContratEmploye;
+import com.cooperative.transport.entities.EmployeStatut;
+import com.cooperative.transport.entities.Employes;
 import com.cooperative.transport.entities.Roles;
 import com.cooperative.transport.entities.Salaires;
+import com.cooperative.transport.entities.StatutEmploye;
+import com.cooperative.transport.services.ContratService;
+import com.cooperative.transport.services.EmployeStatutService;
 import com.cooperative.transport.services.EmployesService;
 import com.cooperative.transport.services.RoleService;
 import com.cooperative.transport.services.SalaireService;
-import com.cooperative.transport.services.EmployeStatutService;
 import com.cooperative.transport.services.StatutEmployeService;
-import com.cooperative.transport.services.ContratService;
-import com.cooperative.transport.entities.StatutEmploye;
-import com.cooperative.transport.entities.Employes;
-import com.cooperative.transport.entities.ContratEmploye;
-import java.util.ArrayList;
-import com.cooperative.transport.entities.EmployeStatut;
-import java.sql.Date;
 
 @Controller
 public class EmployesController {
@@ -78,13 +79,16 @@ public class EmployesController {
             @RequestParam("email") String email,
             @RequestParam("role") Integer roleId,
             @RequestParam("salaire") Double montant,
-            @RequestParam("date") java.sql.Date date
+            @RequestParam("date") java.sql.Date date,
+            @RequestParam("mdp") String motDePasse
     ) {
 
         Employes employe = employesService.findempById(id);
         employe.setNom(nom);
         employe.setPrenom(prenom);
         employe.setEmail(email);
+        employe.setMotDePasse(motDePasse);
+
 
         Salaires SalActuel = salaireService.findByIdEmp(id);
         if (SalActuel == null) {
@@ -144,7 +148,7 @@ public class EmployesController {
     public String ajouterEmploye(@RequestParam("nom") String nom,
                                  @RequestParam("prenom") String prenom,
                                  @RequestParam("email") String email,
-                                //  @RequestParam("motDePasse") String motDePasse,
+                                 @RequestParam("mdp") String motDePasse,
                                  @RequestParam("role") Integer roleId,
                                  @RequestParam("salaire") Double montant,
                                  @RequestParam("date_embauche") java.sql.Date dateEmbauche) {
@@ -152,7 +156,7 @@ public class EmployesController {
         employe.setNom(nom);
         employe.setPrenom(prenom);
         employe.setEmail(email);
-        // employe.setMotDePasse(motDePasse);
+        employe.setMotDePasse(motDePasse);
         Roles role = new Roles();
         role.setId(roleId);
         employe.setRole(role);
