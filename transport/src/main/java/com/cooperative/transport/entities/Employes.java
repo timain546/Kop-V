@@ -31,9 +31,9 @@ public class Employes {
     @OneToMany(mappedBy="employe")
     private List<Salaires> salaires;
     @OneToMany(mappedBy="employe")
-    private List<ContratEmployes> contratEmployes;
+    private List<ContratsEmployes> contratEmployes;
 
-    public Employes(int id, String nom, String prenom, String email, String motDePasse, Role role,List<Salaires> salaires, List<ContratEmployes> contratEmployes) {
+    public Employes(int id, String nom, String prenom, String email, String motDePasse, Role role,List<Salaires> salaires, List<ContratsEmployes> contratEmployes) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -43,7 +43,7 @@ public class Employes {
         this.salaires = salaires;
         this.contratEmployes = contratEmployes;
     }
-  
 
-    
+
+
 }
