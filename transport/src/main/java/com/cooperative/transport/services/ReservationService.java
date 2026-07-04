@@ -158,6 +158,7 @@ public class ReservationService {
         annulationRepository.save(annulation);
     }
 
+       private final ReservationRepository reservationRepository; 
 
     public ReservationService(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;

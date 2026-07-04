@@ -1,0 +1,521 @@
+/* ==========================================================================
+   reservation.css
+   Styles propres à la page "Liste des réservations" (admin).
+   S'appuie sur les tokens/classes déjà définis dans styles.css / common.css
+   (app-shell, topbar, container, brand-*, icon-*, main-grid, summary-col,
+   summary-card, summary-head, summary-title, summary-body).
+   ========================================================================== */
+
+:root {
+  --res-green: #16a34a;
+  --res-green-dark: #15803d;
+  --res-green-bg: #ecfdf3;
+  --res-orange: #b45309;
+  --res-orange-bg: #fef3e2;
+  --res-red: #b91c1c;
+  --res-red-bg: #fee2e2;
+  --res-blue: #1d4ed8;
+  --res-blue-bg: #e0e9ff;
+  --res-border: #e5e7eb;
+  --res-text: #111827;
+  --res-muted: #6b7280;
+  --res-bg: #f7f8f7;
+}
+
+/* ---------- Nav admin (topbar) ---------- */
+
+.topbar-inner {
+  gap: 24px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: auto;
+}
+
+.admin-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--res-muted);
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.admin-nav-link:hover {
+  background-color: var(--res-bg);
+  color: var(--res-text);
+}
+
+.admin-nav-link.active {
+  color: var(--res-green-dark);
+  background-color: var(--res-green-bg);
+}
+
+.agent-menu {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--res-text);
+  cursor: pointer;
+}
+
+/* ---------- Page head ---------- */
+
+.reservations-grid {
+  background: var(--res-bg);
+}
+
+.res-section {
+  padding: 28px 0 40px;
+}
+
+.res-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.res-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--res-text);
+  margin: 4px 0 6px;
+}
+
+.res-subtitle {
+  font-size: 14px;
+  color: var(--res-muted);
+}
+
+.export-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--res-border);
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--res-text);
+  cursor: pointer;
+}
+
+.export-btn:hover {
+  background-color: var(--res-bg);
+}
+
+/* ---------- Filters bar ---------- */
+
+.res-filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  padding: 16px 20px;
+  background: #fff;
+  border: 1px solid var(--res-border);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-label-top {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--res-muted);
+}
+
+.date-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--res-border);
+  border-radius: 8px;
+  color: var(--res-muted);
+}
+
+.date-range input[type="date"] {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: var(--res-text);
+  background: transparent;
+}
+
+.date-range-sep {
+  color: var(--res-muted);
+}
+
+.select-filter {
+  min-width: 160px;
+  padding: 9px 12px;
+  border: 1px solid var(--res-border);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--res-text);
+  background: #fff;
+}
+
+.search-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: var(--res-green);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.search-btn:hover {
+  background: var(--res-green-dark);
+}
+
+/* ---------- Table ---------- */
+
+.res-table {
+  background: #fff;
+  border: 1px solid var(--res-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.res-table-head {
+  display: grid;
+  grid-template-columns: 1.6fr 1.4fr 2fr 1.1fr 1fr 0.9fr;
+  padding: 12px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--res-muted);
+  background: var(--res-bg);
+  border-bottom: 1px solid var(--res-border);
+}
+
+.res-row {
+  display: grid;
+  grid-template-columns: 1.6fr 1.4fr 2fr 1.1fr 1fr 0.9fr;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--res-border);
+}
+
+.res-empty {
+  padding: 32px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--res-muted);
+}
+
+.res-row:last-child {
+  border-bottom: none;
+}
+
+.res-row:hover {
+  background: var(--res-bg);
+}
+
+.res-col {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--res-text);
+}
+
+.res-code-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--res-green-bg);
+  color: var(--res-green-dark);
+}
+
+.res-code {
+  font-weight: 600;
+  color: var(--res-text);
+}
+
+.res-meta {
+  font-size: 12px;
+  color: var(--res-muted);
+}
+
+.res-client-name {
+  font-weight: 500;
+}
+
+.res-col-voyage {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.res-voyage-date,
+.res-voyage-route {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--res-muted);
+}
+
+.res-voyage-route span:first-of-type,
+.res-voyage-route span:last-of-type {
+  color: var(--res-text);
+  font-weight: 500;
+}
+
+.icon-muted {
+  color: var(--res-muted);
+}
+
+.res-places-list {
+  font-weight: 500;
+}
+
+.res-col-tarif {
+  font-weight: 600;
+}
+
+.res-badge {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.res-badge-paye {
+  background: var(--res-green-bg);
+  color: var(--res-green-dark);
+}
+
+.res-badge-attente {
+  background: var(--res-orange-bg);
+  color: var(--res-orange);
+}
+
+.res-badge-annulee {
+  background: var(--res-red-bg);
+  color: var(--res-red);
+}
+
+.res-badge-remboursee {
+  background: var(--res-blue-bg);
+  color: var(--res-blue);
+}
+
+.res-actions-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  color: var(--res-muted);
+  cursor: pointer;
+}
+
+.res-actions-btn:hover {
+  background: var(--res-bg);
+}
+
+/* ---------- Pagination ---------- */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.page-nav,
+.page-btn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--res-border);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  color: var(--res-text);
+  cursor: pointer;
+}
+
+.page-btn-active {
+  background: var(--res-green);
+  border-color: var(--res-green);
+  color: #fff;
+}
+
+.page-nav:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-size-select {
+  margin-left: auto;
+  padding: 8px 12px;
+  border: 1px solid var(--res-border);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--res-text);
+  background: #fff;
+}
+
+/* ---------- Sidebar: bouton Nouvelle réservation (remplace le récap) ---------- */
+
+.new-res-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--res-green);
+  color: #fff;
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: background-color 0.15s ease;
+}
+
+.new-res-card:hover {
+  background: var(--res-green-dark);
+}
+
+.new-res-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.new-res-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.new-res-subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ---------- Sidebar: aide ---------- */
+
+.help-desc {
+  font-size: 13px;
+  color: var(--res-muted);
+  margin-bottom: 12px;
+}
+
+.new-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--res-green);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--res-green-dark);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.new-filter-btn:hover {
+  background: var(--res-green-bg);
+}
+
+/* ---------- Sidebar: statuts de paiement ---------- */
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-dot-paye { background: var(--res-green); }
+.legend-dot-attente { background: var(--res-orange); }
+.legend-dot-annulee { background: var(--res-red); }
+.legend-dot-remboursee { background: var(--res-blue); }
+
+.legend-label {
+  color: var(--res-text);
+}
+
+.legend-count {
+  margin-left: auto;
+  font-weight: 600;
+  color: var(--res-text);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1100px) {
+  .reservations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .res-table-head {
+    display: none;
+  }
+
+  .res-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .admin-nav span {
+    display: none;
+  }
+}

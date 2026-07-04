@@ -3,7 +3,7 @@ CREATE VIEW v_reservations_mere_fille AS
 SELECT rf.id_reservation_mere, rf.id as id_reservation_fille, rf.id_place,
     rm.date_reservation, rm.libelle, rm.id_client, rm.id_statut_paiement, rm.id_voyage
 FROM reservations_fille rf
-JOIN reservations_mere rm ON rm.id = rf.id_reservation_mere
+JOIN reservations_mere rm ON rm.id = rf.id_reservation_mere;
 
 DROP TABLE IF EXISTS v_places_statuts;
 DROP VIEW IF EXISTS v_places_statuts;

@@ -2,6 +2,8 @@ package com.cooperative.transport.controllers;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.cooperative.transport.dto.ReservationDTO;
 import com.cooperative.transport.dto.VoyageDTO;
 import com.cooperative.transport.entities.Gare;
 import com.cooperative.transport.entities.ModePaiement;
@@ -21,6 +24,7 @@ import com.cooperative.transport.entities.PlaceStatut;
 import com.cooperative.transport.entities.ReservationMere;
 import com.cooperative.transport.entities.Voyage;
 import com.cooperative.transport.models.InfoNewReservation;
+import com.cooperative.transport.models.ReservationFiltreVM;
 import com.cooperative.transport.models.ReservationNewPaiementForm;
 import com.cooperative.transport.models.ReservationPaiementForm;
 import com.cooperative.transport.repositories.GareRepository;
@@ -187,24 +191,31 @@ public class ReservationController {
     }
 
 
-    @GetMapping("guichet/reservation")
+    @GetMapping("/guichet/reservation")
     public String getReservations(
-            @RequestParam String date1,
-            @RequestParam String date2,
-            @RequestParam String villeDepart,
-            @RequestParam String villeArrivee,
+            @RequestParam(required = false) String dateDebut,
+            @RequestParam(required = false) String dateFin,
+            @RequestParam(required = false, defaultValue = "") String villeDepart,
+            @RequestParam(required = false, defaultValue = "") String villeArrivee,
             Model model) {
 
-        model.addAttribute(
-                "reservations",
-                reservationService.getReservations(
-                        date1,
-                        date2,
-                        villeDepart,
-                        villeArrivee
-                )
-        );
+        List<ReservationDTO> reservations = reservationService.getReservations(
+                dateDebut, dateFin, villeDepart, villeArrivee);
 
-        return "reservation/liste";
+        model.addAttribute("reservations", reservations);
+        model.addAttribute("villes",
+                gareRepository.findAll().stream().map(Gare::getVille).distinct().toList());
+
+        ReservationFiltreVM filtre = new ReservationFiltreVM(dateDebut, dateFin, villeDepart, villeArrivee);
+        model.addAttribute("filtre", filtre);
+
+        model.addAttribute("stats", computeStats(reservations));
+
+        return "guichet/reservation";
     }
+
+private Map<String, Long> computeStats(List<ReservationDTO> reservations) {
+    return reservations.stream()
+            .collect(Collectors.groupingBy(ReservationDTO::getStatutPaiement, Collectors.counting()));
+}
 }
