@@ -1,8 +1,9 @@
 package com.cooperative.transport.controllers;
 
 import com.cooperative.transport.entities.Trajets;
-import com.cooperative.transport.repositories.TrajetService;
+import com.cooperative.transport.services.TrajetService;
 
+import org.springframework.ui.Model;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Optional;
 
 @Controller
 public class TrajetController {
