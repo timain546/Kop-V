@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VoyageListDTO {
-    private Long id;
+    private Integer id;
     private String gareDepart;
     private String gareArrivee;
     private String gareDepartVille;

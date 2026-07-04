@@ -22,11 +22,11 @@ public class Pannes {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_voyage")
-    private Voyage voyage;
+    private Voyages voyage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_chauffeur")
-    private Utilisateur chauffeur;
+    private Utilisateurs chauffeur;
 
     @Column(name = "date_signalement")
     private java.time.LocalDate dateSignalement;

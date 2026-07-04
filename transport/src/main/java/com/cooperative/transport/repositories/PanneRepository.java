@@ -7,6 +7,6 @@ import java.util.List;
 
 @Repository
 public interface PanneRepository extends JpaRepository<Pannes, Long> {
-    List<Panne> findByChauffeurId(Long chauffeurId);
-    List<Panne> findByVoyageId(Long voyageId);
+    List<Pannes> findByChauffeurId(Long chauffeurId);
+    List<Pannes> findByVoyageId(Long voyageId);
 }

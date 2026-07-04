@@ -1,6 +1,6 @@
 package com.cooperative.transport.services;
 import com.cooperative.transport.entities.Salaires;
-import com.cooperative.transport.repositories.SalairesRepository;
+import com.cooperative.transport.repositories.SalaireRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -8,8 +8,8 @@ import java.util.List;
 @Service
 public class SalaireService {
     @Autowired
-    private SalairesRepository salairesRepository;
-    public List<Salaires> findAllSalaires() {   
+    private SalaireRepository salairesRepository;
+    public List<Salaires> findAllSalaires() {
         return salairesRepository.findAll();
     }
     public void saveSalaire(Salaires salaire) {

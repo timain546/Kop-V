@@ -1,5 +1,5 @@
 package com.cooperative.transport.services;
-import com.cooperative.transport.entities.ContratEmploye;
+import com.cooperative.transport.entities.ContratsEmployes;
 import com.cooperative.transport.repositories.ContratRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,19 +9,19 @@ import java.util.List;
 public class ContratService {
     @Autowired
     private ContratRepository contratRepository;
-    public List<ContratEmploye> findAllContrats() {
+    public List<ContratsEmployes> findAllContrats() {
         return contratRepository.findAll();
     }
-    public void saveContrat(ContratEmploye contrat) {
+    public void saveContrat(ContratsEmployes contrat) {
         contratRepository.save(contrat);
     }
-    public ContratEmploye findContratById(Long id) {
+    public ContratsEmployes findContratById(Long id) {
         return contratRepository.findById(id).orElse(null);
     }
-    public ContratEmploye findContratByIdEmp(Long id) {
+    public ContratsEmployes findContratByIdEmp(Long id) {
         return contratRepository.findByIdEmp(id);
     }
-    public void updateContrat(ContratEmploye contrat) {
+    public void updateContrat(ContratsEmployes contrat) {
         contratRepository.save(contrat);
     }
 }

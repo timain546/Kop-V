@@ -14,7 +14,7 @@ public class EmployeStatutService {
     @Autowired
     private EmployeStatutRepository employeStatutRepository;
     public Integer findIdbyIdemp(Integer employeId) {
-        return employeStatutRepository.findIdbyIdemp(employeId);
+        return employeStatutRepository.findIdByIdEmp(employeId);
     }
     public void updateEmployeStatut(EmployeStatut employeStatut) {
         employeStatutRepository.save(employeStatut);

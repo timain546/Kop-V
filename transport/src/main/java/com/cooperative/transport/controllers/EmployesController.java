@@ -134,7 +134,7 @@ public class EmployesController {
       contratService.saveContrat(contrat);
       EmployeStatut employeStatut = new EmployeStatut();
       employeStatut.setDateModification(new java.sql.Date(System.currentTimeMillis()));
-      employeStatut.setEmploye(employesService.findempById(id));
+      employeStatut.setEmploye(employesService.findEmpById(id));
       employeStatut.setStatutEmploye(statutEmployeService.findStatutById(2));
       employeStatutService.updateEmployeStatut(employeStatut);
       return "redirect:/employes/list";
@@ -188,7 +188,7 @@ public class EmployesController {
         contratService.saveContrat(contrat);
 
         EmployeStatut employeStatut = new EmployeStatut();
-        employeStatut.setEmploye(employesService.findempById(id));
+        employeStatut.setEmploye(employesService.findEmpById(id));
         employeStatut.setStatutEmploye(statutEmployeService.findStatutById(3));
         employeStatut.setDateModification(new java.sql.Date(System.currentTimeMillis()));
         employeStatutService.updateEmployeStatut(employeStatut);

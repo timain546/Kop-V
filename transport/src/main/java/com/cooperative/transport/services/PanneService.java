@@ -23,7 +23,7 @@ public class PanneService {
     private final VoyageService voyageService;
 
     public PanneDTO createPanne(Long voyageId, Long chauffeurId, String lieu, String motifPanneLibelle, String description, String photoUrl) {
-        Optional<Voyage> voyageOpt = voyageRepository.findById(voyageId);
+        Optional<Voyages> voyageOpt = voyageRepository.findById(voyageId);
         if (voyageOpt.isEmpty() || !voyageOpt.get().getChauffeur().getId().equals(chauffeurId)) {
             throw new IllegalArgumentException("Voyage non trouvé ou accès refusé");
         }

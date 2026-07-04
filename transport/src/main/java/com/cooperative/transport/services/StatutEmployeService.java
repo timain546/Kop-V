@@ -1,5 +1,4 @@
 package com.cooperative.transport.services;
-import com.cooperative.transport.entities.ContratEmploye;
 import com.cooperative.transport.entities.StatutEmploye;
 import com.cooperative.transport.repositories.StatutEmployeRepository;
 import org.springframework.beans.factory.annotation.Autowired;

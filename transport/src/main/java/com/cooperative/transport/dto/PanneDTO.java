@@ -10,8 +10,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PanneDTO {
-    private Long id;
-    private Long voyageId;
+    private Integer id;
+    private Integer voyageId;
     private LocalDate dateSignalement;
     private String lieu;
     private String motifPanneLibelle;

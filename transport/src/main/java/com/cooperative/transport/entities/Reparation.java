@@ -24,7 +24,7 @@ public class Reparation {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_panne")
-    private Panne panne;
+    private Pannes panne;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_statut_reparation")
