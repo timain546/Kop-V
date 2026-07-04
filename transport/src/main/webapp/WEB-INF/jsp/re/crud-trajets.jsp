@@ -139,7 +139,7 @@
             <div class="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden lg:col-span-2 flex flex-col">
                 <div class="bg-slate-50/70 border-b border-slate-100 px-4 py-3 flex justify-between items-center">
                     <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Liste des trajets actifs</span>
-                    <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full">4 Lignes</span>
+                    <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full"><%= trajets.size() %> Lignes</span>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -171,7 +171,9 @@
                                     </td>
                                     <td class="py-3.5 px-4 text-right">
                                         <div class="flex items-center justify-end gap-1.5">
-                                            <button class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 bg-white hover:bg-slate-50 flex items-center justify-center text-xs active:scale-95 transition" title="Modifier">
+                                            <button onclick="chargerDonneesEdition(<%= t.getId() %>, <%= t.getGareDepart().getId() %>, <%= t.getGareArrivee().getId() %>, <%= t.getDistanceKm() %>)" 
+                                                    class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 bg-white hover:bg-slate-50 flex items-center justify-center text-xs active:scale-95 transition" 
+                                                    title="Modifier">
                                                 <i class="fa-solid fa-pen"></i>
                                             </button>
                                             <button onclick="supprimerTrajet(<%= t.getId() %>)" class="w-8 h-8 rounded-lg border border-rose-100 text-rose-500 bg-rose-50/30 hover:bg-rose-50 flex items-center justify-center text-xs active:scale-95 transition" title="Supprimer">
@@ -190,8 +192,14 @@
     </main>
 
     <script>
+        let idTrajetEnCours = null;
+
         function afficherMessage(message, type = 'error') {
             const feedbackDiv = document.getElementById("form-feedback");
+            if (!feedbackDiv) {
+                alert(message);
+                return;
+            }
             feedbackDiv.innerText = message;
             feedbackDiv.classList.remove("hidden", "bg-rose-50", "border-rose-200", "text-rose-600", "bg-emerald-50", "border-emerald-200", "text-emerald-600");
 
@@ -204,40 +212,29 @@
 
         function masquerMessage() {
             const feedbackDiv = document.getElementById("form-feedback");
-            feedbackDiv.classList.add("hidden");
+            if (feedbackDiv) feedbackDiv.classList.add("hidden");
         }
 
-        function supprimerTrajet(selectedTrajet) {
+        function chargerDonneesEdition(id, idGareDepart, idGareArrivee, distance) {
             masquerMessage();
-            const url = "http://localhost:8080/re/api/trajet/delete/" + selectedTrajet;
-            
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => {
-                return response.json().then(data => {
-                    if(!response.ok) {
-                        return Promise.reject(data.message || "Erreur lors de l'annulation de la feuille de route.");
-                    }
-                    return data;
-                })
-            })
-            .then(data => {
-                afficherMessage(data.message, 'success');
-                const ligneEffacer = document.getElementById("row-trajet-" + selectedTrajet);
-                if(ligneEffacer) ligneEffacer.remove();
-            })
-            .catch(errorMessage => {
-                console.error("Erreur AJAX:" + errorMessage);
-                afficherMessage(errorMessage, 'error');
-            })
+            idTrajetEnCours = id;
+
+            document.getElementById("form-title").innerHTML = `
+                <i class="fa-solid fa-pen text-amber-500"></i> 
+                <span>Modifier le trajet T-00${id}</span>
+            `;
+
+            document.getElementById("select-gare-depart").value = idGareDepart;
+            document.getElementById("select-gare-arrivee").value = idGareArrivee;
+            document.getElementById("input-distance").value = distance;
         }
 
         function annulerEdition() {
-            document.getElementById("form-title").innerHTML = '<i class="fa-solid fa-circle-plus text-emerald-500"></i> <span>Ajouter un nouveau trajet</span>';
+            idTrajetEnCours = null;
+            document.getElementById("form-title").innerHTML = `
+                <i class="fa-solid fa-circle-plus text-emerald-500"></i> 
+                <span>Ajouter un nouveau trajet</span>
+            `;
             document.getElementById("form-trajet").reset();
             masquerMessage();
         }
@@ -246,41 +243,77 @@
             e.preventDefault();
             masquerMessage();
 
+            const distanceInput = document.getElementById("input-distance").value;
+
             const data = {
-                gareDepart: document.getElementById("select-gare-depart").value,
-                gareArrivee: document.getElementById("select-gare-arrivee").value,
-                distanceKm: document.getElementById("input-distance").value
+                gareDepart: parseInt(document.getElementById("select-gare-depart").value),
+                gareArrivee: parseInt(document.getElementById("select-gare-arrivee").value),
+                distanceKm: distanceInput ? parseFloat(distanceInput) : null
+            };
+
+            if (idTrajetEnCours !== null) {
+                enregistrerModification(idTrajetEnCours, data);
+            } else {
+                enregistrerCreation(data);
             }
-            enregistrerTrajet(data);
         });
 
-        function enregistrerTrajet(nouveauTrajet) {
+        function enregistrerCreation(nouveauTrajet) {
             const url = "http://localhost:8080/re/api/trajet/create";
             fetch(url, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(nouveauTrajet)
             })
-            .then(response => {
-                return response.json().then(data => {
-                    if(!response.ok) {
-                        return Promise.reject(data.message || "Erreur lors de l'insertion du nouveau trajet");
-                    }
-                    return data;
-                })
-            })
+            .then(response => response.json().then(data => !response.ok ? Promise.reject(data.message) : data))
             .then(data => {
                 afficherMessage(data.message, 'success');
-                setTimeout(() => {
-                    window.location.href = "/re/trajet/list";
-                }, 1000);
+                setTimeout(() => window.location.href = "/re/trajet/list", 1000);
             })
             .catch(errorMessage => {
-                console.log("Erreur AJAX: ", errorMessage);
+                console.error("Erreur AJAX:", errorMessage);
                 afficherMessage(errorMessage, 'error');
+            });
+        }
+
+        function enregistrerModification(id, trajetModifie) {
+            const url = "http://localhost:8080/re/api/trajet/edit/" + id;
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(trajetModifie)
             })
+            .then(response => response.json().then(data => !response.ok ? Promise.reject(data.message) : data))
+            .then(data => {
+                afficherMessage(data.message, 'success');
+                setTimeout(() => window.location.href = "/re/trajet/list", 1000);
+            })
+            .catch(errorMessage => {
+                console.error("Erreur AJAX:", errorMessage);
+                afficherMessage(errorMessage, 'error');
+            });
+        }
+
+        function supprimerTrajet(selectedTrajet) {
+            if(!confirm("Voulez-vous vraiment supprimer ce trajet ?")) return;
+            
+            masquerMessage();
+            const url = "http://localhost:8080/re/api/trajet/delete/" + selectedTrajet;
+            
+            fetch(url, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json().then(data => !response.ok ? Promise.reject(data.message) : data))
+            .then(data => {
+                afficherMessage(data.message, 'success');
+                const ligneEffacer = document.getElementById("row-trajet-" + selectedTrajet);
+                if(ligneEffacer) ligneEffacer.remove();
+            })
+            .catch(errorMessage => {
+                console.error("Erreur AJAX:", errorMessage);
+                afficherMessage(errorMessage, 'error');
+            });
         }
     </script>
 </body>
