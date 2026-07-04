@@ -47,7 +47,7 @@ public class VoyageController {
 
         model.addAttribute("nbActif", new Integer(nbActif));
         model.addAttribute("listeVoyages", voyages);
-        return "liste-voyages";
+        return "re/liste-voyages";
     }
 
     @GetMapping("/api/voyage/annuler/{id}")
@@ -91,7 +91,7 @@ public class VoyageController {
         List<Trajets> trajets = service.findAllTrajets();
         model.addAttribute("listeTrajets", trajets);
 
-        return "formulaire-voyage";
+        return "re/formulaire-voyage";
     }
 
     @GetMapping("/api/vehicule-dispo/list")
@@ -100,10 +100,10 @@ public class VoyageController {
         @RequestParam(value = "heure", required = false) String heureStr
     ) {
 
-        LocalTime heure = (heureStr == null || heureStr.trim().isEmpty()) 
-                      ? LocalTime.MIDNIGHT 
+        LocalTime heure = (heureStr == null || heureStr.trim().isEmpty())
+                      ? LocalTime.MIDNIGHT
                       : LocalTime.parse(heureStr);
-                    
+
         LocalDateTime dateEtHeure = date.atTime(heure);
 
         List<Vehicules> vehicules = service.findAllVehiculesDispo(dateEtHeure);
@@ -142,7 +142,7 @@ public class VoyageController {
             return "redirect:/voyage/list";
         } catch(Exception e) {
             model.addAttribute("errorMessage", "Une erreur interne est survenue: " + e.getMessage());
-            return "formulaire-voyage";
+            return "re/formulaire-voyage";
         }
     }
 }

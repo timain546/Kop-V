@@ -61,7 +61,7 @@ public class EmployesController {
         }
         model.addAttribute("statut", statut);
         model.addAttribute("listeEmployes", employes);
-        return "list-employes";
+        return "admin/list-employes";
     }
 
     @PostMapping("/employes/modifier")
@@ -70,7 +70,7 @@ public class EmployesController {
         List<Role> roles = roleservice.findAllRoles(role);
         model.addAttribute("employe", employes.get(0));
         model.addAttribute("roles", roles);
-        return "modifier-employe";
+        return "admin/modifier-employe";
     }
 
     @PostMapping("/employes/miseajour")
@@ -143,7 +143,7 @@ public class EmployesController {
     public String afficherFormulaire(Model model) {
         List<Role> roles = roleservice.findAll();
         model.addAttribute("roles", roles);
-        return "ajouter-employe";
+        return "admin/ajouter-employe";
     }
     @PostMapping("/employes/ajouter")
     public String ajouterEmploye(@RequestParam("nom") String nom,

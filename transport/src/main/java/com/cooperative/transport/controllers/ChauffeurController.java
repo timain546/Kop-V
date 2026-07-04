@@ -44,7 +44,7 @@ public class ChauffeurController {
         model.addAttribute("chauffeurId", DEMO_CHAUFFEUR_ID);
         chauffeurOpt.ifPresent(chauffeur -> model.addAttribute("chauffeur", chauffeur));
 
-        return "chauffeur-dashboard";
+        return "chauffeur/chauffeur-dashboard";
     }
 
     @GetMapping("/voyages")
@@ -87,7 +87,7 @@ public class ChauffeurController {
         model.addAttribute("chauffeurId", DEMO_CHAUFFEUR_ID);
         chauffeurOpt.ifPresent(chauffeur -> model.addAttribute("chauffeur", chauffeur));
 
-        return "chauffeur-voyages";
+        return "chauffeur/chauffeur-voyages";
     }
 
     @GetMapping("/signaler-panne")
@@ -102,6 +102,6 @@ public class ChauffeurController {
         model.addAttribute("motifsPanne", motifsPanne);
         chauffeurOpt.ifPresent(chauffeur -> model.addAttribute("chauffeur", chauffeur));
 
-        return "chauffeur-signaler-panne";
+        return "chauffeur/chauffeur-signaler-panne";
     }
 }

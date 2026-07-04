@@ -31,7 +31,7 @@ public class StatistiqueController {
         model.addAttribute("stats", stats);
         model.addAttribute("titre", "Statistiques Journalières");
 
-        return "stats-journaliere";
+        return "admin/stats-journaliere";
     }
 
     // STATISTIQUE MENSUELLE
@@ -52,6 +52,6 @@ public class StatistiqueController {
         model.addAttribute("stats", stats);
         model.addAttribute("titre", "Statistiques Mensuelles");
 
-        return "stats-mensuelle";
+        return "admin/stats-mensuelle";
     }
 }
