@@ -50,13 +50,24 @@ public class EmployesController {
     public String getListeEmployes(Model model) {
         List<Object[]> employes = employesService.findEmp();
         List<String> statut = new ArrayList<>();
+        
         for (Object[] row : employes) {
             Utilisateurs employe = (Utilisateurs) row[0];
             Integer statutId = employeStatutService.findIdbyIdemp(employe.getId());
-            StatutEmploye statutList = statutEmployeService.findStatutById(statutId);
-            System.out.println("Statut pour l'employé " + employe.getNom() + ": " + (statutList != null ? statutList.getLibelle() : "Aucun statut trouvé"));
-            statut.add(statutList.getLibelle());
-
+            
+            // Sécurisation contre le Null ID
+            if (statutId == null) {
+                System.out.println("Aucun ID de statut pour l'employé " + employe.getNom());
+                statut.add("Inconnu / Aucun");
+            } else {
+                StatutEmploye statutList = statutEmployeService.findStatutById(statutId);
+                if (statutList != null) {
+                    System.out.println("Statut pour l'employé " + employe.getNom() + ": " + statutList.getLibelle());
+                    statut.add(statutList.getLibelle());
+                } else {
+                    statut.add("Statut introuvable");
+                }
+            }
         }
         model.addAttribute("statut", statut);
         model.addAttribute("listeEmployes", employes);

@@ -64,8 +64,6 @@ public class VoyageService {
         voyageStatutRepository.save(voyagestatut);
     }
 
-
-
     public List<Vehicules> findAllVehiculesDispo(LocalDateTime dateCible) {
         return vehiculeRepository.findAllVehiculesDispo(dateCible);
     }

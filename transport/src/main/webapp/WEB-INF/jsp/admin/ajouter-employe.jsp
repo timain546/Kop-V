@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.cooperative.transport.entities.Roles" %>
+<%@ page import="com.cooperative.transport.entities.Role" %>
 <%
-    List<Roles> roles = (List<Roles>) request.getAttribute("roles");
+    List<Role> roles = (List<Role>) request.getAttribute("roles");
 %>
 <!DOCTYPE html>
 
@@ -50,7 +50,7 @@
             <div class="form-group" style="margin-bottom: 0;">
                 <label for="role">Role</label>
                 <select name="role" id="role" style="padding: 10px 14px;">
-                    <% for (Roles r : roles) { %>
+                    <% for (Role r : roles) { %>
                         <option value="<%= r.getId() %>">
                             <%= r.getLibelle() %>
                         </option>
