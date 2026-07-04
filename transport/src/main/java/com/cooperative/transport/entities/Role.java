@@ -14,6 +14,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "role")
+@Getter
+@Setter
 public class Role {
 
     @Id
