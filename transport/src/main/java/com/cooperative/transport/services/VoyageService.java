@@ -3,6 +3,7 @@ package com.cooperative.transport.services;
 import com.cooperative.transport.dto.*;
 import com.cooperative.transport.entities.*;
 import com.cooperative.transport.repositories.*;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,15 +48,20 @@ public class VoyageService {
         return voyageRepository.findById(id);
     }
 
+    @Transactional
     public void annuler(Voyages voyage) {
         VoyageStatut voyagestatut = new VoyageStatut();
         voyagestatut.setVoyage(voyage);
-        Optional<StatutVoyage> statut = statutVoyageRepository.findByLibelle("Annulé");
+        Optional<StatutVoyage> statut = statutVoyageRepo.findByLibelle("Annulé");
         StatutVoyage statutAnnule = statut.get();
+
+        voyage.setStatutActuel(statutAnnule);
+        voyagestatut.setId(null);
+        voyagestatut.setVoyage(voyage);
         voyagestatut.setStatut(statutAnnule);
         voyagestatut.setDateModification(LocalDate.now());
 
-        voyageStatutRepository.save(voyagestatut);
+        voyageStatutRepo.save(voyagestatut);
     }
 
 
@@ -68,6 +74,7 @@ public class VoyageService {
         return utilisateurRepository.findAllChauffeurDispo(dateCible);
     }
 
+    @Transactional
     public void creerNouveauVoyage(VoyageDTO voyageDTO) throws Exception {
 
         // Insertion voyage dans la table voyages
@@ -100,6 +107,14 @@ public class VoyageService {
         Utilisateurs chauffeur = chauffeurOptional.get();
         nouveauVoyage.setChauffeur(chauffeur);
 
+        Optional<StatutVoyage> statutVoyageOptional = statutVoyageRepo.findByLibelle("Plannifié");
+        if(statutVoyageOptional.isEmpty()) {
+            throw new Exception("Le statut 'Plannifié' n'existe pas");
+        }
+
+        StatutVoyage statutVoyage = statutVoyageOptional.get();
+        nouveauVoyage.setStatutActuel(statutVoyage);
+
         LocalDate dateDepart = voyageDTO.getDateDepart();
         LocalTime heureDepart = voyageDTO.getHeureDepart();
         LocalDateTime dateHeureDepart = dateDepart.atTime(heureDepart);
@@ -112,6 +127,12 @@ public class VoyageService {
         }
 
         nouveauVoyage.setDureeEstimeeMinutes(voyageDTO.getDureeEstimeeMinutes());
+
+        double tarif = voyageDTO.getTarif().doubleValue();
+        if(tarif <= 0) {
+            throw new Exception("Le tarif doit être supérieur à zéro");
+        }
+
         nouveauVoyage.setTarif(BigDecimal.valueOf(voyageDTO.getTarif()));
 
         // Insertion d'un nouveau statut
@@ -122,7 +143,7 @@ public class VoyageService {
         nouveauVoyageStatut.setId(null);
         nouveauVoyageStatut.setVoyage(voyageEnregistre);
 
-        Optional<StatutVoyage> statutVoyageOptional = statutVoyageRepository.findByLibelle("Plannifié");
+        Optional<StatutVoyage> statutVoyageOptional = statutVoyageRepo.findByLibelle("Plannifié");
         if(statutVoyageOptional.isEmpty()) {
             throw new Exception("Le statut 'Plannifié' n'existe pas");
         }

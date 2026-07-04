@@ -43,7 +43,7 @@
                     <span>Suivi des Pannes</span>
                     <span class="ml-auto bg-rose-100 text-rose-600 text-[10px] font-bold px-2 py-0.5 rounded-full">2</span>
                 </a>
-                <a href="/trajet/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
+                <a href="/re/trajet/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
                     <i class="fa-solid fa-map-location-dot text-base"></i>
                     <span>CRUD Trajets</span>
                 </a>
@@ -63,7 +63,7 @@
                 <h2 class="text-xl font-bold text-slate-800">Feuilles de Route</h2>
                 <p class="text-xs text-slate-400">Suivez, modifiez ou planifiez les départs de la coopérative</p>
             </div>
-            <a href="/voyage/new" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-emerald-100 flex items-center gap-2 active:scale-95 transition">
+            <a href="/re/voyage/new" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-emerald-100 flex items-center gap-2 active:scale-95 transition">
                 <i class="fa-solid fa-calendar-plus text-[13px]"></i>
                 <span>Planifier un voyage</span>
             </a>
@@ -91,8 +91,13 @@
                             for(Voyages v : voyages) {
                                 int idVoyage = v.getId();
                                 String reference = "V-00" + idVoyage;
+<<<<<<< HEAD
+                                String statut = v.getStatutActuel().getLibelle();
+                                
+=======
                                 String statut = v.getStatutActuel().getStatut().getLibelle();
 
+>>>>>>> dev-principale
                                 Trajets trajet = v.getTrajet();
                                 String villeDepart = trajet.getGareDepart().getVille();
                                 String villeArrivee = trajet.getGareArrivee().getVille();
@@ -210,7 +215,7 @@
             btnConfirm.disabled = true;
             btnConfirm.innerText = "Traitement...";
 
-            fetch('http://localhost:8080/api/voyage/annuler/' + voyageIdSelectionne, {
+            fetch('http://localhost:8080/re/api/voyage/annuler/' + voyageIdSelectionne, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

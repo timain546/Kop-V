@@ -10,9 +10,17 @@ import org.springframework.stereotype.Repository;
 import com.cooperative.transport.entities.Utilisateurs;
 @Repository
 public interface UtilisateurRepository extends JpaRepository<Utilisateurs, Integer> {
+    @Query(value = "SELECT u.* FROM utilisateurs u WHERE u.id_role = (" +
+        " SELECT r.id FROM role r WHERE r.libelle = 'Chauffeur')" +
+        " AND u.id NOT IN (" +
+        " SELECT voy.id_chauffeur FROM voyages voy WHERE" +
+        " :dateCible >= voy.date_heure_depart AND" +
+        " :dateCible < (voy.date_heure_depart + (voy.duree_estimee_minutes * INTERVAL '1 minute'))" +
+        ")", nativeQuery = true)
+    List<Utilisateurs> findAllChauffeurDispo(@Param("dateCible") LocalDateTime dateCible);
+
     @Query("SELECT DISTINCT e,s,r FROM Employes e LEFT JOIN e.salaires s JOIN e.role r where s.date_modification = (SELECT MAX(s2.date_modification) FROM Salaires s2 WHERE s2.employe.id = e.id ) or s is null")
     List<Object[]> findEmploye();
     @Query("SELECT DISTINCT e,s,r FROM Employes e LEFT JOIN e.salaires s JOIN e.role r where (s.date_modification = (SELECT MAX(s2.date_modification) FROM Salaires s2 WHERE s2.employe.id = e.id ) or s is null) and e.id = :id")
     List<Object[]> findEmployeById(Integer id);
-    List<Utilisateurs> findAllChauffeurDispo(LocalDateTime dateCible);
 }

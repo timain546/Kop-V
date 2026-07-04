@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -43,7 +45,6 @@ public class Voyages {
     private BigDecimal tarif;
 
     @OneToMany(mappedBy = "voyage", fetch = FetchType.LAZY)
-    @OrderBy("dateModification DESC")
     private List<VoyageStatut> voyageStatuts;
 
     @ManyToOne(fetch = FetchType.LAZY)

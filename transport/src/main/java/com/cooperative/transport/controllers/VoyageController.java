@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ import java.time.LocalTime;
 import java.time.LocalDateTime;
 
 @Controller
+@RequestMapping("/re")
 public class VoyageController {
 
     @Autowired
@@ -41,8 +43,7 @@ public class VoyageController {
         List<Voyages> voyages = service.findAllVoyages();
         int nbActif = 0;
         for(Voyages v : voyages) {
-            VoyageStatut vs = v.getStatutActuel();
-            if(vs.getStatut().getLibelle().equalsIgnoreCase("En cours")) nbActif++;
+            if(v.getStatutActuel().getLibelle().equalsIgnoreCase("En cours")) nbActif++;
         }
 
         model.addAttribute("nbActif", new Integer(nbActif));
@@ -59,7 +60,7 @@ public class VoyageController {
 
             if(!optionalVoyage.isEmpty()) {
                 Voyages voyage = optionalVoyage.get();
-                String libelleStatut = voyage.getStatutActuel().getStatut().getLibelle();
+                String libelleStatut = voyage.getStatutActuel().getLibelle();
 
                 if(libelleStatut.equalsIgnoreCase("En cours") || libelleStatut.equalsIgnoreCase("Terminé") || libelleStatut.equalsIgnoreCase("Annulé")) {
                     response.put("status", "error");
@@ -139,7 +140,7 @@ public class VoyageController {
     public String enregistrerVoyage(@ModelAttribute VoyageDTO voyageDTO, Model model) {
         try {
             service.creerNouveauVoyage(voyageDTO);
-            return "redirect:/voyage/list";
+            return "redirect:/re/voyage/list";
         } catch(Exception e) {
             model.addAttribute("errorMessage", "Une erreur interne est survenue: " + e.getMessage());
             return "re/formulaire-voyage";
