@@ -9,6 +9,8 @@ import jakarta.persistence.OneToMany;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 
@@ -16,6 +18,8 @@ import java.util.List;
 @Table(name = "statut_voyage")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class StatutVoyage {
 
     @Id
@@ -27,10 +31,6 @@ public class StatutVoyage {
     @OneToMany(mappedBy = "statut")
     private List<VoyageStatut> voyageStatuts;
 
-    public StatutVoyage() {
-    }
-
-    public StatutVoyage(String libelle) {
-        this.libelle = libelle;
-    }
+    @OneToMany(mappedBy = "statutActuel")
+    private List<Voyages> voyages;
 }

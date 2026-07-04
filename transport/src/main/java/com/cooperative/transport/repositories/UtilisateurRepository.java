@@ -11,7 +11,9 @@ import java.time.LocalDateTime;
 
 @Repository
 public interface UtilisateurRepository extends JpaRepository<Utilisateurs, Integer> {
-    @Query(value = "SELECT u.* FROM utilisateurs u WHERE u.id_role = 1 AND u.id NOT IN (" +
+    @Query(value = "SELECT u.* FROM utilisateurs u WHERE u.id_role = (" +
+        " SELECT r.id FROM role r WHERE r.libelle = 'Chauffeur')" +
+        " AND u.id NOT IN (" +
         " SELECT voy.id_chauffeur FROM voyages voy WHERE" +
         " :dateCible >= voy.date_heure_depart AND" +
         " :dateCible < (voy.date_heure_depart + (voy.duree_estimee_minutes * INTERVAL '1 minute'))" +

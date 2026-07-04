@@ -15,12 +15,15 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
             "trajet.gareDepart",
             "trajet.gareArrivee",
             "vehicule",
-            "chauffeur"
+            "chauffeur",
+            "statutActuel"
     })
     @Query("SELECT v FROM Voyages v ORDER BY v.dateHeureDepart ASC")
     List<Voyages> findAllCatalogueVoyage();
 
     @Query(value = "SELECT v.* FROM voyages v WHERE v.date_heure_depart >= NOW()" +
-        " AND v.id_trajet = :idTrajet", nativeQuery = true)
+        " AND v.id_trajet = :idTrajet AND v.id_statut_actuel = (" +
+        " SELECT s.id FROM statut_voyage s WHERE s.libelle = 'Plannifié')"
+        , nativeQuery = true)
     List<Voyages> findAllVoyagePrevusByTrajet(@Param("idTrajet") Integer idTrajet);
 }

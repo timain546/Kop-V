@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/re")
 public class TrajetController {
 
     @Autowired
@@ -26,9 +28,8 @@ public class TrajetController {
     @GetMapping("/trajet/list")
     public String getListeTrajets(Model model) {
         List<Trajets> trajets = service.findAllTrajets();
-        model.addAttribute("listeTrajets", trajets);
-        model.addAttribute("nbActif", trajets.size());
-        return "crud-trajets";
+        model.addAttribute("trajets", trajets);
+        return "re/crud-trajets";
     }
 
     @GetMapping("/api/trajet/delete/{id}")
