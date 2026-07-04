@@ -1,9 +1,13 @@
 package com.cooperative.transport.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "categorie_vehicule")
+@Getter
+@Setter
 public class CategorieVehicule {
 
     @Id
@@ -15,9 +19,4 @@ public class CategorieVehicule {
 
     public CategorieVehicule() {}
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
-    public String getLibelle() { return libelle; }
-    public void setLibelle(String libelle) { this.libelle = libelle; }
 }

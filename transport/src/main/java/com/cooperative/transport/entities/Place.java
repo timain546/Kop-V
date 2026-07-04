@@ -1,9 +1,13 @@
 package com.cooperative.transport.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "places")
+@Getter
+@Setter
 public class Place {
 
     @Id
@@ -25,18 +29,4 @@ public class Place {
 
     public Place() {}
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
-    public Vehicule getVehicule() { return vehicule; }
-    public void setVehicule(Vehicule vehicule) { this.vehicule = vehicule; }
-
-    public String getNumero() { return numero; }
-    public void setNumero(String numero) { this.numero = numero; }
-
-    public Integer getX() { return x; }
-    public void setX(Integer x) { this.x = x; }
-
-    public Integer getY() { return y; }
-    public void setY(Integer y) { this.y = y; }
 }

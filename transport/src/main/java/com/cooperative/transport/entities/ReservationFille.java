@@ -20,12 +20,5 @@ public class ReservationFille {
 
     public ReservationFille() {}
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
-    public ReservationMere getReservationMere() { return reservationMere; }
-    public void setReservationMere(ReservationMere reservationMere) { this.reservationMere = reservationMere; }
-
-    public Place getPlace() { return place; }
-    public void setPlace(Place place) { this.place = place; }
+    
 }

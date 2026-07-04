@@ -1,12 +1,17 @@
 package com.cooperative.transport.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+
 @Entity
 @Table(name = "annulations")
+@Getter
+@Setter
 public class Annulation {
 
     @Id
@@ -28,14 +33,5 @@ public class Annulation {
 
     public Annulation() {}
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-    public ReservationMere getReservation() { return reservation; }
-    public void setReservation(ReservationMere reservation) { this.reservation = reservation; }
-    public LocalDateTime getDateAnnulation() { return dateAnnulation; }
-    public void setDateAnnulation(LocalDateTime dateAnnulation) { this.dateAnnulation = dateAnnulation; }
-    public BigDecimal getFraisAnnulation() { return fraisAnnulation; }
-    public void setFraisAnnulation(BigDecimal fraisAnnulation) { this.fraisAnnulation = fraisAnnulation; }
-    public String getMotif() { return motif; }
-    public void setMotif(String motif) { this.motif = motif; }
+   
 }

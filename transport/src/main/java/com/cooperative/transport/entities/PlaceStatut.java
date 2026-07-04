@@ -3,10 +3,14 @@ package com.cooperative.transport.entities;
 import org.springframework.data.annotation.Immutable;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "v_places_statuts")
 @Immutable
+@Getter
+@Setter
 public class PlaceStatut {
 
     @Id
@@ -25,15 +29,4 @@ public class PlaceStatut {
 
     public PlaceStatut() {}
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
-    public Place getPlace() { return place; }
-    public void setPlace(Place place) { this.place = place; }
-
-    public Voyage getVoyage() { return voyage; }
-    public void setVoyage(Voyage voyage) { this.voyage = voyage; }
-
-    public Boolean getOccupee() { return occupee; }
-    public void setOccupee(Boolean occupee) { this.occupee = occupee; }
 }

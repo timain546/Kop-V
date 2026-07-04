@@ -4,9 +4,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "paiements")
+@Getter
+@Setter
 public class Paiement {
 
     @Id
@@ -32,21 +36,4 @@ public class Paiement {
 
     public Paiement() {}
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
-    public ReservationMere getReservation() { return reservation; }
-    public void setReservation(ReservationMere reservation) { this.reservation = reservation; }
-
-    public BigDecimal getMontant() { return montant; }
-    public void setMontant(BigDecimal montant) { this.montant = montant; }
-
-    public ModePaiement getModePaiement() { return modePaiement; }
-    public void setModePaiement(ModePaiement modePaiement) { this.modePaiement = modePaiement; }
-
-    public LocalDateTime getDate() { return date; }
-    public void setDate(LocalDateTime date) { this.date = date; }
-
-    public String getReferenceTransaction() { return referenceTransaction; }
-    public void setReferenceTransaction(String referenceTransaction) { this.referenceTransaction = referenceTransaction; }
 }
