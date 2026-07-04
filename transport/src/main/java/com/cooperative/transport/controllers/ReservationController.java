@@ -32,6 +32,8 @@ import com.cooperative.transport.repositories.ReservationMereRepository;
 import com.cooperative.transport.services.ReservationService;
 import com.cooperative.transport.services.VoyageService;
 
+
+
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -182,5 +184,27 @@ public class ReservationController {
         reservationService.annulerReservation(reservation, frais, motif);
 
         return "redirect:/guichet/reservation/";
+    }
+
+
+    @GetMapping("guichet/reservation")
+    public String getReservations(
+            @RequestParam String date1,
+            @RequestParam String date2,
+            @RequestParam String villeDepart,
+            @RequestParam String villeArrivee,
+            Model model) {
+
+        model.addAttribute(
+                "reservations",
+                reservationService.getReservations(
+                        date1,
+                        date2,
+                        villeDepart,
+                        villeArrivee
+                )
+        );
+
+        return "reservation/liste";
     }
 }

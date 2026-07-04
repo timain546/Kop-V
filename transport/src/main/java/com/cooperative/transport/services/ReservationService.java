@@ -32,6 +32,9 @@ import com.cooperative.transport.repositories.ReservationMereRepository;
 import com.cooperative.transport.repositories.ReservationStatutRepository;
 import com.cooperative.transport.repositories.StatutPaiementRepository;
 import com.cooperative.transport.repositories.StatutReservationRepository;
+import com.cooperative.transport.dto.ReservationDTO;
+import com.cooperative.transport.repositories.ReservationRepository;
+
 
 @Service
 public class ReservationService {
@@ -154,4 +157,14 @@ public class ReservationService {
         annulation.setMotif(motif);
         annulationRepository.save(annulation);
     }
+
+
+    public ReservationService(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
+
+    public List<ReservationDTO> getReservations(String date1, String date2, String villeDepart, String villeArrivee) {
+        return reservationRepository.findReservationsByDateAndVilleDepartAndVilleArrivee(date1, date2, villeDepart, villeArrivee);
+    }
+    
 }
