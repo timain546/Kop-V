@@ -1,9 +1,13 @@
 package com.cooperative.transport.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "statut_paiement")
+@Getter
+@Setter
 public class StatutPaiement {
 
     @Id
@@ -12,12 +16,4 @@ public class StatutPaiement {
 
     @Column(name = "libelle", nullable = false, length = 50)
     private String libelle;
-
-    public StatutPaiement() {}
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
-    public String getLibelle() { return libelle; }
-    public void setLibelle(String libelle) { this.libelle = libelle; }
 }
