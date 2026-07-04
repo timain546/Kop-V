@@ -1,7 +1,9 @@
 package com.cooperative.transport.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.List;
 import java.math.BigDecimal;
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
 @Table(name = "voyages")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Voyages {
 
     @Id
@@ -42,23 +46,7 @@ public class Voyages {
     @OrderBy("dateModification DESC")
     private List<VoyageStatut> voyageStatuts;
 
-    public Voyages() {
-    }
-
-    public Voyages(Trajets trajet, Vehicules vehicule, Utilisateurs chauffeur, LocalDateTime dateHeureDepart,
-            Integer dureeEstimeeMinutes, BigDecimal tarif) {
-        this.trajet = trajet;
-        this.vehicule = vehicule;
-        this.chauffeur = chauffeur;
-        this.dateHeureDepart = dateHeureDepart;
-        this.dureeEstimeeMinutes = dureeEstimeeMinutes;
-        this.tarif = tarif;
-    }
-
-    public VoyageStatut getStatutActuel() {
-        if (voyageStatuts != null && !voyageStatuts.isEmpty()) {
-            return voyageStatuts.get(0);
-        }
-        return null;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_statut_actuel", nullable = false)
+    private VoyageStatut statutActuel;
 }
