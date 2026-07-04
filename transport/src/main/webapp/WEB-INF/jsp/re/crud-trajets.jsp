@@ -2,10 +2,11 @@
 
 <%@ page import="java.util.List" %>
 <%@ page import="com.cooperative.transport.entities.Trajets" %>
+<%@ page import="com.cooperative.transport.entities.Gares" %>
 
 <%
     List<Trajets> trajets = (List<Trajets>) request.getAttribute("trajets");
-    String messageErreur = (String) request.getAttribute("errorMessage");
+    List<Gares> gares = (List<Gares>) request.getAttribute("gares");
 %>
 
 <!DOCTYPE html>
@@ -86,40 +87,42 @@
                     </h3>
                 </div>
 
-                <% if (messageErreur != null) { %>
-                    <div class="bg-rose-50 border border-rose-200 rounded-xl p-4 flex items-start gap-3 text-rose-800 shadow-sm animate-fade-in">
-                        <div class="bg-rose-500 text-white w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 shadow-md shadow-rose-100">
-                            <i class="fa-solid fa-triangle-exclamation text-xs"></i>
-                        </div>
-                        <div class="flex-1 space-y-1">
-                            <h4 class="font-bold text-xs uppercase tracking-wider text-rose-900">Échec de la modification / insertion</h4>
-                            <p class="text-xs font-semibold opacity-90"><%= messageErreur %></p>
-                        </div>
-                    </div>
-                <% } %>
+                <div id="form-feedback" class="hidden text-xs p-3 rounded-xl font-medium border"></div>
 
-                <form class="space-y-3.5 text-xs">
-                    <div class="space-y-1">
-                        <label class="font-bold text-slate-500 uppercase tracking-wider">Ville de Départ</label>
-                        <input type="text" placeholder="Ex: Antananarivo" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-400 focus:bg-white px-3 py-2 rounded-xl outline-none transition font-medium">
-                    </div>
-
-                    <div class="space-y-1">
-                        <label class="font-bold text-slate-500 uppercase tracking-wider">Ville de Destination</label>
-                        <input type="text" placeholder="Ex: Toamasina" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-400 focus:bg-white px-3 py-2 rounded-xl outline-none transition font-medium">
-                    </div>
-
-                    <div class="space-y-1">
-                        <label class="font-bold text-slate-500 uppercase tracking-wider">Axe Routier (Route Nationale)</label>
-                        <input type="text" placeholder="Ex: RN2" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-400 focus:bg-white px-3 py-2 rounded-xl outline-none transition font-medium">
-                    </div>
-
-                    <div class="space-y-1">
-                        <label class="font-bold text-slate-500 uppercase tracking-wider">Durée estimée (en minutes)</label>
+                <form class="space-y-3.5 text-xs" id="form-trajet">
+                    <div class="space-y-1.5">
+                        <label class="font-bold text-slate-500 uppercase tracking-wider">Gare de départ</label>
                         <div class="relative">
-                            <input type="number" placeholder="Ex: 420" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-400 focus:bg-white px-3 py-2 rounded-xl outline-none transition font-medium pr-12">
-                            <span class="absolute right-3 top-2.5 text-slate-400 font-semibold text-[11px]">min</span>
+                            <select id="select-gare-depart" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-400 focus:bg-white px-3 py-2.5 rounded-xl outline-none transition font-semibold text-slate-700 appearance-none cursor-pointer" required>
+                                <option value="" disabled selected>-- Choisir une gare de départ --</option>
+                                <% for(Gares g : gares) { %>
+                                    <option value="<%= g.getId() %>"><%= g.getNom() %> <%= g.getVille() %></option>
+                                <% } %>
+                            </select>
+                            <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
                         </div>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="font-bold text-slate-500 uppercase tracking-wider">Gare de destination</label>
+                        <div class="relative">
+                            <select id="select-gare-arrivee" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-400 focus:bg-white px-3 py-2.5 rounded-xl outline-none transition font-semibold text-slate-700 appearance-none cursor-pointer" required>
+                                <option value="" disabled selected>-- Choisir une gare d'arrivée --</option>
+                                <% for(Gares g : gares) { %>
+                                    <option value="<%= g.getId() %>"><%= g.getNom() %> <%= g.getVille() %></option>
+                                <% } %>
+                            </select>
+                            <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="font-bold text-slate-500 uppercase tracking-wider">Distance (km)</label>
+                        <input type="number" id="input-distance" min="0" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-400 focus:bg-white px-3 py-2 rounded-xl outline-none transition font-medium">
                     </div>
 
                     <div class="pt-2 flex gap-2">
@@ -145,7 +148,7 @@
                             <tr class="bg-slate-50/30 border-b border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                                 <th class="py-3 px-4">Ligne & Axe</th>
                                 <th class="py-3 px-4">Itinéraire</th>
-                                <th class="py-3 px-4">Durée Configurée</th>
+                                <th class="py-3 px-4">Distance</th>
                                 <th class="py-3 px-4 text-right">Actions</th>
                             </tr>
                         </thead>
@@ -164,7 +167,7 @@
                                         </div>
                                     </td>
                                     <td class="py-3.5 px-4 text-slate-600 font-medium">
-                                        <div><%= t.getDistanceKm().intValue() %> min</div>
+                                        <div><%= t.getDistanceKm().intValue() %> km</div>
                                     </td>
                                     <td class="py-3.5 px-4 text-right">
                                         <div class="flex items-center justify-end gap-1.5">
@@ -187,8 +190,27 @@
     </main>
 
     <script>
+        function afficherMessage(message, type = 'error') {
+            const feedbackDiv = document.getElementById("form-feedback");
+            feedbackDiv.innerText = message;
+            feedbackDiv.classList.remove("hidden", "bg-rose-50", "border-rose-200", "text-rose-600", "bg-emerald-50", "border-emerald-200", "text-emerald-600");
+
+            if (type === 'error') {
+                feedbackDiv.classList.add("bg-rose-50", "border-rose-200", "text-rose-600");
+            } else if (type === 'success') {
+                feedbackDiv.classList.add("bg-emerald-50", "border-emerald-200", "text-emerald-600");
+            }
+        }
+
+        function masquerMessage() {
+            const feedbackDiv = document.getElementById("form-feedback");
+            feedbackDiv.classList.add("hidden");
+        }
+
         function supprimerTrajet(selectedTrajet) {
-            let url = "http://localhost:8080/re/api/trajet/delete/" + selectedTrajet;
+            masquerMessage();
+            const url = "http://localhost:8080/re/api/trajet/delete/" + selectedTrajet;
+            
             fetch(url, {
                 method: 'GET',
                 headers: {
@@ -204,13 +226,60 @@
                 })
             })
             .then(data => {
-                alert(data.message);
+                afficherMessage(data.message, 'success');
                 const ligneEffacer = document.getElementById("row-trajet-" + selectedTrajet);
-                ligneEffacer.remove();
+                if(ligneEffacer) ligneEffacer.remove();
             })
             .catch(errorMessage => {
                 console.error("Erreur AJAX:" + errorMessage);
-                alert(errorMessage);
+                afficherMessage(errorMessage, 'error');
+            })
+        }
+
+        function annulerEdition() {
+            document.getElementById("form-title").innerHTML = '<i class="fa-solid fa-circle-plus text-emerald-500"></i> <span>Ajouter un nouveau trajet</span>';
+            document.getElementById("form-trajet").reset();
+            masquerMessage();
+        }
+
+        document.getElementById("form-trajet").addEventListener("submit", function(e) {
+            e.preventDefault();
+            masquerMessage();
+
+            const data = {
+                gareDepart: document.getElementById("select-gare-depart").value,
+                gareArrivee: document.getElementById("select-gare-arrivee").value,
+                distanceKm: document.getElementById("input-distance").value
+            }
+            enregistrerTrajet(data);
+        });
+
+        function enregistrerTrajet(nouveauTrajet) {
+            const url = "http://localhost:8080/re/api/trajet/create";
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(nouveauTrajet)
+            })
+            .then(response => {
+                return response.json().then(data => {
+                    if(!response.ok) {
+                        return Promise.reject(data.message || "Erreur lors de l'insertion du nouveau trajet");
+                    }
+                    return data;
+                })
+            })
+            .then(data => {
+                afficherMessage(data.message, 'success');
+                setTimeout(() => {
+                    window.location.href = "/re/trajet/list";
+                }, 1000);
+            })
+            .catch(errorMessage => {
+                console.log("Erreur AJAX: ", errorMessage);
+                afficherMessage(errorMessage, 'error');
             })
         }
     </script>

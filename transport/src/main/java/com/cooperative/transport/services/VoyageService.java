@@ -179,10 +179,6 @@ public class VoyageService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Returns voyages for a chauffeur that are currently "en cours" or have no status yet
-     * (i.e., they are in-progress and eligible for panne/arrivée signalement)
-     */
     public List<VoyageListDTO> getActiveVoyagesByChauffeur(Integer chauffeurId) {
         List<Voyages> voyages = voyageRepository.findByChauffeurId(chauffeurId);
         return voyages.stream()
