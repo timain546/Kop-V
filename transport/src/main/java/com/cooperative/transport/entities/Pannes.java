@@ -3,14 +3,18 @@ package com.cooperative.transport.entities;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "pannes")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Panne {
+@Getter
+@Setter
+public class Pannes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

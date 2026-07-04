@@ -5,10 +5,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.Setter;
 import jakarta.persistence.FetchType;
 
 
 @Entity
+@Table(name = "salaires")
+@Getter
+@Setter
 public class Salaires {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,32 +28,6 @@ public class Salaires {
         this.id = id;
         this.salaire = salaire;
         this.employe = employe;
-        this.date_modification = date_modification;
-    }
-    public Salaires() {
-    }
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-    public double getSalaire() {
-        return salaire;
-    }
-    public void setSalaire(double salaire) {
-        this.salaire = salaire;
-    }
-    public Employes getEmploye() {
-        return employe;
-    }
-    public void setEmploye(Employes employe) {
-        this.employe = employe;
-    }
-    public java.sql.Date getDate_modification() {
-        return date_modification;
-    }
-    public void setDate_modification(java.sql.Date date_modification) {
         this.date_modification = date_modification;
     }
 }

@@ -6,10 +6,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 import jakarta.persistence.OneToMany;
 @Entity
 @Table(name = "utilisateurs")
+@Getter
+@Setter
 public class Employes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,14 +26,14 @@ public class Employes {
 
     @ManyToOne
     @JoinColumn(name="id_role")
-    private Roles role;
+    private Role role;
 
     @OneToMany(mappedBy="employe")
     private List<Salaires> salaires;
     @OneToMany(mappedBy="employe")
-    private List<ContratEmploye> contratEmployes;
+    private List<ContratEmployes> contratEmployes;
 
-    public Employes(int id, String nom, String prenom, String email, String motDePasse, Roles role,List<Salaires> salaires, List<ContratEmploye> contratEmployes) {
+    public Employes(int id, String nom, String prenom, String email, String motDePasse, Role role,List<Salaires> salaires, List<ContratEmployes> contratEmployes) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -38,57 +43,7 @@ public class Employes {
         this.salaires = salaires;
         this.contratEmployes = contratEmployes;
     }
-    public Employes() {
-    }
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-    public String getNom() {
-        return nom;
-    }
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-    public String getPrenom() {
-        return prenom;
-    }
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    public String getMotDePasse() {
-        return motDePasse;
-    }
-    public void setMotDePasse(String motDePasse) {
-        this.motDePasse = motDePasse;
-    }
-    public Roles getRole() {
-        return role;
-    }
-    public void setRole(Roles role) {
-        this.role = role;
-    }
-    public List<Salaires> getSalaires() {
-        return salaires;
-    }
-    public void setSalaires(List<Salaires> salaires) {
-        this.salaires = salaires;
-    }
-    public List<ContratEmploye> getContratEmployes() {
-        return contratEmployes;
-    }
-    public void setContratEmployes(List<ContratEmploye> contratEmployes) {
-        this.contratEmployes = contratEmployes;
-    }
-
+  
 
     
 }
