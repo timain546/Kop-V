@@ -84,7 +84,7 @@ public class EmployesController {
             @RequestParam("mdp") String motDePasse
     ) {
 
-        Employes employe = employesService.findEmpById(id);
+        Utilisateurs employe = employesService.findEmpById(id);
         employe.setNom(nom);
         employe.setPrenom(prenom);
         employe.setEmail(email);

@@ -29,7 +29,7 @@ public class ChauffeurController {
     private final MotifPanneRepository motifPanneRepository;
 
     // ID du chauffeur de démonstration (Rakoto Jean, id=2 d'après les données d'insertion)
-    private static final Long DEMO_CHAUFFEUR_ID = 2L;
+    private static final Integer DEMO_CHAUFFEUR_ID = 2;
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
