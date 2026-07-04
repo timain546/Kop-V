@@ -1,7 +1,7 @@
 package com.cooperative.transport.repositories;
 
 import com.cooperative.transport.dto.VoyageDTO;
-import com.cooperative.transport.entities.Voyage;
+import com.cooperative.transport.entities.Voyages;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface VoyageRepository extends JpaRepository<Voyage, Integer> {
+public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
 
     @Query(value = """
         SELECT

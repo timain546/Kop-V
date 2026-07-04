@@ -5,9 +5,9 @@ import java.math.BigDecimal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.cooperative.transport.entities.ReservationMere;
+import com.cooperative.transport.entities.ReservationsMere;
 
-public interface ReservationMereRepository extends JpaRepository<ReservationMere, Long> {
+public interface ReservationMereRepository extends JpaRepository<ReservationsMere, Long> {
 
     @Query("""
         SELECT COUNT(rf) * rf.reservationMere.voyage.tarif
@@ -15,5 +15,5 @@ public interface ReservationMereRepository extends JpaRepository<ReservationMere
         WHERE rf.reservationMere = :reservation
         GROUP BY rf.reservationMere.voyage.tarif
     """)
-    public BigDecimal getPrixTotal(ReservationMere reservation);
+    public BigDecimal getPrixTotal(ReservationsMere reservation);
 }

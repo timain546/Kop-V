@@ -1,22 +1,22 @@
 package com.cooperative.transport.repositories;
 
+import com.cooperative.transport.entities.Paiements;
 import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.cooperative.transport.entities.Paiement;
-import com.cooperative.transport.entities.ReservationMere;
+import com.cooperative.transport.entities.ReservationsMere;
 
-public interface PaiementRepository extends JpaRepository<Paiement, Long> {
+public interface PaiementRepository extends JpaRepository<Paiements, Long> {
 
     @Query("""
         SELECT SUM(p.montant)
         FROM Paiement p
         WHERE p.reservation = :reservation
     """)
-    public BigDecimal getPaiementTotal(ReservationMere reservation);
+    public BigDecimal getPaiementTotal(ReservationsMere reservation);
 
-    public List<Paiement> findByReservation(ReservationMere reservation);
+    public List<Paiements> findByReservation(ReservationsMere reservation);
 }

@@ -5,11 +5,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.cooperative.transport.dto.ReservationDTO;
-import com.cooperative.transport.entities.ReservationMere;
+import com.cooperative.transport.entities.ReservationsMere;
 
 import java.util.List;
 
-public interface ReservationRepository extends JpaRepository<ReservationMere, Integer> {
+public interface ReservationRepository extends JpaRepository<ReservationsMere, Integer> {
 
     @Query(value = """
         SELECT
