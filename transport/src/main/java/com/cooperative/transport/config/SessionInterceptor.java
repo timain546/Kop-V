@@ -25,12 +25,7 @@ public class SessionInterceptor implements HandlerInterceptor {
     }
     
     
-        if (user == null) {
-            session.setAttribute("erreur", "Veuillez vous connecter pour accéder à cette page.");
-            response.sendRedirect(request.getContextPath() + "/");
-            return false; 
-        }
-        
+      
         String role = user.getRole().getLibelle().toLowerCase();
         
         if (uri.contains("/admin") && !role.equals("admin")) {

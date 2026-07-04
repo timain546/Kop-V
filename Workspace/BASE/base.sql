@@ -1,29 +1,25 @@
 CREATE DATABASE kopv;
 
 \c kopv;
--- ============================================================
--- Schéma PostgreSQL — Module Chauffeur
--- Périmètre : Mes voyages, Signaler une panne, Signaler arrivée
--- Pas de SIG (pas de type GEOMETRY), pas de point kilométrique
--- ============================================================
-
--- ============================================================
--- Référentiels de base
--- ============================================================
 
 CREATE TABLE role (
     id          SERIAL PRIMARY KEY,
     libelle     VARCHAR(50) NOT NULL UNIQUE  -- admin, guichet, chauffeur, RH, RE
 );
-
+create table status_employee (
+    id          SERIAL PRIMARY KEY,
+    libelle     VARCHAR(50) NOT NULL UNIQUE  -- actif, inactif
+);
 CREATE TABLE utilisateurs (
     id              SERIAL PRIMARY KEY,
     nom             VARCHAR(100) NOT NULL,
     prenom          VARCHAR(100) NOT NULL,
     id_role         INTEGER NOT NULL REFERENCES role(id),
+    id_status       INTEGER NOT NULL REFERENCES status_employee(id),
     email           VARCHAR(150) NOT NULL UNIQUE,
     mot_de_passe    VARCHAR(255) NOT NULL
 );
+
 
 CREATE TABLE categorie_vehicule (
     id          SERIAL PRIMARY KEY,
@@ -129,6 +125,7 @@ CREATE TABLE statut_reparation (
 CREATE TABLE reparation (
     id                      SERIAL PRIMARY KEY,
     id_panne                INTEGER NOT NULL REFERENCES pannes(id),
+    cout_reparation         NUMERIC(10,2) NOT NULL CHECK (cout_reparation >= 0),
     id_statut_reparation    INTEGER NOT NULL REFERENCES statut_reparation(id),
     date_modification       TIMESTAMP NOT NULL DEFAULT now()
 );
@@ -150,3 +147,8 @@ INSERT INTO motif_panne (libelle) VALUES
 
 INSERT INTO statut_reparation (libelle) VALUES
     ('en attente'), ('en cours de dépannage'), ('résolu');
+
+    INSERT INTO status_employee (libelle) VALUES
+    ('actif'), ('inactif');
+
+    git restore --source remotes/origin/dev transport/src/main/java/com/cooperative/transport/entities/Salaires.java

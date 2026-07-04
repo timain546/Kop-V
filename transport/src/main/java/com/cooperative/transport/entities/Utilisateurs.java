@@ -23,14 +23,20 @@ public class Utilisateurs {
 
     @ManyToOne
     @JoinColumn(name = "id_role", insertable = false, updatable = false)
-    private Role role; 
+    private Roles role; 
+
+    @ManyToOne
+    @JoinColumn(name = "id_status", insertable = false, updatable = false)
+    private StatutEmploye statusEmployee;
+
     public Utilisateurs() {}
 
-    public Utilisateurs(String nom, String email, String motDePasse, Role role) {
+    public Utilisateurs(String nom, String email, String motDePasse, Roles role, StatutEmploye statusEmployee) {
         this.nom = nom;
         this.email = email;
         this.motDePasse = motDePasse;
         this.role =role;
+        this.statusEmployee = statusEmployee;
     }
 
     public void setId(Long id) {
@@ -41,11 +47,11 @@ public class Utilisateurs {
         return id;
     }
 
-    public void setRole(Role role) {
+    public void setRole(Roles role) {
         this.role = role;
     }
 
-    public Role getRole() {
+    public Roles getRole() {
         return role;
     }
 
@@ -71,5 +77,11 @@ public class Utilisateurs {
 
     public String getMotDePasse() {
         return motDePasse;
+    }
+    public StatutEmploye getStatusEmployee() {
+        return statusEmployee;
+    }
+    public void setStatusEmployee(StatutEmploye statusEmployee) {
+        this.statusEmployee = statusEmployee;
     }
 }

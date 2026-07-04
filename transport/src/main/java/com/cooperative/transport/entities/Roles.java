@@ -12,7 +12,8 @@ import lombok.Setter;
 @Entity
 @Table(name = "role")
 @Getter @Setter
-public class Role {
+public class Roles
+ {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,9 +21,9 @@ public class Role {
     @Column(nullable = false, unique = true, length = 50)
     private String libelle;
 
-    public Role() {
+    public Roles() {
     }
-    public Role(String libelle) {
+    public Roles(String libelle) {
         this.libelle = libelle;
     }
     public Long getId() {

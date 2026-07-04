@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.cooperative.transport.entities.ContratEmploye;
 import com.cooperative.transport.entities.Utilisateurs;
 import com.cooperative.transport.services.LoginService;
 
@@ -27,7 +28,7 @@ public class LoginController {
         return "login";
     }
 
-  @PostMapping("/login")
+ @PostMapping("/login")
 public String login(
         @RequestParam String email,
         @RequestParam String password,
@@ -35,28 +36,33 @@ public String login(
         Model model) {
 
     Utilisateurs user = loginService.login(email, password);
-
-    if (user != null) {
-        session.setAttribute("utilisateur", user);
-
-       String roleLibelle = user.getRole().getLibelle().toLowerCase();
-
-        switch (roleLibelle) {
-            case "admin":
-                return "redirect:/admin/";
-            case "guichet":
-                return "redirect:/guichet/";
-            case "rh":
-                return "redirect:/rh/";
-            case "re":
-                return "redirect:/re/";
-            case "chauffeur":
-                return "redirect:/chauffeur/";
-         }
+    
+    if (user == null) {
+        model.addAttribute("erreur", "Email ou mot de passe incorrect.");
+        return "login";
     }
 
-    model.addAttribute("erreur", "Email ou mot de passe incorrect.");
-    return "login";
+    ContratEmploye contrat = loginService.getLatestContratEmploye(user);
+    
+    if (contrat == null || contrat.getDateRenvoie() != null) {
+        model.addAttribute("erreur", "Votre contrat n'est plus valide. Veuillez contacter l'administrateur.");
+        return "login";
+    }
+    
+    session.setAttribute("utilisateur", user);
+    String roleLibelle = user.getRole().getLibelle().toLowerCase();
+
+    return switch (roleLibelle) {
+        case "admin"      -> "redirect:/admin/";
+        case "guichet"    -> "redirect:/guichet/";
+        case "rh"         -> "redirect:/rh/";
+        case "re"         -> "redirect:/re/";
+        case "chauffeur"  -> "redirect:/chauffeur/";
+        default           -> {
+            model.addAttribute("erreur", "Rôle non reconnu.");
+            yield "login";
+        }
+    };
 }
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session) {
