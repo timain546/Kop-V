@@ -29,7 +29,7 @@ public class Paiements {
     private ModePaiement modePaiement;
 
     @Column(name = "date_paiement", nullable = false)
-    private LocalDateTime date;
+    private LocalDateTime datePaiement;
 
     @Column(name = "reference_transaction", length = 50)
     private String referenceTransaction;

@@ -117,7 +117,7 @@
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon-md icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
                   <div>
                     <p class="summary-item-label">Date</p>
-                    <p class="summary-item-value">${paiement.date.format(DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.FRENCH))}</p>
+                    <p class="summary-item-value">${paiement.datePaiement.format(DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.FRENCH))}</p>
                   </div>
                 </div>
                 <div class="summary-item">

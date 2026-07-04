@@ -109,7 +109,7 @@ public class ReservationService {
         paiement.setReservation(reservation);
         paiement.setMontant(form.getMontant());
         paiement.setModePaiement(form.getModePaiement());
-        paiement.setDate(LocalDateTime.now());
+        paiement.setDatePaiement(LocalDateTime.now());
         paiement.setReferenceTransaction(form.getReference());
         paiementRepository.save(paiement);
 
@@ -140,7 +140,7 @@ public class ReservationService {
         paiement.setReservation(reservation);
         paiement.setMontant(montant);
         paiement.setModePaiement(modePaiement);
-        paiement.setDate(LocalDateTime.now());
+        paiement.setDatePaiement(LocalDateTime.now());
         paiement.setReferenceTransaction(reference);
         paiementRepository.save(paiement);
     }
