@@ -15,10 +15,10 @@ public class ContratService {
     public void saveContrat(ContratsEmployes contrat) {
         contratRepository.save(contrat);
     }
-    public ContratsEmployes findContratById(Long id) {
+    public ContratsEmployes findContratById(Integer id) {
         return contratRepository.findById(id).orElse(null);
     }
-    public ContratsEmployes findContratByIdEmp(Long id) {
+    public ContratsEmployes findContratByIdEmp(Integer id) {
         return contratRepository.findByIdEmp(id);
     }
     public void updateContrat(ContratsEmployes contrat) {

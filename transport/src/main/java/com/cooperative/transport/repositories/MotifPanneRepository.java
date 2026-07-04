@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface MotifPanneRepository extends JpaRepository<MotifPanne, Long> {
+public interface MotifPanneRepository extends JpaRepository<MotifPanne, Integer> {
     Optional<MotifPanne> findByLibelle(String libelle);
 }

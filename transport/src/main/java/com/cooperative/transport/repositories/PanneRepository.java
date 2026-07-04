@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PanneRepository extends JpaRepository<Pannes, Long> {
-    List<Pannes> findByChauffeurId(Long chauffeurId);
-    List<Pannes> findByVoyageId(Long voyageId);
+public interface PanneRepository extends JpaRepository<Pannes, Integer> {
+    List<Pannes> findByChauffeurId(Integer chauffeurId);
+    List<Pannes> findByVoyageId(Integer voyageId);
 }

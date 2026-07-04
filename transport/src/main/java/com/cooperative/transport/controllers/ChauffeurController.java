@@ -91,7 +91,7 @@ public class ChauffeurController {
     }
 
     @GetMapping("/signaler-panne")
-    public String signalerPanneForm(Model model, @RequestParam(required = false) Long voyageId) {
+    public String signalerPanneForm(Model model, @RequestParam(required = false) Integer voyageId) {
         List<VoyageListDTO> voyages = voyageService.getActiveVoyagesByChauffeur(DEMO_CHAUFFEUR_ID);
         Optional<Utilisateurs> chauffeurOpt = utilisateurRepository.findById(DEMO_CHAUFFEUR_ID);
         List<MotifPanne> motifsPanne = motifPanneRepository.findAll();

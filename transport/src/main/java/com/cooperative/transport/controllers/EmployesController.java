@@ -65,7 +65,7 @@ public class EmployesController {
     }
 
     @PostMapping("/employes/modifier")
-    public String modifierEmploye(@RequestParam("id") Long id, @RequestParam("role") String role, Model model) {
+    public String modifierEmploye(@RequestParam("id") Integer id, @RequestParam("role") String role, Model model) {
         List<Object[]> employes = employesService.findByid(id);
         List<Role> roles = roleservice.findAllRoles(role);
         model.addAttribute("employe", employes.get(0));
@@ -74,7 +74,7 @@ public class EmployesController {
     }
 
     @PostMapping("/employes/miseajour")
-    public String miseAJourEmploye(@RequestParam("id") Long id,
+    public String miseAJourEmploye(@RequestParam("id") Integer id,
             @RequestParam("nom") String nom,
             @RequestParam("prenom") String prenom,
             @RequestParam("email") String email,
@@ -84,7 +84,7 @@ public class EmployesController {
             @RequestParam("mdp") String motDePasse
     ) {
 
-        Employes employe = employesService.findempById(id);
+        Employes employe = employesService.findEmpById(id);
         employe.setNom(nom);
         employe.setPrenom(prenom);
         employe.setEmail(email);
@@ -128,7 +128,7 @@ public class EmployesController {
     }
 
     @PostMapping("/employes/supprimerEmploye")
-    public String supprimerEmploye(@RequestParam("id") Long id) {
+    public String supprimerEmploye(@RequestParam("id") Integer id) {
       ContratsEmployes contrat = contratService.findContratByIdEmp(id);
       contrat.setDateRenvoie(new java.sql.Date(System.currentTimeMillis()));
       contratService.saveContrat(contrat);
@@ -180,7 +180,7 @@ public class EmployesController {
         return "redirect:/employes/list";
     }
     @PostMapping("/employes/reembaucher")
-    public String reembaucherEmploye(@RequestParam("id") Long id) {
+    public String reembaucherEmploye(@RequestParam("id") Integer id) {
         ContratsEmployes contrat = new ContratsEmployes();
         contrat.setEmploye(employesService.findEmpById(id));
         contrat.setDateRenvoie(null);

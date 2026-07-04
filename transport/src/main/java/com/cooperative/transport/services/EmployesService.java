@@ -13,10 +13,10 @@ public class EmployesService {
     public List<Object[]> findEmp() {
         return utilisateurRepository.findEmploye();
     }
-    public List<Object[]> findByid(Long id) {
+    public List<Object[]> findByid(Integer id) {
         return utilisateurRepository.findEmployeById(id);
     }
-    public Utilisateurs findEmpById(Long id) {
+    public Utilisateurs findEmpById(Integer id) {
         return utilisateurRepository.findById(id).orElse(null);
     }
     public void updateEmploye(Utilisateurs employe) {

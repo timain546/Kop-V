@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
 @Repository
-public interface ContratRepository extends JpaRepository<ContratsEmployes, Long> {
+public interface ContratRepository extends JpaRepository<ContratsEmployes, Integer> {
     @Query("Select c from ContratEmploye c where c.employe.id=:id order by c.date_embauche desc limit 1")
-    ContratsEmployes findByIdEmp(@Param("id") Long id);
+    ContratsEmployes findByIdEmp(@Param("id") Integer id);
 }

@@ -14,7 +14,7 @@ public class StatutReparation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "libelle", length = 50)
     private String libelle;

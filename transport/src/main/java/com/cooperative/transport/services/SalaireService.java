@@ -15,10 +15,10 @@ public class SalaireService {
     public void saveSalaire(Salaires salaire) {
         salairesRepository.save(salaire);
     }
-    public Salaires findSalaireById(Long id) {
+    public Salaires findSalaireById(Integer id) {
         return salairesRepository.findById(id).orElse(null);
     }
-    public Salaires findByIdEmp(Long id) {
+    public Salaires findByIdEmp(Integer id) {
         return salairesRepository.findByIdEmp(id);
     }
 }

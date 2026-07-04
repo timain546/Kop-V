@@ -23,7 +23,7 @@ public class ChauffeurRestController {
 
     @GetMapping("/voyages")
     public ResponseEntity<List<VoyageListDTO>> getVoyages(
-            @RequestHeader("X-Chauffeur-Id") Long chauffeurId,
+            @RequestHeader("X-Chauffeur-Id") Integer chauffeurId,
             @RequestParam(required = false) String filter) {
         List<VoyageListDTO> voyages;
         if ("upcoming".equals(filter)) {
@@ -36,8 +36,8 @@ public class ChauffeurRestController {
 
     @PostMapping("/voyages/{id}/arrivee")
     public ResponseEntity<?> signalerArrivee(
-            @PathVariable Long id,
-            @RequestHeader("X-Chauffeur-Id") Long chauffeurId) {
+            @PathVariable Integer id,
+            @RequestHeader("X-Chauffeur-Id") Integer chauffeurId) {
         boolean success = voyageService.signalerArrivee(id, chauffeurId);
         if (!success) {
             return ResponseEntity.badRequest().body(createErrorResponse("Voyage non trouvé ou accès refusé"));
@@ -50,10 +50,10 @@ public class ChauffeurRestController {
 
     @PostMapping("/pannes")
     public ResponseEntity<?> createPanne(
-            @RequestHeader("X-Chauffeur-Id") Long chauffeurId,
+            @RequestHeader("X-Chauffeur-Id") Integer chauffeurId,
             @RequestBody Map<String, Object> requestBody) {
         try {
-            Long voyageId = Long.valueOf(requestBody.get("voyageId").toString());
+            Integer voyageId = Integer.valueOf(requestBody.get("voyageId").toString());
             String lieu = (String) requestBody.get("lieu");
             String motifPanneLibelle = (String) requestBody.get("motifPanneLibelle");
             String description = (String) requestBody.get("description");

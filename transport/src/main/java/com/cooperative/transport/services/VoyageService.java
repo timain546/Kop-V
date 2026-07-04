@@ -58,7 +58,7 @@ public class VoyageService {
         voyageStatutRepository.save(voyagestatut);
     }
 
- 
+
 
     public List<Vehicules> findAllVehiculesDispo(LocalDateTime dateCible) {
         return vehiculeRepository.findAllVehiculesDispo(dateCible);
@@ -135,14 +135,14 @@ public class VoyageService {
     }
 
 
-    public List<VoyageListDTO> getVoyagesByChauffeur(Long chauffeurId) {
+    public List<VoyageListDTO> getVoyagesByChauffeur(Integer chauffeurId) {
         List<Voyages> voyages = voyageRepository.findByChauffeurId(chauffeurId);
         return voyages.stream()
                 .map(this::mapToVoyageListDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<VoyageListDTO> getUpcomingVoyagesByChauffeur(Long chauffeurId) {
+    public List<VoyageListDTO> getUpcomingVoyagesByChauffeur(Integer chauffeurId) {
         List<Voyages> voyages = voyageRepository.findByChauffeurIdAndDateHeureDepartAfter(
                 chauffeurId, LocalDateTime.now());
         return voyages.stream()
@@ -150,7 +150,7 @@ public class VoyageService {
                 .collect(Collectors.toList());
     }
 
-    public List<VoyageListDTO> getVoyagesByChauffeurAndStatut(Long chauffeurId, String statut) {
+    public List<VoyageListDTO> getVoyagesByChauffeurAndStatut(Integer chauffeurId, String statut) {
         List<Voyages> voyages = voyageRepository.findByChauffeurId(chauffeurId);
         return voyages.stream()
                 .map(this::mapToVoyageListDTO)
@@ -162,7 +162,7 @@ public class VoyageService {
      * Returns voyages for a chauffeur that are currently "en cours" or have no status yet
      * (i.e., they are in-progress and eligible for panne/arrivée signalement)
      */
-    public List<VoyageListDTO> getActiveVoyagesByChauffeur(Long chauffeurId) {
+    public List<VoyageListDTO> getActiveVoyagesByChauffeur(Integer chauffeurId) {
         List<Voyages> voyages = voyageRepository.findByChauffeurId(chauffeurId);
         return voyages.stream()
                 .map(this::mapToVoyageListDTO)
@@ -173,7 +173,7 @@ public class VoyageService {
                 .collect(Collectors.toList());
     }
 
-    public boolean signalerArrivee(Long voyageId, Long chauffeurId) {
+    public boolean signalerArrivee(Integer voyageId, Integer chauffeurId) {
         Optional<Voyages> voyageOpt = voyageRepository.findById(voyageId);
         if (voyageOpt.isEmpty() || !voyageOpt.get().getChauffeur().getId().equals(chauffeurId)) {
             return false;
@@ -191,7 +191,7 @@ public class VoyageService {
         return true;
     }
 
-    public boolean signalerEnPanne(Long voyageId, Long chauffeurId) {
+    public boolean signalerEnPanne(Integer voyageId, Integer chauffeurId) {
         Optional<Voyages> voyageOpt = voyageRepository.findById(voyageId);
         if (voyageOpt.isEmpty() || !voyageOpt.get().getChauffeur().getId().equals(chauffeurId)) {
             return false;
