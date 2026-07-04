@@ -7,6 +7,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 @Repository
 public interface RolesRepository extends JpaRepository<Roles, Long> {
-@Query("SELECT r FROM Roles r WHERE r.libelle!= :nom")
+    @Query("SELECT r FROM Roles r WHERE r.libelle!= :nom")
     List<Roles> findRole(@Param("nom") String nom);
 }

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface StatutVoyageRepository extends JpaRepository<StatutVoyage, Long> {
+public interface StatutVoyageRepository extends JpaRepository<StatutVoyage, Integer> {
     Optional<StatutVoyage> findByLibelle(String libelle);
 }
