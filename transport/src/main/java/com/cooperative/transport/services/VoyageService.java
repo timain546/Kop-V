@@ -32,7 +32,7 @@ public class VoyageService {
     private VehiculeRepository vehiculeRepository;
 
     @Autowired
-    private UtilisateurRepository utilisateurRepo;
+    private UtilisateursRepository utilisateurRepo;
 
     public List<Voyages> findAllVoyages() {
         return voyageRepository.findAllCatalogueVoyage();
@@ -56,6 +56,8 @@ public class VoyageService {
 
         voyageStatutRepo.save(voyagestatut);
     }
+
+ 
 
     public List<Vehicules> findAllVehiculesDispo(LocalDateTime dateCible) {
         return vehiculeRepository.findAllVehiculesDispo(dateCible);
