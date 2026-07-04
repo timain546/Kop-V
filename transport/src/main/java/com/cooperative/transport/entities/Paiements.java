@@ -11,7 +11,7 @@ import lombok.Setter;
 @Table(name = "paiements")
 @Getter
 @Setter
-public class Paiement {
+public class Paiements {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class Paiement {
 
     @ManyToOne
     @JoinColumn(name = "id_reservation", nullable = false)
-    private ReservationMere reservation;
+    private ReservationsMere reservation;
 
     @Column(name = "montant", nullable = false)
     private BigDecimal montant;
@@ -34,6 +34,6 @@ public class Paiement {
     @Column(name = "reference_transaction", length = 50)
     private String referenceTransaction;
 
-    public Paiement() {}
+    public Paiements() {}
 
 }

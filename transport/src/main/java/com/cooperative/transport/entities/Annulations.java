@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "annulations")
 @Getter
 @Setter
-public class Annulation {
+public class Annulations {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ public class Annulation {
 
     @ManyToOne
     @JoinColumn(name = "id_reservation", nullable = false)
-    private ReservationMere reservation;
+    private ReservationsMere reservation;
 
     @Column(name = "date_annulation", nullable = false)
     private LocalDateTime dateAnnulation;
@@ -31,7 +31,7 @@ public class Annulation {
     @Column(name = "motif", nullable = false, length = 200)
     private String motif;
 
-    public Annulation() {}
+    public Annulations() {}
 
-   
+
 }

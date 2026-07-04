@@ -8,7 +8,7 @@ import lombok.Setter;
 @Table(name = "gares")
 @Getter
 @Setter
-public class Gare {
+public class Gares {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +20,6 @@ public class Gare {
     @Column(name = "ville", nullable = false, length = 100)
     private String ville;
 
-    public Gare() {}
+    public Gares() {}
 
 }

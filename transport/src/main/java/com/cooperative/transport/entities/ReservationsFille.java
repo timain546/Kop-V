@@ -20,5 +20,5 @@ public class ReservationsFille {
 
     @ManyToOne
     @JoinColumn(name = "id_place", nullable = false)
-    private Place place;
+    private Places place;
 }
