@@ -139,10 +139,40 @@ public class VoyageController {
     @PostMapping("/voyage/create")
     public String enregistrerVoyage(@ModelAttribute VoyageDTO voyageDTO, Model model) {
         try {
+            Integer dureeMinutes = voyageDTO.getDureeEstimeeMinutes();
+            if(dureeMinutes == null) {
+                model.addAttribute("errorMessage", "La durée estimée est obligatoire");
+                model.addAttribute("listeTrajets", service.findAllTrajets());
+                return "re/formulaire-voyage";
+            }
+
+            int duree = dureeMinutes.intValue();
+            if(duree <= 0) {
+                model.addAttribute("errorMessage", "La durée estimée doit être supérieure à zéro");
+                model.addAttribute("listeTrajets", service.findAllTrajets());
+                return "re/formulaire-voyage";
+            }
+
+            Double tarifVoyage = voyageDTO.getTarif();
+            if(tarifVoyage == null) {
+                model.addAttribute("errorMessage", "Le tarif est obligatoire");
+                model.addAttribute("listeTrajets", service.findAllTrajets());
+                return "re/formulaire-voyage";
+            }
+
+            double tarif = tarifVoyage.doubleValue();
+            if(tarif <= 0) {
+                model.addAttribute("errorMessage", "Le tarif doit être supérieur à zéro");
+                model.addAttribute("listeTrajets", service.findAllTrajets());
+                return "re/formulaire-voyage";
+            }
+
             service.creerNouveauVoyage(voyageDTO);
             return "redirect:/re/voyage/list";
+
         } catch(Exception e) {
             model.addAttribute("errorMessage", "Une erreur interne est survenue: " + e.getMessage());
+            model.addAttribute("listeTrajets", service.findAllTrajets());
             return "re/formulaire-voyage";
         }
     }

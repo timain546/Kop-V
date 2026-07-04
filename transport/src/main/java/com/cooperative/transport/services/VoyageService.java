@@ -120,19 +120,7 @@ public class VoyageService {
         LocalDateTime dateHeureDepart = dateDepart.atTime(heureDepart);
 
         nouveauVoyage.setDateHeureDepart(dateHeureDepart);
-
-        int duree = voyageDTO.getDureeEstimeeMinutes().intValue();
-        if(duree <= 0) {
-            throw new Exception("La durée estimée doit être supérieure à zéro");
-        }
-
         nouveauVoyage.setDureeEstimeeMinutes(voyageDTO.getDureeEstimeeMinutes());
-
-        double tarif = voyageDTO.getTarif().doubleValue();
-        if(tarif <= 0) {
-            throw new Exception("Le tarif doit être supérieur à zéro");
-        }
-
         nouveauVoyage.setTarif(BigDecimal.valueOf(voyageDTO.getTarif()));
 
         // Insertion d'un nouveau statut

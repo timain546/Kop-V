@@ -79,16 +79,79 @@ public class TrajetController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
 
-            if (!gareDepart.equals(gareArrivee)) {
-                service.creerNouveauTrajet(trajetDTO);
-                response.put("status", "success");
-                response.put("message", "Insertion réussie !!");
-                return ResponseEntity.ok(response);
-            } else {
+            if (gareDepart.equals(gareArrivee)) {
                 response.put("status", "error");
-                response.put("message", "Impossible de créer un trajet avec les mêmes gares de départ et d'arrivée.");
+                response.put("message", "Les trajets doivent être différentes");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
+
+            Double distanceKm = trajetDTO.getDistanceKm();
+            if(distanceKm == null) {
+                response.put("status", "error");
+                response.put("message", "Veuillez saisir une distance valide.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
+            double distance = distanceKm.doubleValue();
+            if(distance <= 0) {
+                response.put("status", "error");
+                response.put("message", "La distance doit être supérieure à zéro.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
+            service.creerNouveauTrajet(trajetDTO);
+            response.put("status", "success");
+            response.put("message", "Insertion réussie !!");
+            return ResponseEntity.ok(response);
+
+        } catch(Exception e) {
+            response.put("status", "error");
+            response.put("message", "Une erreur interne s'est produite: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PostMapping("/api/trajet/edit/{id}")
+    public ResponseEntity<Map<String, Object>> editTrajet(@PathVariable Integer id, @RequestBody TrajetDTO trajetDTO) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            Integer gareDepart = trajetDTO.getGareDepart();
+            Integer gareArrivee = trajetDTO.getGareArrivee();
+
+            if(gareDepart == null || gareArrivee == null) {
+                response.put("status", "error");
+                response.put("message", "Veuillez sélectionner une gare de départ et une gare d'arrivée.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
+            if(gareDepart.equals(gareArrivee)) {
+                response.put("status", "error");
+                response.put("message", "Impossible de modifier : les gares de départ et d'arrivée doivent être différentes.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
+            Double distanceKm = trajetDTO.getDistanceKm();
+            if(distanceKm == null) {
+                response.put("status", "error");
+                response.put("message", "Veuillez saisir une distance valide.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
+            double distance = distanceKm.doubleValue();
+            if(distance <= 0) {
+                response.put("status", "error");
+                response.put("message", "La distance doit être supérieure à zéro.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
+            trajetDTO.setId(id);
+
+            service.modifierTrajet(trajetDTO);
+
+            response.put("status", "success");
+            response.put("message", "Modification réussie !!");
+            return ResponseEntity.ok(response);
         } catch(Exception e) {
             response.put("status", "error");
             response.put("message", "Une erreur interne s'est produite: " + e.getMessage());

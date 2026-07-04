@@ -187,7 +187,7 @@
                     <div class="space-y-1.5 max-w-xs">
                         <label class="font-bold text-slate-500 uppercase tracking-wider">Prix unitaire de la Place</label>
                         <div class="relative">
-                            <input id="input-prix" type="number" name="tarif" placeholder="Ex: 35000" class="w-full bg-white border border-slate-200 focus:border-emerald-400 px-3 py-2 rounded-xl outline-none transition font-bold text-slate-700 pr-12">
+                            <input id="input-prix" type="number" name="tarif" min="0" placeholder="Ex: 35000" class="w-full bg-white border border-slate-200 focus:border-emerald-400 px-3 py-2 rounded-xl outline-none transition font-bold text-slate-700 pr-12">
                             <span class="absolute right-3 top-2 text-slate-400 font-bold text-[11px]">Ar</span>
                         </div>
                     </div>

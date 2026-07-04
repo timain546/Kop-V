@@ -10,7 +10,8 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrajetDTO {
-    
+
+    private Integer id;
     private Integer gareDepart;
     private Integer gareArrivee;
     private Double distanceKm;

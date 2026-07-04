@@ -87,4 +87,26 @@ public class TrajetService {
 
         trajetRepo.save(nouveautrajet);
     }
+
+    public void modifierTrajet(TrajetDTO trajetDTO) throws Exception {
+        Trajets trajetAModifier = trajetRepo.findById(trajetDTO.getId())
+            .orElseThrow(() -> new Exception("Trajet introuvable avec l'ID " + trajetDTO.getId()));
+
+        Gares gareDepart = gareRepo.findById(trajetDTO.getGareDepart())
+            .orElseThrow(() -> new Exception("Impossible de trouver la gare de départ G-00" + trajetDTO.getGareDepart()));
+            
+        Gares gareArrivee = gareRepo.findById(trajetDTO.getGareArrivee())
+            .orElseThrow(() -> new Exception("Impossible de trouver la gare d'arrivée G-00" + trajetDTO.getGareArrivee()));
+
+        Trajets trajetExistant = trajetRepo.findByGareDepartAndGareArrivee(gareDepart.getId(), gareArrivee.getId());
+        if (trajetExistant != null && !trajetExistant.getId().equals(trajetAModifier.getId())) {
+            throw new Exception("Un autre trajet existe déjà entre " + gareDepart.getNom() + " et " + gareArrivee.getNom());
+        }
+
+        trajetAModifier.setGareDepart(gareDepart);
+        trajetAModifier.setGareArrivee(gareArrivee);
+        trajetAModifier.setDistanceKm(BigDecimal.valueOf(trajetDTO.getDistanceKm()));
+        
+        trajetRepo.save(trajetAModifier);
+    }
 }

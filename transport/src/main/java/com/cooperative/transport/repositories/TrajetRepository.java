@@ -14,7 +14,7 @@ public interface TrajetRepository extends JpaRepository<Trajets, Integer> {
         "gareDepart",
         "gareArrivee"
     })
-    @Query("SELECT t FROM Trajets t WHERE t.dateSuppression IS NULL")
+    @Query("SELECT t FROM Trajets t WHERE t.dateSuppression IS NULL ORDER BY t.id ASC")
     List<Trajets> findAllTrajets();
 
     @Query("SELECT t FROM Trajets t WHERE t.gareDepart.id = :gareDepart AND t.gareArrivee.id = :gareArrivee AND t.dateSuppression IS NULL")
