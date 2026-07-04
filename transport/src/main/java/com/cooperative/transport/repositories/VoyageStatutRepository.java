@@ -14,6 +14,6 @@ import org.springframework.stereotype.Repository;
 public interface VoyageStatutRepository extends JpaRepository<VoyageStatut, Integer> {
     List<VoyageStatut> findByVoyageIdOrderByDateModificationDesc(Integer voyageId);
 
-    @Query("SELECT vs FROM VoyageStatut vs WHERE vs.voyage.id = :voyageId ORDER BY vs.dateModification DESC")
+    @Query("SELECT vs FROM VoyageStatut vs WHERE vs.voyage.id = :voyageId ORDER BY vs.dateModification DESC LIMIT 1")
     Optional<VoyageStatut> findLatestByVoyageId(@Param("voyageId") Integer voyageId);
 }

@@ -1,12 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.cooperative.transport.entities.Employes" %>
+<%@ page import="com.cooperative.transport.entities.Utilisateurs" %>
 <%@ page import="com.cooperative.transport.entities.Salaires" %>
-<%@ page import="com.cooperative.transport.entities.Roles" %>
+<%@ page import="com.cooperative.transport.entities.Role" %>
 <%
     Object[] employes = (Object[]) request.getAttribute("employe");
     System.out.println("Employé trouvé: " + (employes != null ? employes.length : "null"));
-    List<Roles> roles = (List<Roles>) request.getAttribute("roles");
+    List<Role> roles = (List<Role>) request.getAttribute("roles");
 %>
 <!DOCTYPE html>
 <html lang="fr">
@@ -19,9 +19,9 @@
 <body>
     <div class="form-card">
         <% if (employes != null) {
-            Employes emp = (Employes) employes[0];
+            Utilisateurs emp = (Utilisateurs) employes[0];
             Salaires sal = (Salaires) employes[1];
-            Roles role = (Roles) employes[2];
+            Role role = (Role) employes[2];
         %>
             <div class="form-header">
                 <h1>Modification de l'employe #<%= emp.getId() %></h1>
@@ -56,7 +56,7 @@
                         <span class="current-role-badge"><%= role.getLibelle()%></span>
                     </label>
                     <select name="role" id="role" style="padding: 8px 12px;">
-                        <% for (Roles r : roles) { %>
+                        <% for (Role r : roles) { %>
                             <option value="<%= r.getId() %>" <%= r.getId() == role.getId() ? "selected" : "" %>>
                                 <%= r.getLibelle() %>
                             </option>

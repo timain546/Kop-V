@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.cooperative.transport.entities.Employes" %>
+<%@ page import="com.cooperative.transport.entities.Utilisateurs" %>
 <%@ page import="com.cooperative.transport.entities.Salaires" %>
-<%@ page import="com.cooperative.transport.entities.Roles" %>
+<%@ page import="com.cooperative.transport.entities.Role" %>
 <%
     List<Object[]> employes = (List<Object[]>) request.getAttribute("listeEmployes");
     List<String> statut = (List<String>) request.getAttribute("statut");
@@ -44,9 +44,9 @@
                     <% if (employes != null && !employes.isEmpty()) { 
                         for(int i = 0; i < employes.size(); i++) { 
                             Object[] row = employes.get(i);
-                            Employes employe = (Employes) row[0];
+                            Utilisateurs employe = (Utilisateurs) row[0];
                             Salaires salaire = (Salaires) row[1];
-                            Roles role = (Roles) row[2];
+                            Role role = (Role) row[2];
                             String statutEmploye = statut.get(i);
                             
                             String statutClass = "statut-default";
@@ -84,10 +84,10 @@
                                     </form>
                                    <% if (statutEmploye != null && statutEmploye.equalsIgnoreCase("Engagé") || statutEmploye.equalsIgnoreCase("Reambauché")) { %>
                                          <form action="supprimerEmploye" method="post" style="display:inline;">
-                                        <input type="hidden" name="id" value="<%= employe.getId() %>">
-                                        <input type="submit" value="Renvoyer" class="btn-action btn-supprimer" 
-                                        onclick="return confirm('Etes-vous sur de vouloir renvoyer cet employe ?');">
-                                    </form>
+                                            <input type="hidden" name="id" value="<%= employe.getId() %>">
+                                            <input type="submit" value="Renvoyer" class="btn-action btn-supprimer" 
+                                            onclick="return confirm('Etes-vous sur de vouloir renvoyer cet employe ?');">
+                                        </form>
                                     <% } 
                                     else if (statutEmploye != null && statutEmploye.equalsIgnoreCase("Renvoyé")) { %>
                                         <form action="reembaucher" method="post" style="display:inline;">
