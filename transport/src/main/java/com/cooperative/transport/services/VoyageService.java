@@ -1,6 +1,6 @@
 package com.cooperative.transport.services;
 
-import com.cooperative.transport.dto.VoyageDTO;
+import com.cooperative.transport.dto.VoyageDisponibleDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,7 +18,7 @@ public class VoyageService {
         this.voyageRepository = voyageRepository;
     }
 
-    public List<VoyageDTO> getVoyagesDisponibles(LocalDate date1, LocalDate date2, Integer nbPlaces, String villeDepart, String villeArrivee) {
+    public List<VoyageDisponibleDTO> getVoyagesDisponibles(LocalDate date1, LocalDate date2, Integer nbPlaces, String villeDepart, String villeArrivee) {
         return voyageRepository.findByDateBetweenAndVilleAndNbPlaces(date1, date2, villeDepart, villeArrivee, nbPlaces);
     }
 }

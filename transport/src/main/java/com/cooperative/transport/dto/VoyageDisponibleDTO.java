@@ -2,7 +2,7 @@ package com.cooperative.transport.dto;
 
 import java.time.LocalDate;
 
-public interface VoyageDTO {
+public interface VoyageDisponibleDTO {
 
     Integer getId();
 

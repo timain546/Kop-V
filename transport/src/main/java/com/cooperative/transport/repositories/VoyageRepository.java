@@ -1,6 +1,6 @@
 package com.cooperative.transport.repositories;
 
-import com.cooperative.transport.dto.VoyageDTO;
+import com.cooperative.transport.dto.VoyageDisponibleDTO;
 import com.cooperative.transport.entities.Voyages;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -80,7 +80,7 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
         ORDER BY v.date_heure_depart ASC
         """, nativeQuery = true)
 
-    List<VoyageDTO> findByDateBetweenAndVilleAndNbPlaces(
+    List<VoyageDisponibleDTO> findByDateBetweenAndVilleAndNbPlaces(
 
             @Param("date1") LocalDate date1,
 

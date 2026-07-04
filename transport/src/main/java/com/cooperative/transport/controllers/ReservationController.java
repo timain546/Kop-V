@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cooperative.transport.dto.ReservationDTO;
-import com.cooperative.transport.dto.VoyageDTO;
+import com.cooperative.transport.dto.VoyageDisponibleDTO;
 import com.cooperative.transport.entities.Gares;
 import com.cooperative.transport.entities.ModePaiement;
 import com.cooperative.transport.entities.Paiements;
@@ -85,7 +85,7 @@ public class ReservationController {
     @GetMapping("/guichet/reservation/new/choix-voyage")
     public String newChoixVoyage(HttpSession session, Model model) {
         InfoNewReservation info = (InfoNewReservation) session.getAttribute("infoNewReservation");
-        List<VoyageDTO> voyages = voyageService.getVoyagesDisponibles(
+        List<VoyageDisponibleDTO> voyages = voyageService.getVoyagesDisponibles(
             info.getDateMin(), info.getDateMax(), info.getNbPlaces(),
             info.getGareDepart().getVille(), info.getGareArrivee().getVille()
         );
