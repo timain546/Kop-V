@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cooperative.transport.entities.Annulation;
+import com.cooperative.transport.entities.Annulations;
 import com.cooperative.transport.entities.Client;
 import com.cooperative.transport.entities.ModePaiement;
-import com.cooperative.transport.entities.Paiement;
-import com.cooperative.transport.entities.Place;
-import com.cooperative.transport.entities.ReservationFille;
-import com.cooperative.transport.entities.ReservationMere;
+import com.cooperative.transport.entities.Paiements;
+import com.cooperative.transport.entities.Places;
+import com.cooperative.transport.entities.ReservationsFille;
+import com.cooperative.transport.entities.ReservationsMere;
 import com.cooperative.transport.entities.ReservationStatut;
 import com.cooperative.transport.entities.StatutPaiement;
 import com.cooperative.transport.entities.StatutReservation;
@@ -63,8 +63,12 @@ public class ReservationService {
     @Autowired
     private ReservationStatutRepository reservationStatutRepository;
 
+    @Autowired
+    private final ReservationRepository reservationRepository;
+
+
     @Transactional
-    public ReservationMere saveReservation(InfoNewReservation info, ReservationNewPaiementForm form) throws ValidationException {
+    public ReservationsMere saveReservation(InfoNewReservation info, ReservationNewPaiementForm form) throws ValidationException {
         // TODO: valider tout en fait
         if (form.getMontant().compareTo(BigDecimal.ZERO) <= 0) {
             throw new ValidationException("montant", form.getMontant(), "Le montant est invalide");
@@ -78,7 +82,7 @@ public class ReservationService {
         StatutPaiement statutPaiement = statutPaiementRepository.findById(StatutPaiementId.PART_PAYE.getId()).get();
         StatutReservation statutReservation = statutReservationRepository.findById(StatutReservationId.CONFIRMEE.getId()).get();
 
-        ReservationMere reservation = new ReservationMere();
+        ReservationsMere reservation = new ReservationsMere();
         reservation.setLibelle("Réservation pour " + info.getPlaces().size() + " personnes");
         reservation.setVoyage(info.getVoyage());
         reservation.setClient(client);
@@ -86,9 +90,9 @@ public class ReservationService {
         reservation.setStatutPaiement(statutPaiement);
         reservationMereRepository.save(reservation);
 
-        List<ReservationFille> filles = new ArrayList<>();
+        List<ReservationsFille> filles = new ArrayList<>();
         for (Place place : info.getPlaces()) {
-             ReservationFille fille = new ReservationFille();
+             ReservationsFille fille = new ReservationsFille();
              fille.setReservationMere(reservation);
              fille.setPlace(place);
              filles.add(fille);
@@ -101,7 +105,7 @@ public class ReservationService {
         rs.setDateModification(LocalDateTime.now());
         reservationStatutRepository.save(rs);
 
-        Paiement paiement = new Paiement();
+        Paiements paiement = new Paiements();
         paiement.setReservation(reservation);
         paiement.setMontant(form.getMontant());
         paiement.setModePaiement(form.getModePaiement());
@@ -113,7 +117,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public void payerReservation(ReservationMere reservation, BigDecimal montant, ModePaiement modePaiement, String reference) throws ValidationException {
+    public void payerReservation(ReservationsMere reservation, BigDecimal montant, ModePaiement modePaiement, String reference) throws ValidationException {
         if (montant.compareTo(BigDecimal.ZERO) <= 0) {
             throw new ValidationException("montant", montant, "Le montant est invalide");
         }
@@ -132,7 +136,7 @@ public class ReservationService {
         reservation.setStatutPaiement(statutPaiement);
         reservationMereRepository.save(reservation);
 
-        Paiement paiement = new Paiement();
+        Paiements paiement = new Paiements();
         paiement.setReservation(reservation);
         paiement.setMontant(montant);
         paiement.setModePaiement(modePaiement);
@@ -142,7 +146,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public void annulerReservation(ReservationMere reservation, BigDecimal frais, String motif) {
+    public void annulerReservation(ReservationsMere reservation, BigDecimal frais, String motif) {
         StatutReservation statutAnnulee = statutReservationRepository.findById(StatutReservationId.ANNULEE.getId()).get();
         ReservationStatut rs = new ReservationStatut();
         rs.setReservation(reservation);
@@ -150,7 +154,7 @@ public class ReservationService {
         rs.setDateModification(LocalDateTime.now());
         reservationStatutRepository.save(rs);
 
-        Annulation annulation = new Annulation();
+        Annulations annulation = new Annulations();
         annulation.setReservation(reservation);
         annulation.setDateAnnulation(LocalDateTime.now());
         annulation.setFraisAnnulation(frais);
@@ -158,14 +162,7 @@ public class ReservationService {
         annulationRepository.save(annulation);
     }
 
-       private final ReservationRepository reservationRepository; 
-
-    public ReservationService(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
-    }
-
     public List<ReservationDTO> getReservations(String date1, String date2, String villeDepart, String villeArrivee) {
         return reservationRepository.findReservationsByDateAndVilleDepartAndVilleArrivee(date1, date2, villeDepart, villeArrivee);
     }
-    
 }

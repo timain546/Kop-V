@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cooperative.transport.dto.ReservationDTO;
 import com.cooperative.transport.dto.VoyageDTO;
-import com.cooperative.transport.entities.Gare;
+import com.cooperative.transport.entities.Gares;
 import com.cooperative.transport.entities.ModePaiement;
-import com.cooperative.transport.entities.Paiement;
-import com.cooperative.transport.entities.Place;
+import com.cooperative.transport.entities.Paiements;
+import com.cooperative.transport.entities.Places;
 import com.cooperative.transport.entities.PlaceStatut;
-import com.cooperative.transport.entities.ReservationMere;
-import com.cooperative.transport.entities.Voyage;
+import com.cooperative.transport.entities.ReservationsMere;
+import com.cooperative.transport.entities.Voyages;
 import com.cooperative.transport.models.InfoNewReservation;
 import com.cooperative.transport.models.ReservationFiltreVM;
 import com.cooperative.transport.models.ReservationNewPaiementForm;
@@ -69,7 +69,7 @@ public class ReservationController {
 
     @GetMapping("/guichet/reservation/new")
     public String newIndex(HttpSession session, Model model) {
-        List<Gare> gares = gareRepository.findAll();
+        List<Gares> gares = gareRepository.findAll();
         model.addAttribute("gares", gares);
 
         return "guichet/new-reservation";
@@ -122,7 +122,7 @@ public class ReservationController {
     public String postNewChoixPlace(HttpSession session, @RequestParam List<Long> idPlaces) {
         InfoNewReservation info = (InfoNewReservation) session.getAttribute("infoNewReservation");
 
-        List<Place> places = placeRepository.findAllById(idPlaces);
+        List<Places> places = placeRepository.findAllById(idPlaces);
         info.setPlaces(places);
 
         return "redirect:/guichet/reservation/new/paiement";
@@ -150,9 +150,9 @@ public class ReservationController {
 
     @GetMapping("/guichet/reservation/{idReservation}/paiement")
     public String paiement(Model model, @PathVariable Long idReservation) {
-        ReservationMere reservation = reservationMereRepository.findById(idReservation).get();
+        ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
         List<ModePaiement> modesPaiements = modePaiementRepository.findAll();
-        List<Paiement> paiements = paiementRepository.findByReservation(reservation);
+        List<Paiements> paiements = paiementRepository.findByReservation(reservation);
         BigDecimal montantPayeTotal = paiementRepository.getPaiementTotal(reservation);
 
         model.addAttribute("reservation", reservation);
@@ -165,7 +165,7 @@ public class ReservationController {
 
     @PostMapping("/guichet/reservation/{idReservation}/paiement")
     public String postPaiement(@PathVariable Long idReservation, @ModelAttribute ReservationPaiementForm form) {
-        ReservationMere reservation = reservationMereRepository.findById(idReservation).get();
+        ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
 
         reservationService.payerReservation(reservation, form.getMontant(), form.getModePaiement(), form.getReference());
 
@@ -174,7 +174,7 @@ public class ReservationController {
 
     @GetMapping("/guichet/reservation/{idReservation}/annulation")
     public String annulation(Model model, @PathVariable Long idReservation) {
-        ReservationMere reservation = reservationMereRepository.findById(idReservation).get();
+        ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
 
         model.addAttribute("reservation", reservation);
 
@@ -183,7 +183,7 @@ public class ReservationController {
 
     @PostMapping("/guichet/reservation/{idReservation}/annulation")
     public String postAnnulation(@PathVariable Long idReservation, @RequestParam BigDecimal frais, @RequestParam String motif) {
-        ReservationMere reservation = reservationMereRepository.findById(idReservation).get();
+        ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
 
         reservationService.annulerReservation(reservation, frais, motif);
 
@@ -204,7 +204,7 @@ public class ReservationController {
 
         model.addAttribute("reservations", reservations);
         model.addAttribute("villes",
-                gareRepository.findAll().stream().map(Gare::getVille).distinct().toList());
+                gareRepository.findAll().stream().map(Gares::getVille).distinct().toList());
 
         ReservationFiltreVM filtre = new ReservationFiltreVM(dateDebut, dateFin, villeDepart, villeArrivee);
         model.addAttribute("filtre", filtre);
@@ -214,8 +214,8 @@ public class ReservationController {
         return "guichet/reservation";
     }
 
-private Map<String, Long> computeStats(List<ReservationDTO> reservations) {
-    return reservations.stream()
-            .collect(Collectors.groupingBy(ReservationDTO::getStatutPaiement, Collectors.counting()));
-}
+    private Map<String, Long> computeStats(List<ReservationDTO> reservations) {
+        return reservations.stream()
+                .collect(Collectors.groupingBy(ReservationDTO::getStatutPaiement, Collectors.counting()));
+    }
 }

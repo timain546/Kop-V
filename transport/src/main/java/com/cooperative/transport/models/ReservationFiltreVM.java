@@ -1,5 +1,8 @@
 package com.cooperative.transport.models;
 
+import lombok.Getter;
+
+@Getter
 public class ReservationFiltreVM {
     private String dateDebut;
     private String dateFin;
@@ -12,9 +15,4 @@ public class ReservationFiltreVM {
         this.villeDepart = villeDepart;
         this.villeArrivee = villeArrivee;
     }
-
-    public String getDateDebut() { return dateDebut; }
-    public String getDateFin() { return dateFin; }
-    public String getVilleDepart() { return villeDepart; }
-    public String getVilleArrivee() { return villeArrivee; }
 }
