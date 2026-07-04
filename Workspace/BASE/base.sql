@@ -33,6 +33,7 @@ CREATE TABLE vehicules (
     immatriculation     VARCHAR(20) NOT NULL UNIQUE,
     modele              VARCHAR(100) NOT NULL,
     id_categorie        INTEGER NOT NULL REFERENCES categorie_vehicule(id),
+    prx_achat            NUMERIC(10,2) NOT NULL CHECK (prx_achat >= 0),
     nombre_places       INTEGER NOT NULL CHECK (nombre_places > 0)
 );
 
@@ -128,6 +129,7 @@ CREATE TABLE reparation (
     id                      SERIAL PRIMARY KEY,
     id_panne                INTEGER NOT NULL REFERENCES pannes(id),
     id_statut_reparation    INTEGER NOT NULL REFERENCES statut_reparation(id),
+    cout                    NUMERIC(10,2) CHECK (cout >= 0),
     date_modification       TIMESTAMP NOT NULL DEFAULT now()
 );
 

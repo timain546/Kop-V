@@ -25,10 +25,8 @@ public class Employes {
 
     @OneToMany(mappedBy="employe")
     private List<Salaires> salaires;
-    @OneToMany(mappedBy="employe")
-    private List<ContratEmploye> contratEmployes;
 
-    public Employes(int id, String nom, String prenom, String email, String motDePasse, Roles role,List<Salaires> salaires, List<ContratEmploye> contratEmployes) {
+    public Employes(int id, String nom, String prenom, String email, String motDePasse, Roles role,List<Salaires> salaires) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -36,7 +34,6 @@ public class Employes {
         this.motDePasse = motDePasse;
         this.role = role;
         this.salaires = salaires;
-        this.contratEmployes = contratEmployes;
     }
     public Employes() {
     }
@@ -81,12 +78,6 @@ public class Employes {
     }
     public void setSalaires(List<Salaires> salaires) {
         this.salaires = salaires;
-    }
-    public List<ContratEmploye> getContratEmployes() {
-        return contratEmployes;
-    }
-    public void setContratEmployes(List<ContratEmploye> contratEmployes) {
-        this.contratEmployes = contratEmployes;
     }
 
 
