@@ -52,7 +52,7 @@ public class VoyageService {
     public void annuler(Voyages voyage) {
         VoyageStatut voyagestatut = new VoyageStatut();
         voyagestatut.setVoyage(voyage);
-        Optional<StatutVoyage> statut = statutVoyageRepo.findByLibelle("Annulé");
+        Optional<StatutVoyage> statut = statutVoyageRepository.findByLibelle("Annulé");
         StatutVoyage statutAnnule = statut.get();
 
         voyage.setStatutActuel(statutAnnule);
@@ -61,7 +61,7 @@ public class VoyageService {
         voyagestatut.setStatut(statutAnnule);
         voyagestatut.setDateModification(LocalDate.now());
 
-        voyageStatutRepo.save(voyagestatut);
+        voyageStatutRepository.save(voyagestatut);
     }
 
 
@@ -107,7 +107,7 @@ public class VoyageService {
         Utilisateurs chauffeur = chauffeurOptional.get();
         nouveauVoyage.setChauffeur(chauffeur);
 
-        Optional<StatutVoyage> statutVoyageOptional = statutVoyageRepo.findByLibelle("Plannifié");
+        Optional<StatutVoyage> statutVoyageOptional = statutVoyageRepository.findByLibelle("Plannifié");
         if(statutVoyageOptional.isEmpty()) {
             throw new Exception("Le statut 'Plannifié' n'existe pas");
         }
@@ -143,12 +143,12 @@ public class VoyageService {
         nouveauVoyageStatut.setId(null);
         nouveauVoyageStatut.setVoyage(voyageEnregistre);
 
-        Optional<StatutVoyage> statutVoyageOptional = statutVoyageRepo.findByLibelle("Plannifié");
+        statutVoyageOptional = statutVoyageRepository.findByLibelle("Plannifié");
         if(statutVoyageOptional.isEmpty()) {
             throw new Exception("Le statut 'Plannifié' n'existe pas");
         }
 
-        StatutVoyage statutVoyage = statutVoyageOptional.get();
+        statutVoyage = statutVoyageOptional.get();
 
         nouveauVoyageStatut.setStatut(statutVoyage);
         nouveauVoyageStatut.setDateModification(LocalDate.now());

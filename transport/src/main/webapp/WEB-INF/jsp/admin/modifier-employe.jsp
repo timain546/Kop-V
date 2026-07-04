@@ -6,7 +6,7 @@
 <%
     Object[] employes = (Object[]) request.getAttribute("employe");
     System.out.println("Employé trouvé: " + (employes != null ? employes.length : "null"));
-    List<Roles> roles = (List<Roles>) request.getAttribute("roles");    
+    List<Roles> roles = (List<Roles>) request.getAttribute("roles");
 %>
 <!DOCTYPE html>
 <html lang="fr">
@@ -71,7 +71,7 @@
 
                 <div class="form-group" style="margin-bottom: 0;">
                     <label for="date" style="margin-bottom: 4px;">Date de modification</label>
-                    <input type="date" name="date" id="date" value="<%= sal != null ? sal.getDate_modification() : "" %>" required style="padding: 8px 12px;">
+                    <input type="date" name="date" id="date" value="<%= sal != null ? sal.getDateModification() : "" %>" required style="padding: 8px 12px;">
                 </div>
 
                 <input type="hidden" name="id" value="<%= emp.getId() %>">

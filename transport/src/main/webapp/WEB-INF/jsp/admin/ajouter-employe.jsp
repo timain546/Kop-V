@@ -14,7 +14,7 @@
     <title>Formulaire employe</title>
     <link rel="stylesheet" href="../assets/css/ajouter-employe.css">
 
-   
+
 </head>
 
 <body>
@@ -65,7 +65,7 @@
 
             <div class="form-group" style="margin-bottom: 0;">
                 <label for="date_embauche">Date d'embauche</label>
-                <input type="date" name="date_embauche" id="date_embauche" style="padding: 10px 14px;">
+                <input type="date" name="dateEmbauche" id="date_embauche" style="padding: 10px 14px;">
             </div>
 
             <input type="submit" value="Ajouter l'employe" class="btn-submit" style="padding: 12px; margin-top: 4px;">

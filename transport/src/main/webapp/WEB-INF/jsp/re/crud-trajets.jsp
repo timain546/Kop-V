@@ -5,6 +5,7 @@
 
 <%
     List<Trajets> trajets = (List<Trajets>) request.getAttribute("trajets");
+    String messageErreur = (String) request.getAttribute("errorMessage");
 %>
 
 <!DOCTYPE html>
@@ -69,14 +70,14 @@
     </aside>
 
     <main class="flex-1 p-6 max-w-6xl mx-auto w-full space-y-6">
-        
+
         <div>
             <h2 class="text-xl font-bold text-slate-800">Configuration des Trajets</h2>
             <p class="text-xs text-slate-400">Définissez les axes routiers, les gares de départ/destination et la durée estimée des trajets</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-            
+
             <div class="bg-white border border-slate-100 rounded-xl shadow-sm p-4 space-y-4 lg:col-span-1">
                 <div class="border-b border-slate-100 pb-2">
                     <h3 id="form-title" class="text-sm font-bold text-slate-700 flex items-center gap-2">
@@ -149,7 +150,7 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 text-sm">
-                            
+
                             <% for(Trajets t : trajets) { %>
                                 <tr class="hover:bg-slate-50/40 transition" id="row-trajet-<%= t.getId() %>">
                                     <td class="py-3.5 px-4">

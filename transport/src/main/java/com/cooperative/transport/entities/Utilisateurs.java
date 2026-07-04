@@ -41,6 +41,12 @@ public class Utilisateurs {
     @OneToMany(mappedBy = "chauffeur")
     private List<Voyages> voyages;
 
+    @OneToMany(mappedBy="employe")
+    private List<Salaires> salaires;
+
+    @OneToMany(mappedBy="employe")
+    private List<ContratsEmployes> contratEmployes;
+
     public Utilisateurs() {
     }
 
@@ -50,5 +56,16 @@ public class Utilisateurs {
         this.role = role;
         this.email = email;
         this.motDePasse = motDePasse;
+    }
+
+    public Utilisateurs(int id, String nom, String prenom, String email, String motDePasse, Role role,List<Salaires> salaires, List<ContratsEmployes> contratEmployes) {
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.motDePasse = motDePasse;
+        this.role = role;
+        this.salaires = salaires;
+        this.contratEmployes = contratEmployes;
     }
 }

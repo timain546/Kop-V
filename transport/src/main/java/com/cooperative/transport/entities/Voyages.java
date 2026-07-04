@@ -49,5 +49,5 @@ public class Voyages {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_statut_actuel", nullable = false)
-    private VoyageStatut statutActuel;
+    private StatutVoyage statutActuel;
 }

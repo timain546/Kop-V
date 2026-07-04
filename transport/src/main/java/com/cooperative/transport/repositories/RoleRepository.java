@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Integer> {
-    @Query("SELECT r FROM Roles r WHERE r.libelle!= :nom")
+    @Query("SELECT r FROM Role r WHERE r.libelle!= :nom")
     List<Role> findRole(@Param("nom") String nom);
 }

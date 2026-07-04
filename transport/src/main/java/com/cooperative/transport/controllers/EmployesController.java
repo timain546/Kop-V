@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cooperative.transport.entities.ContratsEmployes;
 import com.cooperative.transport.entities.EmployeStatut;
-import com.cooperative.transport.entities.Employes;
 import com.cooperative.transport.entities.Role;
 import com.cooperative.transport.entities.Salaires;
 import com.cooperative.transport.entities.StatutEmploye;
@@ -52,7 +51,7 @@ public class EmployesController {
         List<Object[]> employes = employesService.findEmp();
         List<String> statut = new ArrayList<>();
         for (Object[] row : employes) {
-            Employes employe = (Employes) row[0];
+            Utilisateurs employe = (Utilisateurs) row[0];
             Integer statutId = employeStatutService.findIdbyIdemp(employe.getId());
             StatutEmploye statutList = statutEmployeService.findStatutById(statutId);
             System.out.println("Statut pour l'employé " + employe.getNom() + ": " + (statutList != null ? statutList.getLibelle() : "Aucun statut trouvé"));

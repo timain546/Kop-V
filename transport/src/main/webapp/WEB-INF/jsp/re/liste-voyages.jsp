@@ -91,13 +91,7 @@
                             for(Voyages v : voyages) {
                                 int idVoyage = v.getId();
                                 String reference = "V-00" + idVoyage;
-<<<<<<< HEAD
                                 String statut = v.getStatutActuel().getLibelle();
-                                
-=======
-                                String statut = v.getStatutActuel().getStatut().getLibelle();
-
->>>>>>> dev-principale
                                 Trajets trajet = v.getTrajet();
                                 String villeDepart = trajet.getGareDepart().getVille();
                                 String villeArrivee = trajet.getGareArrivee().getVille();
