@@ -21,7 +21,7 @@ public class ReservationsMere {
 
     @ManyToOne
     @JoinColumn(name = "id_voyage", nullable = false)
-    private Voyage voyage;
+    private Voyages voyage;
 
     @ManyToOne
     @JoinColumn(name = "id_client", nullable = false)

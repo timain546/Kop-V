@@ -18,11 +18,11 @@ public class Trajets {
 
     @ManyToOne
     @JoinColumn(name = "id_gare_depart", nullable = false)
-    private Gare gareDepart;
+    private Gares gareDepart;
 
     @ManyToOne
     @JoinColumn(name = "id_gare_arrivee", nullable = false)
-    private Gare gareArrivee;
+    private Gares gareArrivee;
 
     @Column(name = "distance_km", nullable = false, precision = 10, scale = 2)
     private BigDecimal distanceKm;
