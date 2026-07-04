@@ -13,7 +13,7 @@ public interface PaiementRepository extends JpaRepository<Paiements, Long> {
 
     @Query("""
         SELECT SUM(p.montant)
-        FROM Paiement p
+        FROM Paiements p
         WHERE p.reservation = :reservation
     """)
     public BigDecimal getPaiementTotal(ReservationsMere reservation);

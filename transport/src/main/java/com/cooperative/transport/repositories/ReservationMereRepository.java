@@ -11,7 +11,7 @@ public interface ReservationMereRepository extends JpaRepository<ReservationsMer
 
     @Query("""
         SELECT COUNT(rf) * rf.reservationMere.voyage.tarif
-        FROM ReservationFille rf
+        FROM ReservationsFille rf
         WHERE rf.reservationMere = :reservation
         GROUP BY rf.reservationMere.voyage.tarif
     """)

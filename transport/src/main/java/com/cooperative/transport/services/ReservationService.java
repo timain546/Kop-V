@@ -64,7 +64,7 @@ public class ReservationService {
     private ReservationStatutRepository reservationStatutRepository;
 
     @Autowired
-    private final ReservationRepository reservationRepository;
+    private ReservationRepository reservationRepository;
 
 
     @Transactional
@@ -91,7 +91,7 @@ public class ReservationService {
         reservationMereRepository.save(reservation);
 
         List<ReservationsFille> filles = new ArrayList<>();
-        for (Place place : info.getPlaces()) {
+        for (Places place : info.getPlaces()) {
              ReservationsFille fille = new ReservationsFille();
              fille.setReservationMere(reservation);
              fille.setPlace(place);
