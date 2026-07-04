@@ -101,10 +101,10 @@ public class VoyageController {
         @RequestParam(value = "heure", required = false) String heureStr
     ) {
 
-        LocalTime heure = (heureStr == null || heureStr.trim().isEmpty()) 
-                      ? LocalTime.MIDNIGHT 
+        LocalTime heure = (heureStr == null || heureStr.trim().isEmpty())
+                      ? LocalTime.MIDNIGHT
                       : LocalTime.parse(heureStr);
-                    
+
         LocalDateTime dateEtHeure = date.atTime(heure);
 
         List<Vehicules> vehicules = service.findAllVehiculesDispo(dateEtHeure);

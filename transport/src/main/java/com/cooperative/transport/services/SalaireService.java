@@ -1,0 +1,24 @@
+package com.cooperative.transport.services;
+import com.cooperative.transport.entities.Salaires;
+import com.cooperative.transport.repositories.SalaireRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
+
+@Service
+public class SalaireService {
+    @Autowired
+    private SalaireRepository salairesRepository;
+    public List<Salaires> findAllSalaires() {
+        return salairesRepository.findAll();
+    }
+    public void saveSalaire(Salaires salaire) {
+        salairesRepository.save(salaire);
+    }
+    public Salaires findSalaireById(Integer id) {
+        return salairesRepository.findById(id).orElse(null);
+    }
+    public Salaires findByIdEmp(Integer id) {
+        return salairesRepository.findByIdEmp(id);
+    }
+}

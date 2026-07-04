@@ -57,7 +57,7 @@
     </aside>
 
     <main class="flex-1 p-6 max-w-5xl mx-auto w-full space-y-6">
-        
+
         <div class="flex items-center justify-between">
             <div>
                 <h2 class="text-xl font-bold text-slate-800">Feuilles de Route</h2>
@@ -87,12 +87,17 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 text-sm">
-                        <% 
+                        <%
                             for(Voyages v : voyages) {
                                 int idVoyage = v.getId();
                                 String reference = "V-00" + idVoyage;
+<<<<<<< HEAD
                                 String statut = v.getStatutActuel().getLibelle();
                                 
+=======
+                                String statut = v.getStatutActuel().getStatut().getLibelle();
+
+>>>>>>> dev-principale
                                 Trajets trajet = v.getTrajet();
                                 String villeDepart = trajet.getGareDepart().getVille();
                                 String villeArrivee = trajet.getGareArrivee().getVille();
@@ -226,12 +231,12 @@
             })
             .then(data => {
                 alert(data.message);
-                
+
                 const badgeContainer = document.getElementById('badge-container-' + voyageIdSelectionne);
                 if (badgeContainer) {
                     badgeContainer.innerHTML = `<span class="text-[9px] font-black uppercase text-red-600 bg-red-50 border border-red-100 px-1.5 py-0.2 rounded mt-0.5 inline-block">Annulé</span>`;
                 }
-                
+
                 const actionsContainer = document.getElementById('actions-container-' + voyageIdSelectionne);
                 if (actionsContainer) {
                     actionsContainer.innerHTML = `

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
@@ -21,26 +22,26 @@ public class VoyageService {
     private VoyageRepository voyageRepository;
 
     @Autowired
-    private StatutVoyageRepository statutVoyageRepo;
+    private StatutVoyageRepository statutVoyageRepository;
 
     @Autowired
-    private VoyageStatutRepository voyageStatutRepo;
+    private VoyageStatutRepository voyageStatutRepository;
 
     @Autowired
-    private TrajetRepository trajetRepo;
+    private TrajetRepository trajetRepository;
 
     @Autowired
     private VehiculeRepository vehiculeRepository;
 
     @Autowired
-    private UtilisateurRepository utilisateurRepo;
+    private UtilisateurRepository utilisateurRepository;
 
     public List<Voyages> findAllVoyages() {
         return voyageRepository.findAllCatalogueVoyage();
     }
 
     public List<Trajets> findAllTrajets() {
-        return trajetRepo.findAllTrajets();
+        return trajetRepository.findAllTrajets();
     }
 
     public Optional<Voyages> findVoyageById(Integer id) {
@@ -50,7 +51,7 @@ public class VoyageService {
     @Transactional
     public void annuler(Voyages voyage) {
         VoyageStatut voyagestatut = new VoyageStatut();
-    
+        voyagestatut.setVoyage(voyage);
         Optional<StatutVoyage> statut = statutVoyageRepo.findByLibelle("Annulé");
         StatutVoyage statutAnnule = statut.get();
 
@@ -60,16 +61,17 @@ public class VoyageService {
         voyagestatut.setStatut(statutAnnule);
         voyagestatut.setDateModification(LocalDate.now());
 
-        voyageRepository.save(voyage);
         voyageStatutRepo.save(voyagestatut);
     }
+
+
 
     public List<Vehicules> findAllVehiculesDispo(LocalDateTime dateCible) {
         return vehiculeRepository.findAllVehiculesDispo(dateCible);
     }
 
     public List<Utilisateurs> findAllChauffeurDispo(LocalDateTime dateCible) {
-        return utilisateurRepo.findAllChauffeurDispo(dateCible);
+        return utilisateurRepository.findAllChauffeurDispo(dateCible);
     }
 
     @Transactional
@@ -80,7 +82,7 @@ public class VoyageService {
         Voyages nouveauVoyage = new Voyages();
         nouveauVoyage.setId(null);
 
-        Optional<Trajets> trajetOptional = trajetRepo.findById(voyageDTO.getIdTrajet());
+        Optional<Trajets> trajetOptional = trajetRepository.findById(voyageDTO.getIdTrajet());
 
         if(trajetOptional.isEmpty()) {
             throw new Exception("Trajet T-00" + voyageDTO.getIdTrajet() + " introuvable");
@@ -97,7 +99,7 @@ public class VoyageService {
         Vehicules vehicule = vehiculeOptional.get();
         nouveauVoyage.setVehicule(vehicule);
 
-        Optional<Utilisateurs> chauffeurOptional = utilisateurRepo.findById(voyageDTO.getIdChauffeur());
+        Optional<Utilisateurs> chauffeurOptional = utilisateurRepository.findById(voyageDTO.getIdChauffeur());
         if(chauffeurOptional.isEmpty()) {
             throw new Exception("Chauffeur introuvable");
         }
@@ -141,8 +143,128 @@ public class VoyageService {
         nouveauVoyageStatut.setId(null);
         nouveauVoyageStatut.setVoyage(voyageEnregistre);
 
+        Optional<StatutVoyage> statutVoyageOptional = statutVoyageRepo.findByLibelle("Plannifié");
+        if(statutVoyageOptional.isEmpty()) {
+            throw new Exception("Le statut 'Plannifié' n'existe pas");
+        }
+
+        StatutVoyage statutVoyage = statutVoyageOptional.get();
+
         nouveauVoyageStatut.setStatut(statutVoyage);
         nouveauVoyageStatut.setDateModification(LocalDate.now());
-        voyageStatutRepo.save(nouveauVoyageStatut);
+        voyageStatutRepository.save(nouveauVoyageStatut);
     }
+
+
+    public List<VoyageListDTO> getVoyagesByChauffeur(Integer chauffeurId) {
+        List<Voyages> voyages = voyageRepository.findByChauffeurId(chauffeurId);
+        return voyages.stream()
+                .map(this::mapToVoyageListDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<VoyageListDTO> getUpcomingVoyagesByChauffeur(Integer chauffeurId) {
+        List<Voyages> voyages = voyageRepository.findByChauffeurIdAndDateHeureDepartAfter(
+                chauffeurId, LocalDateTime.now());
+        return voyages.stream()
+                .map(this::mapToVoyageListDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<VoyageListDTO> getVoyagesByChauffeurAndStatut(Integer chauffeurId, String statut) {
+        List<Voyages> voyages = voyageRepository.findByChauffeurId(chauffeurId);
+        return voyages.stream()
+                .map(this::mapToVoyageListDTO)
+                .filter(dto -> statut.equalsIgnoreCase(dto.getStatutLibelle()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns voyages for a chauffeur that are currently "en cours" or have no status yet
+     * (i.e., they are in-progress and eligible for panne/arrivée signalement)
+     */
+    public List<VoyageListDTO> getActiveVoyagesByChauffeur(Integer chauffeurId) {
+        List<Voyages> voyages = voyageRepository.findByChauffeurId(chauffeurId);
+        return voyages.stream()
+                .map(this::mapToVoyageListDTO)
+                .filter(dto -> {
+                    String statut = dto.getStatutLibelle();
+                    return statut == null || "en cours".equalsIgnoreCase(statut) || "".equals(statut);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public boolean signalerArrivee(Integer voyageId, Integer chauffeurId) {
+        Optional<Voyages> voyageOpt = voyageRepository.findById(voyageId);
+        if (voyageOpt.isEmpty() || !voyageOpt.get().getChauffeur().getId().equals(chauffeurId)) {
+            return false;
+        }
+
+        Optional<StatutVoyage> statutTermineOpt = statutVoyageRepository.findByLibelle("terminé");
+        if (statutTermineOpt.isPresent()) {
+            VoyageStatut voyageStatut = new VoyageStatut();
+            voyageStatut.setVoyage(voyageOpt.get());
+            voyageStatut.setStatut(statutTermineOpt.get());
+            voyageStatut.setDateModification(LocalDate.now());
+            voyageStatutRepository.save(voyageStatut);
+        }
+
+        return true;
+    }
+
+    public boolean signalerEnPanne(Integer voyageId, Integer chauffeurId) {
+        Optional<Voyages> voyageOpt = voyageRepository.findById(voyageId);
+        if (voyageOpt.isEmpty() || !voyageOpt.get().getChauffeur().getId().equals(chauffeurId)) {
+            return false;
+        }
+
+        Optional<StatutVoyage> statutPanneOpt = statutVoyageRepository.findByLibelle("en panne");
+        if (statutPanneOpt.isPresent()) {
+            VoyageStatut voyageStatut = new VoyageStatut();
+            voyageStatut.setVoyage(voyageOpt.get());
+            voyageStatut.setStatut(statutPanneOpt.get());
+            voyageStatut.setDateModification(LocalDate.now());
+            voyageStatutRepository.save(voyageStatut);
+        }
+
+        return true;
+    }
+
+    private VoyageListDTO mapToVoyageListDTO(Voyages voyage) {
+        VoyageListDTO dto = new VoyageListDTO();
+        dto.setId(voyage.getId());
+
+        if (voyage.getTrajet() != null) {
+            if (voyage.getTrajet().getGareDepart() != null) {
+                dto.setGareDepart(voyage.getTrajet().getGareDepart().getNom());
+                dto.setGareDepartVille(voyage.getTrajet().getGareDepart().getVille());
+            }
+            if (voyage.getTrajet().getGareArrivee() != null) {
+                dto.setGareArrivee(voyage.getTrajet().getGareArrivee().getNom());
+                dto.setGareArriveeVille(voyage.getTrajet().getGareArrivee().getVille());
+            }
+            dto.setDistanceKm(voyage.getTrajet().getDistanceKm());
+        }
+
+        dto.setDateHeureDepart(voyage.getDateHeureDepart());
+        dto.setDureeEstimeeMinutes(voyage.getDureeEstimeeMinutes());
+        dto.setTarif(voyage.getTarif());
+
+        if (voyage.getVehicule() != null) {
+            dto.setVehiculeImmatriculation(voyage.getVehicule().getImmatriculation());
+            dto.setVehiculeModele(voyage.getVehicule().getModele());
+            dto.setVehiculeNombrePlaces(voyage.getVehicule().getNombrePlaces());
+            if (voyage.getVehicule().getCategorie() != null) {
+                dto.setVehiculeCategorie(voyage.getVehicule().getCategorie().getLibelle());
+            }
+        }
+
+        Optional<VoyageStatut> latestStatut = voyageStatutRepository.findLatestByVoyageId(voyage.getId());
+        if (latestStatut.isPresent() && latestStatut.get().getStatut() != null) {
+            dto.setStatutLibelle(latestStatut.get().getStatut().getLibelle());
+        }
+
+        return dto;
+    }
+
 }
