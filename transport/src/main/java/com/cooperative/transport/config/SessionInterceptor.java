@@ -24,6 +24,11 @@ public class SessionInterceptor implements HandlerInterceptor {
         return true; 
     }
     
+    if(user == null) {
+            session.setAttribute("erreur", "Vous devez être connecté pour accéder à cette page.");
+            response.sendRedirect(request.getContextPath() + "/");
+            return false;
+        }
     
       
         String role = user.getRole().getLibelle().toLowerCase();

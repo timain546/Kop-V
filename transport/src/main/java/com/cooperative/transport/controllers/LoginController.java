@@ -21,6 +21,11 @@ public class LoginController {
 
     @GetMapping("/")
     public String loginPage(HttpSession session, Model model) {
+        Utilisateurs user = (Utilisateurs) session.getAttribute("utilisateur");
+        if (user != null && user.getRole() != null) {
+        String roleLibelle = user.getRole().getLibelle().toLowerCase();
+        return "redirect:/" + roleLibelle + "/";
+    }
         if (session.getAttribute("erreur") != null) {
             model.addAttribute("erreur", session.getAttribute("erreur"));
             session.removeAttribute("erreur"); 
