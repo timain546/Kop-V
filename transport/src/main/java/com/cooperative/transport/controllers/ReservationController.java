@@ -97,7 +97,7 @@ public class ReservationController {
     }
 
     @PostMapping("/guichet/reservation/new/choix-voyage")
-    public String postNewChoixVoyage(HttpSession session, @RequestParam Voyage voyage) {
+    public String postNewChoixVoyage(HttpSession session, @RequestParam Voyages voyage) {
         InfoNewReservation info = (InfoNewReservation) session.getAttribute("infoNewReservation");
 
         info.setVoyage(voyage);
