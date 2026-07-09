@@ -111,10 +111,9 @@ CREATE TABLE reparation(
     date_modification DATE NOT NULL DEFAULT NOW(),
     cout NUMERIC(10, 2) DEFAULT NULL
 );
-<<<<<<< HEAD
 
 ALTER TABLE pannes ADD COLUMN id_statut_reparation_actuel INT REFERENCES statut_reparation(id) DEFAULT NULL;
-=======
+
 create table salaires(
     id SERIAL PRIMARY KEY,
     id_employe INT NOT NULL REFERENCES utilisateurs(id) ON DELETE CASCADE,
@@ -140,5 +139,3 @@ create table employe_statut(
     id_statut INT NOT NULL REFERENCES statut_employe(id) ON DELETE CASCADE,
     date_modification DATE NOT NULL DEFAULT NOW()
 );
-
->>>>>>> a0a84705a46fdff934f07c9d016b178be3152ae8

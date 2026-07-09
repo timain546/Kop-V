@@ -55,8 +55,6 @@ INSERT INTO voyage_statut (id_voyage, id_statut, date_modification) VALUES
 (3, 1, '2026-06-01'),
 (1, 2, '2026-06-01'),
 (2, 3, '2026-06-01');
-<<<<<<< HEAD
-=======
 
 INSERT INTO salaires (id_employe, salaire, date_modification) VALUES
 (1, 2000.00, '2026-01-01'),
@@ -75,4 +73,3 @@ INSERT INTO contrats_employes (id_employe, date_embauche, date_renvoi) VALUES
 (5, '2026-02-01', NULL),
 (6, '2026-03-01', NULL),
 (7, '2026-04-01', NULL);
->>>>>>> a0a84705a46fdff934f07c9d016b178be3152ae8
