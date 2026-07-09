@@ -82,3 +82,32 @@ CREATE TABLE indisponibilite_vehicule(
     date_debut DATE NOT NULL,
     date_fin_estimee DATE NOT NULL
 );
+
+CREATE TABLE motif_panne(
+    id SERIAL PRIMARY KEY,
+    libelle VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE statut_reparation(
+    id SERIAL PRIMARY KEY,
+    libelle VARCHAR(50) NOT NULL 
+);
+
+CREATE TABLE pannes(
+    id SERIAL PRIMARY KEY,
+    id_voyage INT NOT NULL REFERENCES voyages(id) ON DELETE CASCADE,
+    id_chauffeur INT NOT NULL REFERENCES utilisateurs(id) ON DELETE CASCADE,
+    date_signalement DATE NOT NULL,
+    lieu GEOMETRY(POINT, 4326) DEFAULT NULL,  
+    id_motif_panne INT NOT NULL REFERENCES motif_panne(id) ON DELETE CASCADE,    
+    description VARCHAR(60) NOT NULL,
+    photo_url VARCHAR(500) DEFAULT NULL
+);
+
+CREATE TABLE reparation(
+    id SERIA PRIMARY KEY,
+    id_panne INT NOT NULL REFERENCES pannes(id) ON DELETE CASCADE,
+    id_statut_reparation INT NOT NULL REFERENCES statut_reparation(id) ON DELETE CASCADE, 
+    date_modification DATE NOT NULL DEFAULT NOW(),
+    cout NUMERIC(10, 2) DEFAULT NULL
+);
