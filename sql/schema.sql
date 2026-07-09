@@ -44,7 +44,8 @@ CREATE TABLE trajets(
     id_gare_depart INT NOT NULL REFERENCES gares(id) ON DELETE CASCADE,
     id_gare_arrivee INT NOT NULL REFERENCES gares(id) ON DELETE CASCADE,
     distance_km NUMERIC(10, 2) NOT NULL,
-    date_suppression TIMESTAMP DEFAULT NULL
+    date_suppression TIMESTAMP DEFAULT NULL,
+    trace GEOMETRY(LineString, 4326) DEFAULT NULL
 );
 
 CREATE TABLE statut_voyage(

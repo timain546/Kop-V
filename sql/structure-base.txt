@@ -41,6 +41,7 @@ Table trajets:
     - id_gare_arrivee
     - distance_km NUMERIC(10,2)
     - date_suppression
+    - trace GEOMETRY(LineString,4326)
 
 Table point_ramassage:
     - id
