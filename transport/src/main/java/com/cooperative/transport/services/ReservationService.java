@@ -38,6 +38,7 @@ import com.cooperative.transport.repositories.GareRepository;
 import com.cooperative.transport.repositories.ModePaiementRepository;
 import com.cooperative.transport.repositories.PaiementRepository;
 import com.cooperative.transport.repositories.PlaceRepository;
+import com.cooperative.transport.repositories.PlaceStatutRepository;
 import com.cooperative.transport.repositories.ReservationFilleRepository;
 import com.cooperative.transport.repositories.ReservationMereRepository;
 import com.cooperative.transport.repositories.ReservationStatutRepository;
@@ -69,6 +70,9 @@ public class ReservationService {
 
     @Autowired
     private PlaceRepository placeRepository;
+
+    @Autowired
+    private PlaceStatutRepository placeStatutRepository;
 
     @Autowired
     private ReservationFilleRepository reservationFilleRepository;
@@ -226,8 +230,7 @@ public class ReservationService {
             throw new InvalidParameterException("Le fichier doit être un fichier Excel (.xlsx)");
         }
 
-        try {
-            Workbook workbook = new XSSFWorkbook(file.getInputStream());
+        try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
             Sheet sheet = workbook.getSheetAt(0);
 
             // Lecture de l’ordre des colonnes
@@ -333,6 +336,10 @@ public class ReservationService {
                     Places p = placeRepository.findByVehiculeAndNumero(voyage.getVehicule(), numero).orElseThrow(() -> {
                         return new InvalidParameterException("La place n’existe pas : " + numero);
                     });
+                    // todo: test if not occupied
+                    if (placeStatutRepository.findByVoyageAndPlace(voyage, p).get().getOccupee()) {
+                        throw new InvalidParameterException("La place est déjà occupée : " + numero);
+                    }
                     ReservationsFille fille = new ReservationsFille();
                     fille.setPlace(p);
                     fille.setReservationMere(reservation);
