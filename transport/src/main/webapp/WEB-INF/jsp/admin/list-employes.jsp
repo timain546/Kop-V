@@ -14,8 +14,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Employes</title>
-<link rel="stylesheet" href="../assets/css/list-employes.css"></head>
-<body>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/list-employes.css"><body>
     <div class="container">
         <div class="header">
             <h1>Liste des employes</h1>
