@@ -21,6 +21,7 @@ Table vehicules:
     - id_categorie
     - nombre_places
     - date_vente
+    - prix
 
 Table gares:
     - id
@@ -61,6 +62,7 @@ Table voyages:
     - date_heure_depart TIMESTAMP
     - duree_estimee_minutes
     - tarif NUMERIC(10,2)
+    - statut_actuel
 
 Table statut_voyage:
     - id
@@ -163,13 +165,19 @@ Table demande_statut: (Table associative)
     - id_statut
     - date_modification
 
+Table motif_panne:
+    - id
+    - libelle (Pneu creuvé, Surchauffe moteur, ...)
+
 Table pannes:
     - id
     - id_voyage
     - id_chauffeur // Qui est-ce qui a signalé la panne ?
     - date_signalement
-    - description // Vaky pneu, Surchauffe moteur
-    - position GEOMETRY(Point, 4326)
+    - lieu GEOMETRY(Point, 4326)
+    - id_motif_panne
+    - description
+    - photo_url
 
 Table statut_reparation:
     - id
@@ -180,6 +188,7 @@ Table reparation:
     - id_panne
     - id_statut_reparation
     - date_modification
+    - cout
 
 Table indisponibilite_vehicule:
     - id

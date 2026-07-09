@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "reparation")
@@ -32,4 +33,7 @@ public class Reparation {
 
     @Column(name = "date_modification")
     private LocalDate dateModification;
+
+    @Column(name = "cout")
+    private BigDecimal cout;
 }

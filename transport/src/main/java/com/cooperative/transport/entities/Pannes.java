@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "pannes")
 @Data
@@ -43,4 +45,12 @@ public class Pannes {
 
     @Column(name = "photo_url", length = 500)
     private String photoUrl;
+
+    @OneToMany(mappedBy = "panne")
+    @OrderBy("dateModification DESC")
+    private List<Reparation> reparations;
+
+    public String getLastReparationStatut() {
+        return reparations.get(0).getStat
+    }
 }
