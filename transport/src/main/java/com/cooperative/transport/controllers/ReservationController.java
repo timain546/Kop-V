@@ -41,6 +41,11 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class ReservationController {
 
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/guichet/reservation";
+    }
+
     @Autowired
     private ReservationService reservationService;
 
@@ -82,7 +87,11 @@ public class ReservationController {
 
     @GetMapping("/guichet/reservation/new/choix-voyage")
     public String newChoixVoyage(HttpSession session, Model model) {
-        InfoNewReservationDTO info = (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
+        InfoNewReservationDTO info = getInfoNewReservation(session);
+        if (info == null) {
+            return "redirect:/guichet/reservation/new";
+        }
+
         List<VoyageDisponibleDTO> voyages = voyageService.getVoyagesDisponibles(
             info.getDateMin(), info.getDateMax(), info.getNbPlaces(),
             info.getGareDepart().getVille(), info.getGareArrivee().getVille()
@@ -96,7 +105,10 @@ public class ReservationController {
 
     @PostMapping("/guichet/reservation/new/choix-voyage")
     public String postNewChoixVoyage(HttpSession session, @RequestParam Voyages voyage) {
-        InfoNewReservationDTO info = (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
+        InfoNewReservationDTO info = getInfoNewReservation(session);
+        if (info == null) {
+            return "redirect:/guichet/reservation/new";
+        }
 
         info.setVoyage(voyage);
 
@@ -105,7 +117,11 @@ public class ReservationController {
 
     @GetMapping("/guichet/reservation/new/choix-place")
     public String newChoixPlace(HttpSession session, Model model) {
-        InfoNewReservationDTO info = (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
+        InfoNewReservationDTO info = getInfoNewReservation(session);
+        if (info == null) {
+            return "redirect:/guichet/reservation/new";
+        }
+
         List<PlaceStatut> places = placeStatutRepository.findByVoyage(info.getVoyage());
         int maxY = places.stream().mapToInt(p -> p.getPlace().getY()).max().getAsInt();
 
@@ -118,7 +134,10 @@ public class ReservationController {
 
     @PostMapping("/guichet/reservation/new/choix-place")
     public String postNewChoixPlace(HttpSession session, @RequestParam List<Long> idPlaces) {
-        InfoNewReservationDTO info = (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
+        InfoNewReservationDTO info = getInfoNewReservation(session);
+        if (info == null) {
+            return "redirect:/guichet/reservation/new";
+        }
 
         List<Places> places = placeRepository.findAllById(idPlaces);
         info.setPlaces(places);
@@ -128,7 +147,11 @@ public class ReservationController {
 
     @GetMapping("/guichet/reservation/new/paiement")
     public String newPaiement(HttpSession session, Model model) {
-        InfoNewReservationDTO info = (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
+        InfoNewReservationDTO info = getInfoNewReservation(session);
+        if (info == null) {
+            return "redirect:/guichet/reservation/new";
+        }
+
         List<ModePaiement> modesPaiements = modePaiementRepository.findAll();
 
         model.addAttribute("info", info);
@@ -142,7 +165,10 @@ public class ReservationController {
             @RequestParam String nomClient, @RequestParam String telephoneClient,
             @RequestParam BigDecimal montant, @RequestParam ModePaiement modePaiement,
             @RequestParam(required = false, defaultValue = "") String reference) {
-        InfoNewReservationDTO info = (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
+        InfoNewReservationDTO info = getInfoNewReservation(session);
+        if (info == null) {
+            return "redirect:/guichet/reservation/new";
+        }
 
         try {
             reservationService.saveReservation(info, nomClient, telephoneClient, montant, modePaiement, reference);
@@ -259,5 +285,9 @@ public class ReservationController {
     private Map<String, Long> computeStats(List<ReservationDTO> reservations) {
         return reservations.stream()
                 .collect(Collectors.groupingBy(ReservationDTO::getStatutPaiement, Collectors.counting()));
+    }
+
+    private InfoNewReservationDTO getInfoNewReservation(HttpSession session) {
+        return session == null ? null : (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
     }
 }

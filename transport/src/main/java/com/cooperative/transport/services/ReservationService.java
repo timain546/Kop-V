@@ -75,14 +75,14 @@ public class ReservationService {
         else if (prixTotal.compareTo(montant) < 0) {
             throw new InvalidParameterException("Le montant est trop élevé");
         }
-        StatutPaiement statutPaiement = statutPaiementRepository.findByLibelle(libelleStatut).get();
+        StatutPaiement statutPaiement = getOrCreateStatutPaiement(libelleStatut);
 
         Client client = new Client();
         client.setNom(nomClient);
         client.setTelephone(telephoneClient);
         clientRepository.save(client);
 
-        StatutReservation statutReservation = statutReservationRepository.findByLibelle("Confirmée").get();
+        StatutReservation statutReservation = getOrCreateStatutReservation("Confirmée");
 
         ReservationsMere reservation = new ReservationsMere();
         reservation.setLibelle("Réservation pour " + info.getPlaces().size() + " personnes");
@@ -135,7 +135,7 @@ public class ReservationService {
             throw new InvalidParameterException("Le montant est trop élevé");
         }
 
-        StatutPaiement statutPaiement = statutPaiementRepository.findByLibelle(libelleStatut).get();
+        StatutPaiement statutPaiement = getOrCreateStatutPaiement(libelleStatut);
         reservation.setStatutPaiement(statutPaiement);
         reservationMereRepository.save(reservation);
 
@@ -150,7 +150,7 @@ public class ReservationService {
 
     @Transactional
     public void annulerReservation(ReservationsMere reservation, BigDecimal frais, String motif) {
-        StatutReservation statutAnnulee = statutReservationRepository.findByLibelle("Annulée").get();
+        StatutReservation statutAnnulee = getOrCreateStatutReservation("Annulée");
         ReservationStatut rs = new ReservationStatut();
         rs.setReservation(reservation);
         rs.setStatut(statutAnnulee);
@@ -167,5 +167,23 @@ public class ReservationService {
 
     public List<ReservationDTO> getReservations(String date1, String date2, String villeDepart, String villeArrivee) {
         return reservationMereRepository.findReservationsByDateAndVilleDepartAndVilleArrivee(date1, date2, villeDepart, villeArrivee);
+    }
+
+    private StatutPaiement getOrCreateStatutPaiement(String libelle) {
+        return statutPaiementRepository.findByLibelle(libelle)
+                .orElseGet(() -> {
+                    StatutPaiement statutPaiement = new StatutPaiement();
+                    statutPaiement.setLibelle(libelle);
+                    return statutPaiementRepository.save(statutPaiement);
+                });
+    }
+
+    private StatutReservation getOrCreateStatutReservation(String libelle) {
+        return statutReservationRepository.findByLibelle(libelle)
+                .orElseGet(() -> {
+                    StatutReservation statutReservation = new StatutReservation();
+                    statutReservation.setLibelle(libelle);
+                    return statutReservationRepository.save(statutReservation);
+                });
     }
 }

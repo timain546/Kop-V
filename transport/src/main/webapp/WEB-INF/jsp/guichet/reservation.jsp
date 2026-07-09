@@ -11,7 +11,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Liste des réservations — KOP-V</title>
+    <title>Liste des réservations — KOP-V</title>    
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/styles.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/common.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/reservation.css" />
@@ -31,9 +31,9 @@
             <div class="brand-title"><span class="kop">KOP</span><span class="dash">—</span><span class="v">V</span></div>
           </a>
 
-          <!-- Nav admin : Réservations passe avant Recherche -->
+          <!-- Nav : Réservations (route réelle, inchangée) -->
           <nav class="admin-nav" aria-label="Navigation principale">
-            <a href="${pageContext.request.contextPath}/guichet/reservation" class="admin-nav-link active">
+            <a href="${pageContext.request.contextPath}/guichet/reservation" class="admin-nav-pill active">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path><path d="m9 16 2 2 4-4"></path></svg>
               <span>Réservations</span>
             </a>
@@ -52,188 +52,180 @@
 
       <div class="main-grid reservations-grid">
         <main class="main-col">
-          <section class="res-section">
-            <div class="res-head">
-              <div>
-                <p class="hero-kicker">Réservations</p>
-                <h1 class="res-title">Liste des réservations</h1>
-                <p class="res-subtitle">${fn:length(reservations)} réservations trouvées</p>
+
+          <!-- ================= CARTE HÉRO ================= -->
+          
+
+          <!-- ================= FILTRES (date + ville, inchangés) ================= -->
+          <form class="filters-card" action="${pageContext.request.contextPath}/guichet/reservation" method="get">
+            <div class="filter-field">
+              <label class="filter-label-top">Date du voyage</label>
+              <div class="date-range">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg>
+                <input type="date" name="dateDebut" value="${filtre.dateDebut}" />
+                <span class="date-range-sep">→</span>
+                <input type="date" name="dateFin" value="${filtre.dateFin}" />
               </div>
-              <button type="button" class="export-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10l5 5 5-5"></path><path d="M12 15V3"></path></svg>
-                Exporter
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"></path></svg>
-              </button>
             </div>
 
-            <!-- Action pointe vers /guichet/reservation (route réelle du controller).
-                 Le filtre "Statut paiement" a été retiré : le controller/repository actuels
-                 ne le reçoivent pas encore côté requête. Ajoute-le des deux côtés si besoin. -->
-            <form class="filters-bar res-filters" action="${pageContext.request.contextPath}/guichet/reservation" method="get">
-              <div class="filter-field">
-                <label class="filter-label-top">Date du voyage</label>
-                <div class="date-range">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg>
-                  <input type="date" name="dateDebut" value="${filtre.dateDebut}" />
-                  <span class="date-range-sep">→</span>
-                  <input type="date" name="dateFin" value="${filtre.dateFin}" />
+            <div class="filter-field">
+              <label class="filter-label-top">Ville de départ</label>
+              <select name="villeDepart" class="select-filter">
+                <option value="">Toutes</option>
+                <c:forEach var="ville" items="${villes}">
+                  <option value="${ville}" ${ville == filtre.villeDepart ? 'selected' : ''}>${ville}</option>
+                </c:forEach>
+              </select>
+            </div>
+
+            <div class="filter-field">
+              <label class="filter-label-top">Ville d'arrivée</label>
+              <select name="villeArrivee" class="select-filter">
+                <option value="">Toutes</option>
+                <c:forEach var="ville" items="${villes}">
+                  <option value="${ville}" ${ville == filtre.villeArrivee ? 'selected' : ''}>${ville}</option>
+                </c:forEach>
+              </select>
+            </div>
+
+            <button type="submit" class="search-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+              Rechercher
+            </button>
+          </form>
+
+          <!-- ================= LISTE (cartes ticket) ================= -->
+          <div class="res-list">
+            <c:forEach var="reservation" items="${reservations}">
+              <article class="ticket-card">
+                <div class="ticket-left">
+                  <div class="ticket-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"></path><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"></path><path d="m9 15 2 2 4-4"></path></svg>
+                  </div>
+                  <div>
+                    <p class="ticket-code">KOPV-${reservation.idReservation}</p>
+                    <p class="ticket-client">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                      ${reservation.client}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              <div class="filter-field">
-                <label class="filter-label-top">Ville de départ</label>
-                <select name="villeDepart" class="select-filter">
-                  <option value="">Toutes</option>
-                  <c:forEach var="ville" items="${villes}">
-                    <option value="${ville}" ${ville == filtre.villeDepart ? 'selected' : ''}>${ville}</option>
-                  </c:forEach>
-                </select>
-              </div>
+                <div class="ticket-route">
+                  <div class="route-point">
+                    <p class="route-time">${reservation.dateVoyage.format(DateTimeFormatter.ofPattern("HH:mm"))}</p>
+                    <p class="route-city">${reservation.gareDepart}</p>
+                  </div>
+                  <div class="route-line-wrap">
+                    <span class="route-date-badge">
+                      ${reservation.dateVoyage.format(DateTimeFormatter.ofPattern("EEE dd MMM yyyy", Locale.FRENCH))}
+                    </span>
+                    <div class="route-line"></div>
+                  </div>
+                  <div class="route-point route-point-end">
+                    <p class="route-city">${reservation.gareArrivee}</p>
+                  </div>
+                </div>
 
-              <div class="filter-field">
-                <label class="filter-label-top">Ville d'arrivée</label>
-                <select name="villeArrivee" class="select-filter">
-                  <option value="">Toutes</option>
-                  <c:forEach var="ville" items="${villes}">
-                    <option value="${ville}" ${ville == filtre.villeArrivee ? 'selected' : ''}>${ville}</option>
-                  </c:forEach>
-                </select>
-              </div>
-
-              <button type="submit" class="search-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-                Rechercher
-              </button>
-            </form>
-
-            <div class="res-table">
-              <div class="res-table-head">
-                <span>Réservation</span>
-                <span>Client</span>
-                <span>Voyage</span>
-                <span>Places</span>
-                <span>Tarif</span>
-                <span>Statut</span>
-              </div>
-
-              <c:forEach var="reservation" items="${reservations}">
-                <article class="res-row">
-                  <div class="res-col res-col-code">
-                    <div class="res-code-icon">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"></path><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"></path><path d="m9 15 2 2 4-4"></path></svg>
-                    </div>
-                    <div>
-                      <p class="res-code">#RES-${reservation.idReservation}</p>
-                      <p class="res-meta">${reservation.dateReservation.format(DateTimeFormatter.ofPattern("dd MMM yyyy · HH:mm", Locale.FRENCH))}</p>
+                <div class="ticket-side">
+                  <div class="seats-block">
+                    <span class="seats-label">
+                      SIÈGES
+                    </span>
+                    <div class="seats-badges">
+                      <c:forEach var="place" items="${fn:split(reservation.numeroPlace, ',')}">
+                        <span class="seat-badge">${fn:trim(place)}</span>
+                      </c:forEach>
                     </div>
                   </div>
 
-                  <div class="res-col res-col-client">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
-                    <div>
-                      <p class="res-client-name">${reservation.client}</p>
-                      <p class="res-meta">${reservation.telephone}</p>
-                    </div>
-                  </div>
+                  <p class="ticket-price"><fmt:formatNumber value="${reservation.tarif}" pattern="#,##0"/> Ar</p>
 
-                  <div class="res-col res-col-voyage">
-                    <div class="res-voyage-date">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg>
-                      <span>${reservation.dateVoyage.format(DateTimeFormatter.ofPattern("EEE dd MMM yyyy", Locale.FRENCH))}</span>
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
-                      <span>${reservation.dateVoyage.format(DateTimeFormatter.ofPattern("HH:mm"))}</span>
-                    </div>
-                    <div class="res-voyage-route">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                      <span>${reservation.gareDepart}</span>
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-                      <span>${reservation.gareArrivee}</span>
-                    </div>
-                  </div>
+                  <c:set var="statutLower" value="${fn:toLowerCase(reservation.statutPaiement)}" />
+                  <c:choose>
+                    <c:when test="${fn:contains(statutLower, 'annul')}">
+                      <span class="ticket-status status-annulee">${reservation.statutPaiement}</span>
+                    </c:when>
+                    <c:when test="${fn:contains(statutLower, 'rembour')}">
+                      <span class="ticket-status status-remboursee">${reservation.statutPaiement}</span>
+                    </c:when>
+                    <c:when test="${fn:contains(statutLower, 'pay')}">
+                      <span class="ticket-status status-paye">${reservation.statutPaiement}</span>
+                    </c:when>
+                    <c:otherwise>
+                      <span class="ticket-status status-attente">${reservation.statutPaiement}</span>
+                    </c:otherwise>
+                  </c:choose>
+                </div>
+              </article>
+            </c:forEach>
 
-                  <div class="res-col res-col-places">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"></path></svg>
-                    <p class="res-places-list">${reservation.numeroPlace}</p>
-                  </div>
-
-                  <div class="res-col res-col-tarif">
-                    <fmt:formatNumber value="${reservation.tarif}" pattern="#,##0"/> Ar
-                  </div>
-
-                  <div class="res-col res-col-statut">
-                    <c:set var="statutLower" value="${fn:toLowerCase(reservation.statutPaiement)}" />
-                    <c:choose>
-                      <c:when test="${fn:contains(statutLower, 'annul')}">
-                        <span class="res-badge res-badge-annulee">${reservation.statutPaiement}</span>
-                      </c:when>
-                      <c:when test="${fn:contains(statutLower, 'rembour')}">
-                        <span class="res-badge res-badge-remboursee">${reservation.statutPaiement}</span>
-                      </c:when>
-                      <c:when test="${fn:contains(statutLower, 'pay')}">
-                        <span class="res-badge res-badge-paye">${reservation.statutPaiement}</span>
-                      </c:when>
-                      <c:otherwise>
-                        <span class="res-badge res-badge-attente">${reservation.statutPaiement}</span>
-                      </c:otherwise>
-                    </c:choose>
-                  </div>
-                </article>
-              </c:forEach>
-
-              <c:if test="${empty reservations}">
-                <p class="res-empty">Aucune réservation ne correspond à ces critères.</p>
-              </c:if>
-            </div>
-
-            <!-- Pagination retirée pour l'instant : le controller/service actuels renvoient
-                 toutes les réservations correspondant au filtre, sans découpage par page.
-                 Réintègre ce bloc quand getReservations(...) acceptera page/taillePage. -->
-          </section>
+            <c:if test="${empty reservations}">
+              <p class="res-empty">Aucune réservation ne correspond à ces critères.</p>
+            </c:if>
+          </div>
         </main>
 
         <aside class="summary-col">
-          <!-- À la place du récapitulatif de recherche : bouton Nouvelle réservation -->
-          <a href="${pageContext.request.contextPath}/guichet/reservation/new" class="new-res-card">
-            <div class="new-res-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
-            </div>
-            <div>
-              <p class="new-res-title">Nouvelle réservation</p>
-              <p class="new-res-subtitle">Créer une réservation pour un client</p>
-            </div>
-          </a>
+          <section class="summary-card reservation-summary-card">
+            <div class="reservation-summary-hero">
+              <div class="reservation-summary-badge">Vue rapide</div>
+              <h2 class="reservation-summary-title">Réservations du guichet</h2>
+              <p class="reservation-summary-text">
+                Un aperçu clair des réservations, des statuts de paiement et un accès direct à la création d'une nouvelle fiche.
+              </p>
 
-          <div class="summary-card">
-            <div class="summary-head">
-              <p class="summary-title">Besoin d'aide ?</p>
-            </div>
-            <div class="summary-body">
-              <p class="help-desc">Vous pouvez filtrer les réservations par période ou par ville.</p>
-              <button type="button" class="new-filter-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54z"></path></svg>
-                Nouveau filtre
-              </button>
-            </div>
-          </div>
-
-          <!-- stats est une Map<String, Long> : clé = libellé réel du statut de paiement
-               en base (ex. "Payé", "Part. payé"...), valeur = nombre de réservations. -->
-          <div class="summary-card">
-            <div class="summary-head">
-              <p class="summary-title">Statuts de paiement</p>
-            </div>
-            <div class="summary-body">
-              <c:forEach var="entry" items="${stats}">
-                <div class="legend-row">
-                  <span class="legend-label">${entry.key}</span>
-                  <span class="legend-count">${entry.value}</span>
+              <div class="reservation-summary-metrics">
+                <div class="summary-metric summary-metric-primary">
+                  <span class="summary-metric-value">${fn:length(reservations)}</span>
+                  <span class="summary-metric-label">Réservations</span>
                 </div>
-              </c:forEach>
-              <c:if test="${empty stats}">
-                <p class="res-empty">Pas encore de données.</p>
-              </c:if>
+                <div class="summary-metric">
+                  <span class="summary-metric-value">${fn:length(stats)}</span>
+                  <span class="summary-metric-label">Statuts suivis</span>
+                </div>
+                <div class="summary-metric">
+                  <span class="summary-metric-value">24h</span>
+                  <span class="summary-metric-label">Délai d'annulation</span>
+                </div>
+              </div>
             </div>
-          </div>
+
+            <div class="reservation-summary-body">
+              <div class="reservation-summary-panel">
+                <div class="reservation-summary-panel-head">
+                  <span>Répartition des paiements</span>
+                </div>
+
+                <div class="reservation-summary-status-list">
+                  <c:forEach var="entry" items="${stats}">
+                    <div class="reservation-summary-status-row">
+                      <span class="reservation-summary-status-name">${fn:toUpperCase(entry.key)}</span>
+                      <span class="reservation-summary-status-value">${entry.value}</span>
+                    </div>
+                  </c:forEach>
+                  <c:if test="${empty stats}">
+                    <p class="reservation-summary-empty">Aucun statut disponible pour le moment.</p>
+                  </c:if>
+                </div>
+              </div>
+
+              <div class="reservation-summary-note">
+                <div class="reservation-summary-note-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                </div>
+                <div>
+                  <p class="reservation-summary-note-title">Navigation rapide</p>
+                  <p class="reservation-summary-note-text">Créez une nouvelle réservation ou revenez au tableau de bord en un clic.</p>
+                </div>
+              </div>
+
+              <a href="${pageContext.request.contextPath}/guichet/reservation/new" class="new-res-btn reservation-summary-cta">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+                Nouvelle réservation
+              </a>
+            </div>
+          </section>
         </aside>
       </div>
     </div>
