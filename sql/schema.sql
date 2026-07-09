@@ -105,9 +105,29 @@ CREATE TABLE pannes(
 );
 
 CREATE TABLE reparation(
-    id SERIA PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     id_panne INT NOT NULL REFERENCES pannes(id) ON DELETE CASCADE,
     id_statut_reparation INT NOT NULL REFERENCES statut_reparation(id) ON DELETE CASCADE, 
     date_modification DATE NOT NULL DEFAULT NOW(),
     cout NUMERIC(10, 2) DEFAULT NULL
 );
+
+create table contrats_employes(
+    id SERIAL PRIMARY KEY,
+    id_employe INT NOT NULL REFERENCES utilisateurs(id) ON DELETE CASCADE,
+    date_embauche DATE NOT NULL,
+    date_renvoi DATE DEFAULT NULL,
+);
+
+create table statut_employe(
+    id SERIAL PRIMARY KEY,
+    libelle VARCHAR(50) NOT NULL
+);
+
+create table employe_statut(
+    id SERIAL PRIMARY KEY,
+    id_employe INT NOT NULL REFERENCES utilisateurs(id) ON DELETE CASCADE,
+    id_statut INT NOT NULL REFERENCES statut_employe(id) ON DELETE CASCADE,
+    date_modification DATE NOT NULL DEFAULT NOW()
+);
+

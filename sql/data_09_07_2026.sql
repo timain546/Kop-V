@@ -34,3 +34,9 @@ INSERT INTO reparation (id_panne,id_statut_reparation,date_modification,cout) VA
 (1,1,'2026-07-10',100.00),
 (2,1,'2026-08-10',100.00),
 (3,1,'2026-09-10',100.00);
+
+
+insert into statut_employe (libelle) values
+('Engagé'),
+('Renvoyé'),
+('Reambauché')
