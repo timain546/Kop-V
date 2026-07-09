@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +29,7 @@ import com.cooperative.transport.entities.Gares;
 import com.cooperative.transport.entities.ModePaiement;
 import com.cooperative.transport.entities.Paiements;
 import com.cooperative.transport.entities.Places;
+import com.cooperative.transport.entities.ReservationsFille;
 import com.cooperative.transport.entities.PlaceStatut;
 import com.cooperative.transport.entities.ReservationsMere;
 import com.cooperative.transport.entities.Voyages;
@@ -34,21 +38,19 @@ import com.cooperative.transport.repositories.ModePaiementRepository;
 import com.cooperative.transport.repositories.PaiementRepository;
 import com.cooperative.transport.repositories.PlaceRepository;
 import com.cooperative.transport.repositories.PlaceStatutRepository;
+import com.cooperative.transport.repositories.ReservationFilleRepository;
 import com.cooperative.transport.repositories.ReservationMereRepository;
+import com.cooperative.transport.services.PdfService;
 import com.cooperative.transport.services.ReservationService;
 import com.cooperative.transport.services.VoyageService;
-
-
 
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ReservationController {
 
-    @GetMapping("/")
-    public String home() {
-        return "redirect:/guichet/reservation";
-    }
+    @Autowired
+    private PdfService pdfService;
 
     @Autowired
     private ReservationService reservationService;
@@ -64,6 +66,9 @@ public class ReservationController {
 
     @Autowired
     private ReservationMereRepository reservationMereRepository;
+
+    @Autowired
+    private ReservationFilleRepository reservationFilleRepository;
 
     @Autowired
     private PaiementRepository paiementRepository;
@@ -311,5 +316,21 @@ public class ReservationController {
             model.addAttribute("erreur", e.getMessage());
         }
         return "guichet/import-excel";
+    }
+
+
+    @GetMapping("/guichet/reservation/{idReservation}/pdf")
+    public ResponseEntity<byte[]> downloadReservationPdf(@PathVariable Long idReservation) {
+
+        ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
+        List<ReservationsFille> places = reservationFilleRepository.findByReservationMere(reservation);
+        byte[] pdf = pdfService.generateReservationPdf(reservation, places);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=reservation-kopv-" + reservation.getId() + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(pdf.length)
+                .body(pdf);
     }
 }
