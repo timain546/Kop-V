@@ -162,7 +162,7 @@ public class EmployesController {
                                  @RequestParam("mdp") String motDePasse,
                                  @RequestParam("role") Integer roleId,
                                  @RequestParam("salaire") Double montant,
-                                 @RequestParam("date_embauche") java.sql.Date dateEmbauche) {
+                                 @RequestParam("dateEmbauche") java.sql.Date dateEmbauche) {
         Utilisateurs employe = new Utilisateurs();
         employe.setNom(nom);
         employe.setPrenom(prenom);
