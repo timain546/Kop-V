@@ -138,12 +138,23 @@ public class ReservationController {
     }
 
     @PostMapping("/guichet/reservation/new/paiement")
-    public String postNewPaiement(HttpSession session, @RequestParam String nomClient,
-            @RequestParam String telephoneClient, @RequestParam BigDecimal montant,
-            @RequestParam ModePaiement modePaiement, @RequestParam String reference) {
+    public String postNewPaiement(HttpSession session, Model model,
+            @RequestParam String nomClient, @RequestParam String telephoneClient,
+            @RequestParam BigDecimal montant, @RequestParam ModePaiement modePaiement,
+            @RequestParam(required = false, defaultValue = "") String reference) {
         InfoNewReservationDTO info = (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
 
-        reservationService.saveReservation(info, nomClient, telephoneClient, montant, modePaiement, reference);
+        try {
+            reservationService.saveReservation(info, nomClient, telephoneClient, montant, modePaiement, reference);
+        }
+        catch (Exception e) {
+            List<ModePaiement> modesPaiements = modePaiementRepository.findAll();
+            model.addAttribute("info", info);
+            model.addAttribute("modesPaiements", modesPaiements);
+            model.addAttribute("erreur", e.getMessage());
+
+            return "guichet/new-paiement";
+        }
 
         return "redirect:/guichet/reservation";
     }
@@ -153,23 +164,42 @@ public class ReservationController {
         ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
         List<ModePaiement> modesPaiements = modePaiementRepository.findAll();
         List<Paiements> paiements = paiementRepository.findByReservation(reservation);
-        BigDecimal montantPayeTotal = paiementRepository.getPaiementTotal(reservation);
+        BigDecimal montantPayeTotal = paiementRepository.getPaiementTotal(reservation).orElse(BigDecimal.ZERO);
+        BigDecimal prixTotal = reservationMereRepository.getPrixTotal(reservation);
 
         model.addAttribute("reservation", reservation);
         model.addAttribute("modesPaiements", modesPaiements);
         model.addAttribute("paiements", paiements);
         model.addAttribute("montantPayeTotal", montantPayeTotal);
+        model.addAttribute("prixTotal", prixTotal);
 
         return "guichet/paiement";
     }
 
     @PostMapping("/guichet/reservation/{idReservation}/paiement")
-    public String postPaiement(@PathVariable Long idReservation, @RequestParam BigDecimal montant,
-            @RequestParam ModePaiement modePaiement,
+    public String postPaiement(@PathVariable Long idReservation, Model model,
+            @RequestParam BigDecimal montant, @RequestParam ModePaiement modePaiement,
             @RequestParam(required = false, defaultValue = "") String reference) {
         ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
 
-        reservationService.payerReservation(reservation, montant, modePaiement, reference);
+        try {
+            reservationService.payerReservation(reservation, montant, modePaiement, reference);
+        }
+        catch (Exception e) {
+            List<ModePaiement> modesPaiements = modePaiementRepository.findAll();
+            List<Paiements> paiements = paiementRepository.findByReservation(reservation);
+            BigDecimal montantPayeTotal = paiementRepository.getPaiementTotal(reservation).orElse(BigDecimal.ZERO);
+            BigDecimal prixTotal = reservationMereRepository.getPrixTotal(reservation);
+
+            model.addAttribute("reservation", reservation);
+            model.addAttribute("modesPaiements", modesPaiements);
+            model.addAttribute("paiements", paiements);
+            model.addAttribute("montantPayeTotal", montantPayeTotal);
+            model.addAttribute("prixTotal", prixTotal);
+            model.addAttribute("erreur", e.getMessage());
+
+            return "guichet/paiement";
+        }
 
         return "redirect:/guichet/reservation/" + idReservation + "/paiement";
     }
@@ -184,10 +214,20 @@ public class ReservationController {
     }
 
     @PostMapping("/guichet/reservation/{idReservation}/annulation")
-    public String postAnnulation(@PathVariable Long idReservation, @RequestParam BigDecimal frais, @RequestParam String motif) {
+    public String postAnnulation(Model model, @PathVariable Long idReservation,
+            @RequestParam(required = false, defaultValue = "0") BigDecimal frais,
+            @RequestParam(required = false, defaultValue = "") String motif) {
         ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
 
-        reservationService.annulerReservation(reservation, frais, motif);
+        try {
+            reservationService.annulerReservation(reservation, frais, motif);
+        }
+        catch (Exception e) {
+            model.addAttribute("reservation", reservation);
+            model.addAttribute("erreur", e.getMessage());
+
+            return "guichet/annulation";
+        }
 
         return "redirect:/guichet/reservation";
     }

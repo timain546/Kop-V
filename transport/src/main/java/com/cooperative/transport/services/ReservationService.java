@@ -67,17 +67,25 @@ public class ReservationService {
     @Transactional
     public ReservationsMere saveReservation(InfoNewReservationDTO info, String nomClient,
             String telephoneClient, BigDecimal montant, ModePaiement modePaiement, String reference) {
-        // TODO: valider tout en fait
         if (montant.compareTo(BigDecimal.ZERO) <= 0) {
             throw new InvalidParameterException("Le montant est invalide");
         }
+
+        BigDecimal prixTotal = info.getVoyage().getTarif().multiply(BigDecimal.valueOf(info.getNbPlaces()));
+        String libelleStatut = "Partiellement payé";
+        if (prixTotal.compareTo(montant) == 0) {
+            libelleStatut = "Payé";
+        }
+        else if (prixTotal.compareTo(montant) < 0) {
+            throw new InvalidParameterException("Le montant est trop élevé");
+        }
+        StatutPaiement statutPaiement = statutPaiementRepository.findByLibelle(libelleStatut).get();
 
         Client client = new Client();
         client.setNom(nomClient);
         client.setTelephone(telephoneClient);
         clientRepository.save(client);
 
-        StatutPaiement statutPaiement = statutPaiementRepository.findByLibelle("Partiellement payé").get();
         StatutReservation statutReservation = statutReservationRepository.findByLibelle("Confirmée").get();
 
         ReservationsMere reservation = new ReservationsMere();
@@ -121,8 +129,9 @@ public class ReservationService {
         }
 
         BigDecimal prixTotal = reservationMereRepository.getPrixTotal(reservation);
-        BigDecimal montantDejaPaye = paiementRepository.getPaiementTotal(reservation);
+        BigDecimal montantDejaPaye = paiementRepository.getPaiementTotal(reservation).orElse(BigDecimal.ZERO);
         String libelleStatut = "Partiellement payé";
+
         if (prixTotal.compareTo(montantDejaPaye.add(montant)) == 0) {
             libelleStatut = "Payé";
         }

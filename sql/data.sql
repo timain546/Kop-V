@@ -130,9 +130,13 @@ values
 
 insert into paiements (montant, date_paiement, id_mode_paiement, id_reservation)
 values
-(30000, '2026-07-02', 1, 1);
+(20000, '2026-07-02', 1, 1);
 
 insert into statut_reservation (libelle)
 values
 ('Confirmée'),
 ('Annulée');
+
+insert into reservation_statut (date_modification, id_reservation, id_statut)
+values
+('2026-07-02', 1, 1);
