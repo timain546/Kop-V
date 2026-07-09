@@ -1,4 +1,4 @@
-package com.cooperative.transport.models;
+package com.cooperative.transport.dto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,7 +12,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class InfoNewReservation {
+public class InfoNewReservationDTO {
 
     private Gares gareDepart;
     private Gares gareArrivee;

@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.cooperative.transport.dto.InfoNewReservationDTO;
 import com.cooperative.transport.dto.ReservationDTO;
+import com.cooperative.transport.dto.ReservationFiltreDTO;
 import com.cooperative.transport.dto.VoyageDisponibleDTO;
 import com.cooperative.transport.entities.Gares;
 import com.cooperative.transport.entities.ModePaiement;
@@ -23,10 +25,6 @@ import com.cooperative.transport.entities.Places;
 import com.cooperative.transport.entities.PlaceStatut;
 import com.cooperative.transport.entities.ReservationsMere;
 import com.cooperative.transport.entities.Voyages;
-import com.cooperative.transport.models.InfoNewReservation;
-import com.cooperative.transport.models.ReservationFiltreVM;
-import com.cooperative.transport.models.ReservationNewPaiementForm;
-import com.cooperative.transport.models.ReservationPaiementForm;
 import com.cooperative.transport.repositories.GareRepository;
 import com.cooperative.transport.repositories.ModePaiementRepository;
 import com.cooperative.transport.repositories.PaiementRepository;
@@ -76,7 +74,7 @@ public class ReservationController {
     }
 
     @PostMapping("/guichet/reservation/new")
-    public String newIndex(HttpSession session, @ModelAttribute InfoNewReservation info) {
+    public String newIndex(HttpSession session, @ModelAttribute InfoNewReservationDTO info) {
         session.setAttribute("infoNewReservation", info);
 
         return "redirect:/guichet/reservation/new/choix-voyage";
@@ -84,7 +82,7 @@ public class ReservationController {
 
     @GetMapping("/guichet/reservation/new/choix-voyage")
     public String newChoixVoyage(HttpSession session, Model model) {
-        InfoNewReservation info = (InfoNewReservation) session.getAttribute("infoNewReservation");
+        InfoNewReservationDTO info = (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
         List<VoyageDisponibleDTO> voyages = voyageService.getVoyagesDisponibles(
             info.getDateMin(), info.getDateMax(), info.getNbPlaces(),
             info.getGareDepart().getVille(), info.getGareArrivee().getVille()
@@ -98,7 +96,7 @@ public class ReservationController {
 
     @PostMapping("/guichet/reservation/new/choix-voyage")
     public String postNewChoixVoyage(HttpSession session, @RequestParam Voyages voyage) {
-        InfoNewReservation info = (InfoNewReservation) session.getAttribute("infoNewReservation");
+        InfoNewReservationDTO info = (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
 
         info.setVoyage(voyage);
 
@@ -107,7 +105,7 @@ public class ReservationController {
 
     @GetMapping("/guichet/reservation/new/choix-place")
     public String newChoixPlace(HttpSession session, Model model) {
-        InfoNewReservation info = (InfoNewReservation) session.getAttribute("infoNewReservation");
+        InfoNewReservationDTO info = (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
         List<PlaceStatut> places = placeStatutRepository.findByVoyage(info.getVoyage());
         int maxY = places.stream().mapToInt(p -> p.getPlace().getY()).max().getAsInt();
 
@@ -120,7 +118,7 @@ public class ReservationController {
 
     @PostMapping("/guichet/reservation/new/choix-place")
     public String postNewChoixPlace(HttpSession session, @RequestParam List<Long> idPlaces) {
-        InfoNewReservation info = (InfoNewReservation) session.getAttribute("infoNewReservation");
+        InfoNewReservationDTO info = (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
 
         List<Places> places = placeRepository.findAllById(idPlaces);
         info.setPlaces(places);
@@ -130,7 +128,7 @@ public class ReservationController {
 
     @GetMapping("/guichet/reservation/new/paiement")
     public String newPaiement(HttpSession session, Model model) {
-        InfoNewReservation info = (InfoNewReservation) session.getAttribute("infoNewReservation");
+        InfoNewReservationDTO info = (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
         List<ModePaiement> modesPaiements = modePaiementRepository.findAll();
 
         model.addAttribute("info", info);
@@ -140,12 +138,14 @@ public class ReservationController {
     }
 
     @PostMapping("/guichet/reservation/new/paiement")
-    public String postNewPaiement(HttpSession session, @ModelAttribute ReservationNewPaiementForm form) {
-        InfoNewReservation info = (InfoNewReservation) session.getAttribute("infoNewReservation");
+    public String postNewPaiement(HttpSession session, @RequestParam String nomClient,
+            @RequestParam String telephoneClient, @RequestParam BigDecimal montant,
+            @RequestParam ModePaiement modePaiement, @RequestParam String reference) {
+        InfoNewReservationDTO info = (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
 
-        reservationService.saveReservation(info, form);
+        reservationService.saveReservation(info, nomClient, telephoneClient, montant, modePaiement, reference);
 
-        return "redirect:/";
+        return "redirect:/guichet/reservation";
     }
 
     @GetMapping("/guichet/reservation/{idReservation}/paiement")
@@ -164,10 +164,12 @@ public class ReservationController {
     }
 
     @PostMapping("/guichet/reservation/{idReservation}/paiement")
-    public String postPaiement(@PathVariable Long idReservation, @ModelAttribute ReservationPaiementForm form) {
+    public String postPaiement(@PathVariable Long idReservation, @RequestParam BigDecimal montant,
+            @RequestParam ModePaiement modePaiement,
+            @RequestParam(required = false, defaultValue = "") String reference) {
         ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
 
-        reservationService.payerReservation(reservation, form.getMontant(), form.getModePaiement(), form.getReference());
+        reservationService.payerReservation(reservation, montant, modePaiement, reference);
 
         return "redirect:/guichet/reservation/" + idReservation + "/paiement";
     }
@@ -187,7 +189,7 @@ public class ReservationController {
 
         reservationService.annulerReservation(reservation, frais, motif);
 
-        return "redirect:/guichet/reservation/";
+        return "redirect:/guichet/reservation";
     }
 
 
@@ -206,7 +208,7 @@ public class ReservationController {
         model.addAttribute("villes",
                 gareRepository.findAll().stream().map(Gares::getVille).distinct().toList());
 
-        ReservationFiltreVM filtre = new ReservationFiltreVM(dateDebut, dateFin, villeDepart, villeArrivee);
+        ReservationFiltreDTO filtre = new ReservationFiltreDTO(dateDebut, dateFin, villeDepart, villeArrivee);
         model.addAttribute("filtre", filtre);
 
         model.addAttribute("stats", computeStats(reservations));

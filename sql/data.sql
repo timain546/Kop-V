@@ -1,7 +1,7 @@
 insert into role(libelle)
 values
-('guichet'),
-('chauffeur');
+('Guichet'),
+('Chauffeur');
 
 insert into gares(nom, ville)
 values
@@ -11,9 +11,9 @@ values
 
 insert into statut_paiement(libelle)
 values
-('non payé'),
-('partiellement payé'),
-('payé');
+('Non payé'),
+('Partiellement payé'),
+('Payé');
 
 insert into mode_paiement(libelle)
 values
@@ -30,8 +30,8 @@ values
 
 insert into categorie_vehicule(libelle)
 values
-('standard'),
-('premium'),
+('Standard'),
+('Premium'),
 ('VIP');
 
 insert into utilisateurs(email, mot_de_passe, nom, prenom, id_role)
@@ -134,5 +134,5 @@ values
 
 insert into statut_reservation (libelle)
 values
-('confirmée'),
-('annulée');
+('Confirmée'),
+('Annulée');

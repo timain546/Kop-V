@@ -1,6 +1,7 @@
 package com.cooperative.transport.services;
 
 import java.math.BigDecimal;
+import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +20,6 @@ import com.cooperative.transport.entities.ReservationsMere;
 import com.cooperative.transport.entities.ReservationStatut;
 import com.cooperative.transport.entities.StatutPaiement;
 import com.cooperative.transport.entities.StatutReservation;
-import com.cooperative.transport.enums.StatutPaiementId;
-import com.cooperative.transport.enums.StatutReservationId;
-import com.cooperative.transport.exceptions.ValidationException;
-import com.cooperative.transport.models.InfoNewReservation;
-import com.cooperative.transport.models.ReservationNewPaiementForm;
 import com.cooperative.transport.repositories.AnnulationRepository;
 import com.cooperative.transport.repositories.ClientRepository;
 import com.cooperative.transport.repositories.PaiementRepository;
@@ -32,6 +28,7 @@ import com.cooperative.transport.repositories.ReservationMereRepository;
 import com.cooperative.transport.repositories.ReservationStatutRepository;
 import com.cooperative.transport.repositories.StatutPaiementRepository;
 import com.cooperative.transport.repositories.StatutReservationRepository;
+import com.cooperative.transport.dto.InfoNewReservationDTO;
 import com.cooperative.transport.dto.ReservationDTO;
 import com.cooperative.transport.repositories.ReservationRepository;
 
@@ -68,19 +65,20 @@ public class ReservationService {
 
 
     @Transactional
-    public ReservationsMere saveReservation(InfoNewReservation info, ReservationNewPaiementForm form) throws ValidationException {
+    public ReservationsMere saveReservation(InfoNewReservationDTO info, String nomClient,
+            String telephoneClient, BigDecimal montant, ModePaiement modePaiement, String reference) {
         // TODO: valider tout en fait
-        if (form.getMontant().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new ValidationException("montant", form.getMontant(), "Le montant est invalide");
+        if (montant.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new InvalidParameterException("Le montant est invalide");
         }
 
         Client client = new Client();
-        client.setNom(form.getNomClient());
-        client.setTelephone(form.getTelephoneClient());
+        client.setNom(nomClient);
+        client.setTelephone(telephoneClient);
         clientRepository.save(client);
 
-        StatutPaiement statutPaiement = statutPaiementRepository.findById(StatutPaiementId.PART_PAYE.getId()).get();
-        StatutReservation statutReservation = statutReservationRepository.findById(StatutReservationId.CONFIRMEE.getId()).get();
+        StatutPaiement statutPaiement = statutPaiementRepository.findByLibelle("Partiellement payé").get();
+        StatutReservation statutReservation = statutReservationRepository.findByLibelle("Confirmée").get();
 
         ReservationsMere reservation = new ReservationsMere();
         reservation.setLibelle("Réservation pour " + info.getPlaces().size() + " personnes");
@@ -107,32 +105,32 @@ public class ReservationService {
 
         Paiements paiement = new Paiements();
         paiement.setReservation(reservation);
-        paiement.setMontant(form.getMontant());
-        paiement.setModePaiement(form.getModePaiement());
+        paiement.setMontant(montant);
+        paiement.setModePaiement(modePaiement);
         paiement.setDatePaiement(LocalDateTime.now());
-        paiement.setReferenceTransaction(form.getReference());
+        paiement.setReferenceTransaction(reference);
         paiementRepository.save(paiement);
 
         return reservation;
     }
 
     @Transactional
-    public void payerReservation(ReservationsMere reservation, BigDecimal montant, ModePaiement modePaiement, String reference) throws ValidationException {
+    public void payerReservation(ReservationsMere reservation, BigDecimal montant, ModePaiement modePaiement, String reference) {
         if (montant.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new ValidationException("montant", montant, "Le montant est invalide");
+            throw new InvalidParameterException("Le montant est invalide");
         }
 
         BigDecimal prixTotal = reservationMereRepository.getPrixTotal(reservation);
         BigDecimal montantDejaPaye = paiementRepository.getPaiementTotal(reservation);
-        StatutPaiementId statut = StatutPaiementId.PART_PAYE;
+        String libelleStatut = "Partiellement payé";
         if (prixTotal.compareTo(montantDejaPaye.add(montant)) == 0) {
-            statut = StatutPaiementId.PAYE;
+            libelleStatut = "Payé";
         }
         else if (prixTotal.compareTo(montantDejaPaye.add(montant)) < 0) {
-            throw new ValidationException("montant", montant, "Le montant est trop élevé");
+            throw new InvalidParameterException("Le montant est trop élevé");
         }
 
-        StatutPaiement statutPaiement = statutPaiementRepository.findById(statut.getId()).get();
+        StatutPaiement statutPaiement = statutPaiementRepository.findByLibelle(libelleStatut).get();
         reservation.setStatutPaiement(statutPaiement);
         reservationMereRepository.save(reservation);
 
@@ -147,7 +145,7 @@ public class ReservationService {
 
     @Transactional
     public void annulerReservation(ReservationsMere reservation, BigDecimal frais, String motif) {
-        StatutReservation statutAnnulee = statutReservationRepository.findById(StatutReservationId.ANNULEE.getId()).get();
+        StatutReservation statutAnnulee = statutReservationRepository.findByLibelle("Annulée").get();
         ReservationStatut rs = new ReservationStatut();
         rs.setReservation(reservation);
         rs.setStatut(statutAnnulee);

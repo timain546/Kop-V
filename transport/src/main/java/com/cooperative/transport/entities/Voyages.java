@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Entity
 @Table(name = "voyages")
@@ -38,4 +39,13 @@ public class Voyages {
 
     @Column(name = "tarif", nullable = false, precision = 10, scale = 2)
     private BigDecimal tarif;
+
+    public String getHeureDepart() {
+        return dateHeureDepart.format(DateTimeFormatter.ofPattern("HH:mm", Locale.FRENCH));
+    }
+
+    public String getHeureArrivee() {
+        return dateHeureDepart.plusMinutes(dureeEstimeeMinutes)
+                .format(DateTimeFormatter.ofPattern("HH:mm", Locale.FRENCH));
+    }
 }
