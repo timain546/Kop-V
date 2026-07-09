@@ -3,6 +3,8 @@ package com.cooperative.transport.repositories;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -50,9 +52,10 @@ public interface ReservationMereRepository extends JpaRepository<ReservationsMer
                  v.date_heure_depart, gd.ville, ga.ville, sp.libelle
         ORDER BY rm.date_reservation DESC
         """, nativeQuery = true)
-    List<ReservationDTO> findReservationsByDateAndVilleDepartAndVilleArrivee(
+    Page<ReservationDTO> findReservationsByDateAndVilleDepartAndVilleArrivee(
             @Param("dateDebut") String dateDebut,
             @Param("dateFin") String dateFin,
             @Param("villeDepart") String villeDepart,
-            @Param("villeArrivee") String villeArrivee);
+            @Param("villeArrivee") String villeArrivee,
+            Pageable pageable);
 }

@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -266,19 +269,21 @@ public class ReservationController {
             @RequestParam(required = false) String dateFin,
             @RequestParam(required = false, defaultValue = "") String villeDepart,
             @RequestParam(required = false, defaultValue = "") String villeArrivee,
+            @PageableDefault(page = 0, size = 10) Pageable pageable,
             Model model) {
 
-        List<ReservationDTO> reservations = reservationService.getReservations(
-                dateDebut, dateFin, villeDepart, villeArrivee);
+        Page<ReservationDTO> reservations = reservationService.getReservations(
+                dateDebut, dateFin, villeDepart, villeArrivee, pageable);
 
-        model.addAttribute("reservations", reservations);
+        model.addAttribute("reservations", reservations.getContent());
+        model.addAttribute("page", reservations);
         model.addAttribute("villes",
                 gareRepository.findAll().stream().map(Gares::getVille).distinct().toList());
 
         ReservationFiltreDTO filtre = new ReservationFiltreDTO(dateDebut, dateFin, villeDepart, villeArrivee);
         model.addAttribute("filtre", filtre);
 
-        model.addAttribute("stats", computeStats(reservations));
+        model.addAttribute("stats", computeStats(reservations.getContent()));
 
         return "guichet/reservation";
     }

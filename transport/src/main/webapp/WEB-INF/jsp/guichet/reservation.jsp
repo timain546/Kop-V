@@ -11,7 +11,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Liste des réservations — KOP-V</title>    
+    <title>Liste des réservations — KOP-V</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/styles.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/common.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/reservation.css" />
@@ -54,7 +54,7 @@
         <main class="main-col">
 
           <!-- ================= CARTE HÉRO ================= -->
-          
+
 
           <!-- ================= FILTRES (date + ville, inchangés) ================= -->
           <form class="filters-card" action="${pageContext.request.contextPath}/guichet/reservation" method="get">
@@ -93,6 +93,28 @@
               Rechercher
             </button>
           </form>
+
+          <div class="page-size-wrap">
+            <form class="page-size-form" action="${pageContext.request.contextPath}/guichet/reservation" method="get">
+              <input type="hidden" name="page" value="0" />
+              <input type="hidden" name="dateDebut" value="${filtre.dateDebut}" />
+              <input type="hidden" name="dateFin" value="${filtre.dateFin}" />
+              <input type="hidden" name="villeDepart" value="${filtre.villeDepart}" />
+              <input type="hidden" name="villeArrivee" value="${filtre.villeArrivee}" />
+
+              <label for="size" class="page-size-label">Afficher</label>
+              <select id="size" name="size" class="page-size-select">
+                <option value="5"  ${page.size == 5 ? 'selected' : ''}>5</option>
+                <option value="10" ${page.size == 10 ? 'selected' : ''}>10</option>
+                <option value="20" ${page.size == 20 ? 'selected' : ''}>20</option>
+                <option value="50" ${page.size == 50 ? 'selected' : ''}>50</option>
+                <option value="100" ${page.size == 100 ? 'selected' : ''}>100</option>
+              </select>
+              <span class="page-size-suffix">réservations par page</span>
+
+              <button type="submit" class="page-size-btn">Appliquer</button>
+            </form>
+          </div>
 
           <!-- ================= LISTE (cartes ticket) ================= -->
           <div class="res-list">
@@ -175,6 +197,56 @@
               </article>
             </c:forEach>
 
+            <c:if test="${page.totalPages > 1}">
+              <nav class="pagination" aria-label="Pagination des réservations">
+                <!-- Précédent -->
+                <c:choose>
+                  <c:when test="${page.number > 0}">
+                    <a class="pagination-btn pagination-nav"
+                       href="?page=${page.number - 1}&size=${page.size}&dateDebut=${filtre.dateDebut}&dateFin=${filtre.dateFin}&villeDepart=${filtre.villeDepart}&villeArrivee=${filtre.villeArrivee}"
+                       aria-label="Page précédente">
+                      ← Précédent
+                    </a>
+                  </c:when>
+                  <c:otherwise>
+                    <span class="pagination-btn pagination-nav is-disabled" aria-disabled="true">← Précédent</span>
+                  </c:otherwise>
+                </c:choose>
+
+                <!-- Numéros -->
+                <div class="pagination-pages">
+                  <c:forEach begin="0" end="${page.totalPages - 1}" var="i">
+                    <c:choose>
+                      <c:when test="${i == page.number}">
+                        <span class="pagination-btn is-active" aria-current="page">${i + 1}</span>
+                      </c:when>
+                      <c:otherwise>
+                        <a class="pagination-btn"
+                           href="?page=${i}&size=${page.size}&dateDebut=${filtre.dateDebut}&dateFin=${filtre.dateFin}&villeDepart=${filtre.villeDepart}&villeArrivee=${filtre.villeArrivee}"
+                           aria-label="Aller à la page ${i + 1}">
+                          ${i + 1}
+                        </a>
+                      </c:otherwise>
+                    </c:choose>
+                  </c:forEach>
+                </div>
+
+                <!-- Suivant -->
+                <c:choose>
+                  <c:when test="${page.number < page.totalPages - 1}">
+                    <a class="pagination-btn pagination-nav"
+                       href="?page=${page.number + 1}&size=${page.size}&dateDebut=${filtre.dateDebut}&dateFin=${filtre.dateFin}&villeDepart=${filtre.villeDepart}&villeArrivee=${filtre.villeArrivee}"
+                       aria-label="Page suivante">
+                      Suivant →
+                    </a>
+                  </c:when>
+                  <c:otherwise>
+                    <span class="pagination-btn pagination-nav is-disabled" aria-disabled="true">Suivant →</span>
+                  </c:otherwise>
+                </c:choose>
+              </nav>
+            </c:if>
+
             <c:if test="${empty reservations}">
               <p class="res-empty">Aucune réservation ne correspond à ces critères.</p>
             </c:if>
@@ -238,6 +310,11 @@
               <a href="${pageContext.request.contextPath}/guichet/reservation/new" class="new-res-btn reservation-summary-cta">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
                 Nouvelle réservation
+              </a>
+
+              <a href="${pageContext.request.contextPath}/guichet/reservation/import-excel" class="new-res-btn reservation-summary-cta">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+                Importer depuis un Excel
               </a>
             </div>
           </section>

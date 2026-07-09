@@ -15,6 +15,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -187,6 +189,11 @@ public class ReservationService {
     @Transactional
     public void annulerReservation(ReservationsMere reservation, BigDecimal frais, String motif) {
         StatutReservation statutAnnulee = getOrCreateStatutReservation("Annulée");
+
+        if (reservationStatutRepository.existsByReservationAndStatut(reservation, statutAnnulee)) {
+            throw new InvalidParameterException("La réservation est déjà annulée");
+        }
+
         ReservationStatut rs = new ReservationStatut();
         rs.setReservation(reservation);
         rs.setStatut(statutAnnulee);
@@ -201,8 +208,8 @@ public class ReservationService {
         annulationRepository.save(annulation);
     }
 
-    public List<ReservationDTO> getReservations(String date1, String date2, String villeDepart, String villeArrivee) {
-        return reservationMereRepository.findReservationsByDateAndVilleDepartAndVilleArrivee(date1, date2, villeDepart, villeArrivee);
+    public Page<ReservationDTO> getReservations(String date1, String date2, String villeDepart, String villeArrivee, Pageable pageable) {
+        return reservationMereRepository.findReservationsByDateAndVilleDepartAndVilleArrivee(date1, date2, villeDepart, villeArrivee, pageable);
     }
 
     private StatutPaiement getOrCreateStatutPaiement(String libelle) {
