@@ -30,7 +30,6 @@ import com.cooperative.transport.repositories.StatutPaiementRepository;
 import com.cooperative.transport.repositories.StatutReservationRepository;
 import com.cooperative.transport.dto.InfoNewReservationDTO;
 import com.cooperative.transport.dto.ReservationDTO;
-import com.cooperative.transport.repositories.ReservationRepository;
 
 
 @Service
@@ -59,9 +58,6 @@ public class ReservationService {
 
     @Autowired
     private ReservationStatutRepository reservationStatutRepository;
-
-    @Autowired
-    private ReservationRepository reservationRepository;
 
 
     @Transactional
@@ -170,6 +166,6 @@ public class ReservationService {
     }
 
     public List<ReservationDTO> getReservations(String date1, String date2, String villeDepart, String villeArrivee) {
-        return reservationRepository.findReservationsByDateAndVilleDepartAndVilleArrivee(date1, date2, villeDepart, villeArrivee);
+        return reservationMereRepository.findReservationsByDateAndVilleDepartAndVilleArrivee(date1, date2, villeDepart, villeArrivee);
     }
 }
