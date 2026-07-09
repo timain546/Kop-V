@@ -35,3 +35,12 @@ insert into statut_employe (libelle) values
 ('Engagé'),
 ('Renvoyé'),
 ('Reambauché');
+
+insert into employe_statut (id_employe, id_statut, date_modification) values
+(1,1,'2026-01-01'),
+(2,1,'2026-02-01'),
+(3,1,'2026-03-01'),
+(4,1,'2026-04-01'),
+(5,1,'2026-02-01'),
+(6,1,'2026-03-01'),
+(7,1,'2026-04-01');
