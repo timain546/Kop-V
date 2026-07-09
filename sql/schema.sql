@@ -111,6 +111,12 @@ CREATE TABLE reparation(
     date_modification DATE NOT NULL DEFAULT NOW(),
     cout NUMERIC(10, 2) DEFAULT NULL
 );
+create table salaires(
+    id SERIAL PRIMARY KEY,
+    id_employe INT NOT NULL REFERENCES utilisateurs(id) ON DELETE CASCADE,
+    montant NUMERIC(10, 2) NOT NULL,
+    date_modification DATE NOT NULL DEFAULT NOW()
+);
 
 create table contrats_employes(
     id SERIAL PRIMARY KEY,
