@@ -3,9 +3,9 @@ INSERT INTO role (libelle) VALUES
 ('RE');
 
 INSERT INTO utilisateurs (nom, prenom, id_role, email, mot_de_passe) VALUES
-('Rakoto', 'John', 1, 'john@gmail.com', '1234'), 
-('Rabe', 'Jean', 1, 'jean@gmail.com', '1234'),   
-('Rado', 'Paul', 1, 'paul@gmail.com', '1234'),   
+('Rakoto', 'John', 1, 'john@gmail.com', '1234'),
+('Rabe', 'Jean', 1, 'jean@gmail.com', '1234'),
+('Rado', 'Paul', 1, 'paul@gmail.com', '1234'),
 ('Randria', 'Alice', 2, 'alice@gmail.com', '1234'),
 ('Rajaonarivelo', 'Hery', 1, 'herya@gmail.com', '1234'),
 ('Rajao', 'Zo', 1, 'andry@gmail.com', '1234'),

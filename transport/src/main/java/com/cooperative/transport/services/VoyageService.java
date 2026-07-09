@@ -249,4 +249,8 @@ public class VoyageService {
         return dto;
     }
 
+
+    public List<VoyageDisponibleDTO> getVoyagesDisponibles(LocalDate date1, LocalDate date2, Integer nbPlaces, String villeDepart, String villeArrivee) {
+        return voyageRepository.findByDateBetweenAndVilleAndNbPlaces(date1, date2, villeDepart, villeArrivee, nbPlaces);
+    }
 }
