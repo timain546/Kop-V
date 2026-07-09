@@ -156,6 +156,21 @@
                       <span class="ticket-status status-attente">${reservation.statutPaiement}</span>
                     </c:otherwise>
                   </c:choose>
+
+                  <details class="ticket-actions">
+                    <summary class="ticket-actions-trigger" aria-label="Actions de la réservation KOPV-${reservation.idReservation}">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="19" cy="12" r="1"></circle>
+                        <circle cx="5" cy="12" r="1"></circle>
+                      </svg>
+                    </summary>
+                    <div class="ticket-actions-menu">
+                      <a href="${pageContext.request.contextPath}/guichet/reservation/${reservation.idReservation}/annulation" class="ticket-action ticket-action-danger">Annuler</a>
+                      <a href="${pageContext.request.contextPath}/facture/pdf" class="ticket-action">Exporter</a>
+                      <a href="${pageContext.request.contextPath}/guichet/reservation/${reservation.idReservation}/paiement" class="ticket-action">Payer le reste</a>
+                    </div>
+                  </details>
                 </div>
               </article>
             </c:forEach>
