@@ -53,6 +53,9 @@ public class Pannes {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "photo_url", length = 255)
+    private String photoUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_statut_reparation_actuel")
     private StatutReparation statutReparationActuel;
@@ -60,8 +63,4 @@ public class Pannes {
     @OneToMany(mappedBy = "panne")
     @OrderBy("dateModification DESC")
     private List<Reparation> reparations;
-
-    @Column(name = "photo_url", length = 255)
-    private String photoUrl;
-
 }

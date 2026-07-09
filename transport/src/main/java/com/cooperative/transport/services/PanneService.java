@@ -36,6 +36,9 @@ public class PanneService {
             throw new IllegalArgumentException("Motif de panne non trouvé");
         }
         Optional<StatutReparation> statutReparationOpt = statutReparationRepository.findByLibelle("En panne");
+        if (statutReparationOpt.isEmpty()) {
+            throw new IllegalArgumentException("Statut réparation non trouvé");
+        }
 
         Pannes panne = new Pannes();
         panne.setVoyage(voyageOpt.get());
@@ -45,6 +48,7 @@ public class PanneService {
         panne.setMotifPanne(motifPanneOpt.get());
         panne.setDescription(description);
         panne.setPhotoUrl(photoUrl);
+        panne.setStatutReparationActuel(statutReparationOpt.get());
 
         Pannes savedPanne = panneRepository.save(panne);
 

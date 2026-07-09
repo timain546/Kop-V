@@ -23,6 +23,12 @@ Table vehicules:
     - date_vente
     - prix
 
+Table ventes_vehicule:
+    - id
+    - id_vehicule
+    - date_vente
+    - prix_vente
+
 Table gares:
     - id
     - nom
