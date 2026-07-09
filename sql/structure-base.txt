@@ -178,6 +178,7 @@ Table pannes:
     - id_motif_panne
     - description
     - photo_url
+    - id_statut_reparation
 
 Table statut_reparation:
     - id

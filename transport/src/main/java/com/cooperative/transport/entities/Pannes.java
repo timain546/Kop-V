@@ -1,13 +1,23 @@
 package com.cooperative.transport.entities;
 
-import jakarta.persistence.*;
+import java.util.List;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Entity
 @Table(name = "pannes")
@@ -43,17 +53,15 @@ public class Pannes {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "photo_url", length = 500)
-    private String photoUrl;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_statut_reparation_actuel")
+    private StatutReparation statutReparationActuel;
 
     @OneToMany(mappedBy = "panne")
     @OrderBy("dateModification DESC")
     private List<Reparation> reparations;
 
-    public String getLastReparationStatut() {
-        if(!reparations.isEmpty()) {
-            return reparations.get(0).getStatutReparation().getLibelle();
-        }
-        return null;
-    }
+    @Column(name = "photo_url", length = 255)
+    private String photoUrl;
+
 }

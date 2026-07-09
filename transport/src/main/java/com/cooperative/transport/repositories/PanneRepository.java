@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface PanneRepository extends JpaRepository<Pannes, Integer> {
     List<Pannes> findByChauffeurId(Integer chauffeurId);
+
     List<Pannes> findByVoyageId(Integer voyageId);
 
     @EntityGraph(attributePaths = {
@@ -21,6 +22,6 @@ public interface PanneRepository extends JpaRepository<Pannes, Integer> {
         "chauffeur",
         "motifPanne"
     })
-    @Query("SELECT p FROM Pannes p ORDER BY dateSignalement DESC")
-    List<Pannes> findAllPannes();
+    @Query("SELECT p.* FROM pannes p WHERE p.id_statut_reparation_actuel != (SELECT s.id FROM statut_reparation s WHERE s.libelle = 'resolu')",nativeQuery = true);
+    List<Pannes> findAllPannesSignale();
 }

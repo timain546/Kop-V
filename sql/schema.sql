@@ -105,9 +105,11 @@ CREATE TABLE pannes(
 );
 
 CREATE TABLE reparation(
-    id SERIA PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     id_panne INT NOT NULL REFERENCES pannes(id) ON DELETE CASCADE,
     id_statut_reparation INT NOT NULL REFERENCES statut_reparation(id) ON DELETE CASCADE, 
     date_modification DATE NOT NULL DEFAULT NOW(),
     cout NUMERIC(10, 2) DEFAULT NULL
 );
+
+ALTER TABLE pannes ADD COLUMN id_statut_reparation_actuel INT REFERENCES statut_reparation(id) DEFAULT NULL;

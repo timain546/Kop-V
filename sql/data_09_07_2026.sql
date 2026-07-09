@@ -25,10 +25,10 @@ INSERT INTO voyages (id_trajet, id_vehicule, id_chauffeur, duree_estimee_minutes
 (2, 5, 5, 30, '2026-08-10 09:00:00', 30.00, 2),
 (3, 6, 6, 45, '2026-09-10 10:00:00', 30.00, 2);
 
-INSERT INTO pannes (id_voyage,id_chauffeur,date_signalement,id_motif_panne,description) VALUES
-(1,4,'2026-07-10','1','Le moteur a surchauffé et le véhicule ne peut plus avancer.'),
-(2,5,'2026-08-10','2','Une crevaison a été signalée sur le trajet.'),
-(3,6,'2026-09-10','3','Problème électrique empêchant le démarrage du véhicule.');
+INSERT INTO pannes (id_voyage,id_chauffeur,date_signalement,id_motif_panne,description,id_statut_actuel) VALUES
+(1,4,'2026-07-10','1','Le moteur a surchauffé et le véhicule ne peut plus avancer.',1),
+(2,5,'2026-08-10','2','Une crevaison a été signalée sur le trajet.',1),
+(3,6,'2026-09-10','3','Problème électrique empêchant le démarrage du véhicule.',1);
 
 INSERT INTO reparation (id_panne,id_statut_reparation,date_modification,cout) VALUES
 (1,1,'2026-07-10',100.00),

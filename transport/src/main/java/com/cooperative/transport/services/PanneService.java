@@ -23,7 +23,8 @@ public class PanneService {
     private final MotifPanneRepository motifPanneRepository;
     private final VoyageService voyageService;
 
-    public PanneDTO createPanne(Integer voyageId, Integer chauffeurId, String lieu, String motifPanneLibelle, String description, String photoUrl) {
+    public PanneDTO createPanne(Integer voyageId, Integer chauffeurId, String lieu, String motifPanneLibelle,
+            String description, String photoUrl) {
         Optional<Voyages> voyageOpt = voyageRepository.findById(voyageId);
         if (voyageOpt.isEmpty() || !voyageOpt.get().getChauffeur().getId().equals(chauffeurId)) {
             throw new IllegalArgumentException("Voyage non trouvé ou accès refusé");
@@ -75,15 +76,6 @@ public class PanneService {
     }
 
     public List<Pannes> findAllPannesSignale() {
-        List<Pannes> pannesSignale = new ArrayList<>();
-        List<Pannes> toutesLesPannes = this.panneRepository.findAllPannes();
-
-        for(Pannes p : toutesLesPannes) {
-            String statutReparation = p.getLastReparationStatut();
-            if(!statutReparation.equalsIgnoreCase("resolu")) {
-                pannesSignale.add(p);
-            }
-        }
-        return pannesSignale;
+        return panneRepository.findAllPannesSignale();
     }
 }
