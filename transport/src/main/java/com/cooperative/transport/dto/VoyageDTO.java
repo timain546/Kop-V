@@ -24,10 +24,11 @@ public class VoyageDTO {
 
     private Integer dureeEstimeeMinutes;
     private Double tarif;
+    private Double carburant;
 
     public VoyageDTO() {}
 
-    public VoyageDTO(Integer idTrajet, Integer idVehicule, Integer idChauffeur, LocalDate dateDepart, LocalTime heureDepart, Integer dureeEstimeeMinutes, Double tarif) {
+    public VoyageDTO(Integer idTrajet, Integer idVehicule, Integer idChauffeur, LocalDate dateDepart, LocalTime heureDepart, Integer dureeEstimeeMinutes, Double tarif, Double carburant) {
         this.idTrajet = idTrajet;
         this.idVehicule = idVehicule;
         this.idChauffeur = idChauffeur;
@@ -35,5 +36,6 @@ public class VoyageDTO {
         this.heureDepart = heureDepart;
         this.dureeEstimeeMinutes = dureeEstimeeMinutes;
         this.tarif = tarif;
+        this.carburant = carburant;
     }
 }

@@ -133,6 +133,7 @@ Table annulations:
     - id
     - id_reservation
     - date_annulation
+    - prix_remboursement
     - frais_annulation
     - motif
 

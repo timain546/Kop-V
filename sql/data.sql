@@ -17,9 +17,12 @@ INSERT INTO categorie_vehicule (libelle) VALUES
 ('Standard');
 
 INSERT INTO vehicules (immatriculation, modele, id_categorie, nombre_places) VALUES
-('1234ABC', 'Toyota Camry', 1, 4),
-('5678DEF', 'Honda Accord', 2, 4),
-('9012GHI', 'Ford Focus', 3, 4);
+('6767BLA', 'Toyota Camry', 1, 4),
+('5463BAL', 'Honda Accord', 2, 4),
+('0911FRO', 'Ford Focus', 3, 4),
+('1234XYZ', 'Nissan Altima', 1, 4),
+('5678ABC', 'Chevrolet Malibu', 2, 4),
+('9012DEF', 'Hyundai Sonata', 3, 4);
 
 INSERT INTO gares (nom, ville, position) VALUES
 ('Gare Centrale', 'Antananarivo', ST_SetSRID(ST_MakePoint(47.5162, -18.8792), 4326)),
@@ -38,10 +41,13 @@ INSERT INTO statut_voyage (libelle) VALUES
 ('Annulé'),
 ('En panne');
 
-INSERT INTO voyages (id_trajet, id_vehicule, id_chauffeur, duree_estimee_minutes, date_heure_depart,tarif, id_statut_actuel) VALUES
-(1, 1, 1, 15, '2026-07-10 08:00:00', 30.00, 1),
-(2, 2, 2, 30, '2026-07-10 09:00:00', 30.00, 1),
-(3, 3, 3, 45, '2026-07-10 10:00:00', 30.00, 1);
+INSERT INTO voyages (id_trajet, id_vehicule, id_chauffeur, duree_estimee_minutes, date_heure_depart,tarif, id_statut_actuel, carburant) VALUES
+(1, 1, 1, 15, '2026-07-10 08:00:00', 30.00, 2, 3500.00),
+(2, 2, 2, 30, '2026-08-10 09:00:00', 30.00, 3, 4000.00),
+(3, 3, 3, 45, '2026-09-10 10:00:00', 30.00, 1, 4500.00),
+(1, 4, 4, 15, '2026-07-10 08:00:00', 30.00, 1, 2500.00),
+(2, 5, 5, 30, '2026-08-10 09:00:00', 30.00, 2, 2000.00),
+(3, 6, 6, 45, '2026-09-10 10:00:00', 30.00, 3, 1500.00);
 
 INSERT INTO tarif_voyage (id_categorie, prix, date_modification) VALUES
 (1, 30.00, '2026-01-01'),
@@ -54,7 +60,10 @@ INSERT INTO tarif_voyage (id_categorie, prix, date_modification) VALUES
 INSERT INTO voyage_statut (id_voyage, id_statut, date_modification) VALUES
 (3, 1, '2026-06-01'),
 (1, 2, '2026-06-01'),
-(2, 3, '2026-06-01');
+(2, 3, '2026-06-01'),
+(4, 1, '2026-06-01'),
+(5, 2, '2026-06-01'),
+(6, 3, '2026-06-01');
 
 INSERT INTO salaires (id_employe, salaire, date_modification) VALUES
 (1, 2000.00, '2026-01-01'),

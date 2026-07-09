@@ -120,6 +120,7 @@ public class VoyageService {
         nouveauVoyage.setDateHeureDepart(dateHeureDepart);
         nouveauVoyage.setDureeEstimeeMinutes(voyageDTO.getDureeEstimeeMinutes());
         nouveauVoyage.setTarif(BigDecimal.valueOf(voyageDTO.getTarif()));
+        nouveauVoyage.setCarburant(BigDecimal.valueOf(voyageDTO.getCarburant()));
 
         // Insertion d'un nouveau statut
 
