@@ -1,4 +1,6 @@
 CREATE DATABASE kopv;
+\c kopv;
+
 CREATE EXTENSION IF NOT EXISTS postgis;
 
 CREATE TABLE role (
@@ -58,7 +60,8 @@ CREATE TABLE voyages(
     duree_estimee_minutes INT NOT NULL,
     tarif NUMERIC(10, 2) NOT NULL,
     date_heure_depart TIMESTAMP NOT NULL,
-    id_statut_actuel INT REFERENCES statut_voyage(id) NOT NULL
+    id_statut_actuel INT REFERENCES statut_voyage(id) NOT NULL,
+    carburant NUMERIC(10, 2) DEFAULT NULL
 );
 
 CREATE TABLE tarif_voyage(

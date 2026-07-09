@@ -22,6 +22,7 @@ public class PanneService {
     private final MotifPanneRepository motifPanneRepository;
     private final VoyageService voyageService;
     private final StatutReparationRepository statutReparationRepository;
+    private final ReparationRepository reparationRepository;
 
     public PanneDTO createPanne(Integer voyageId, Integer chauffeurId, String lieu, String motifPanneLibelle,
             String description, String photoUrl) {
@@ -82,5 +83,34 @@ public class PanneService {
 
     public List<Pannes> findAllPannesSignale() {
         return panneRepository.findAllPannesSignale();
+    }
+
+    public void prendreEnChargePanne(Integer panneId) {
+
+        Optional<Pannes> panneOpt = panneRepository.findById(panneId);
+        Optional<StatutReparation> statutReparationOpt = statutReparationRepository
+                .findByLibelle("en cours de depannage");
+
+        if (!panneOpt.isPresent()) {
+            throw new IllegalArgumentException("Panne non trouvée");
+        }
+        if (!statutReparationOpt.isPresent()) {
+            throw new IllegalArgumentException("Statut de réparation 'en cours de depannage' non trouvé");
+        }
+
+        Pannes panne = panneOpt.get();
+        StatutReparation statutRep = statutReparationOpt.get();
+
+        panne.setStatutReparationActuel(statutRep);
+        Pannes newpanne = panneRepository.save(panne);
+
+        Reparation reparation = new Reparation();
+        reparation.setPanne(newpanne);
+        reparation.setStatutReparation(statutRep);
+        reparation.setDateModification(LocalDate.now());
+        reparation.setCout(null);
+
+        reparationRepository.save(reparation);
+
     }
 }
