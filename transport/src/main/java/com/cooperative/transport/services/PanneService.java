@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -71,5 +72,18 @@ public class PanneService {
         }
 
         return dto;
+    }
+
+    public List<Pannes> findAllPannesSignale() {
+        List<Pannes> pannesSignale = new ArrayList<>();
+        List<Pannes> toutesLesPannes = this.panneRepository.findAllPannes();
+
+        for(Pannes p : toutesLesPannes) {
+            String statutReparation = p.getLastReparationStatut();
+            if(!statutReparation.equalsIgnoreCase("resolu")) {
+                pannesSignale.add(p);
+            }
+        }
+        return pannesSignale;
     }
 }

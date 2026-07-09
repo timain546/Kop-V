@@ -51,6 +51,9 @@ public class Pannes {
     private List<Reparation> reparations;
 
     public String getLastReparationStatut() {
-        return reparations.get(0).getStat
+        if(!reparations.isEmpty()) {
+            return reparations.get(0).getStatutReparation().getLibelle();
+        }
+        return null;
     }
 }
