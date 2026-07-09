@@ -22,6 +22,7 @@ public class PanneService {
     private final VoyageRepository voyageRepository;
     private final MotifPanneRepository motifPanneRepository;
     private final VoyageService voyageService;
+    private final StatutReparationRepository statutReparationRepository;
 
     public PanneDTO createPanne(Integer voyageId, Integer chauffeurId, String lieu, String motifPanneLibelle, String description, String photoUrl) {
         Optional<Voyages> voyageOpt = voyageRepository.findById(voyageId);
@@ -33,6 +34,8 @@ public class PanneService {
         if (motifPanneOpt.isEmpty()) {
             throw new IllegalArgumentException("Motif de panne non trouvé");
         }
+
+        Optional<StatutReparation> statuReparation = 
 
         Pannes panne = new Pannes();
         panne.setVoyage(voyageOpt.get());
