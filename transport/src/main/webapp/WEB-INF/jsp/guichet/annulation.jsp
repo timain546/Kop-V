@@ -41,7 +41,10 @@
             <div class="passenger-head">
               <div>
                 <h1 class="passenger-title">Annulation de la réservation #${reservation.id}</h1>
-                <p class="passenger-subtitle">Une réservation peut être annulée 24 heures avant le départ.</p>
+                <p class="passenger-subtitle">
+                  Une réservation peut être annulée 24 heures avant le départ.
+                  Montant déjà payé : <fmt:formatNumber value="${montantPayeTotal}" pattern="#,##0"/> Ar.
+                </p>
               </div>
             </div>
 
@@ -65,10 +68,14 @@
                 <div class="passenger-form-grid">
                   <label class="field field-span-2">
                     <span class="field-label">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm icon-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote-icon lucide-banknote"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
-                      Frais
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="5" x2="5" y2="19"></line>
+                        <circle cx="7" cy="7" r="2"></circle>
+                        <circle cx="17" cy="17" r="2"></circle>
+                      </svg>
+                      Pourcentage retenu
                     </span>
-                    <input name="frais" class="field-input" type="number" value="0" placeholder="Ex. 10 000 Ar" />
+                    <input name="pourcentageFrais" class="field-input" type="number" min="0" max="100" step="0.01" value="10" placeholder="Ex. 10" />
                   </label>
 
                   <label class="field field-span-2">

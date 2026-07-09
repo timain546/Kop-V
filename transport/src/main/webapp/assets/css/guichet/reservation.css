@@ -528,7 +528,8 @@
 }
 
 .ticket-card-cancelled .ticket-code,
-.ticket-card-cancelled .ticket-price {
+.ticket-card-cancelled .ticket-price,
+.ticket-card-cancelled .ticket-refund {
   color: var(--res-red);
 }
 
@@ -700,6 +701,25 @@
   color: var(--res-green-dark);
   min-width: 110px;
   text-align: right;
+}
+
+.ticket-money {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  min-width: 130px;
+}
+
+.ticket-money .ticket-price {
+  min-width: 0;
+}
+
+.ticket-refund {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--res-red);
+  white-space: nowrap;
 }
 
 .ticket-status {

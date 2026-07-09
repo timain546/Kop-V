@@ -164,7 +164,14 @@
                     </div>
                   </div>
 
-                  <p class="ticket-price"><fmt:formatNumber value="${reservation.tarif}" pattern="#,##0"/> Ar</p>
+                  <div class="ticket-money">
+                    <p class="ticket-price"><fmt:formatNumber value="${reservation.tarif}" pattern="#,##0"/> Ar</p>
+                    <c:if test="${isAnnulee}">
+                      <p class="ticket-refund">
+                        Remboursé <fmt:formatNumber value="${reservation.prixRemboursement}" pattern="#,##0"/> Ar
+                      </p>
+                    </c:if>
+                  </div>
 
                   <c:choose>
                     <c:when test="${isAnnulee}">
