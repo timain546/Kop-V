@@ -1,4 +1,6 @@
 CREATE DATABASE kopv;
+\c kopv;
+
 CREATE EXTENSION IF NOT EXISTS postgis;
 
 CREATE TABLE role (
