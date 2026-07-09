@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cooperative.transport.dto.InfoNewReservationDTO;
 import com.cooperative.transport.dto.ReservationDTO;
@@ -289,5 +290,21 @@ public class ReservationController {
 
     private InfoNewReservationDTO getInfoNewReservation(HttpSession session) {
         return session == null ? null : (InfoNewReservationDTO) session.getAttribute("infoNewReservation");
+    }
+
+    @GetMapping("/guichet/reservation/import-excel")
+    public String importExcel() {
+        return "guichet/import-excel";
+    }
+
+    @PostMapping("/guichet/reservation/import-excel")
+    public String postImportExcel(@RequestParam("file") MultipartFile file, Model model) {
+        try {
+            List<ReservationsMere> reservations = reservationService.importReservationsFromExcel(file);
+            model.addAttribute("reservations", reservations);
+        } catch (Exception e) {
+            model.addAttribute("erreur", e.getMessage());
+        }
+        return "guichet/import-excel";
     }
 }

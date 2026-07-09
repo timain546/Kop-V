@@ -18,7 +18,7 @@
     </properties>
 
     <dependencies>
-    
+
         <dependency>
             <groupId>com.github.librepdf</groupId>
             <artifactId>openpdf</artifactId>
@@ -69,9 +69,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.xhtmlrenderer</groupId>
-            <artifactId>flying-saucer-pdf-openpdf</artifactId>
-            <version>9.1.22</version>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.4</version>
         </dependency>
     </dependencies>
 
@@ -83,6 +83,5 @@
             </plugin>
         </plugins>
     </build>
-    
 
 </project>

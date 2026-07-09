@@ -1,15 +1,21 @@
 package com.cooperative.transport.repositories;
 
 import com.cooperative.transport.dto.VoyageDisponibleDTO;
+import com.cooperative.transport.entities.Trajets;
 import com.cooperative.transport.entities.Voyages;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
+
+    @Query("SELECT v FROM Voyages v WHERE v.trajet = :trajet AND v.dateHeureDepart = :dateHeureDepart AND v.vehicule.categorieVehicule.libelle = :categorie")
+    public Optional<Voyages> findByTrajetAndDateHeureDepartAndCategorie(Trajets trajet, LocalDateTime dateHeureDepart, String categorie);
 
     @Query(value = """
         SELECT
