@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulaire employe</title>
-    <link rel="stylesheet" href="../assets/css/ajouter-employe.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ajouter-employe.css">
 
 
 </head>

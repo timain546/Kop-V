@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -24,6 +25,7 @@ import com.cooperative.transport.services.SalaireService;
 import com.cooperative.transport.services.StatutEmployeService;
 
 @Controller
+@RequestMapping("/admin")
 public class EmployesController {
 
     @Autowired
@@ -38,6 +40,7 @@ public class EmployesController {
     private StatutEmployeService statutEmployeService;
     @Autowired
     private ContratService contratService;
+    
 
     @GetMapping("/employes/test-simple")
     @ResponseBody
@@ -162,7 +165,7 @@ public class EmployesController {
                                  @RequestParam("mdp") String motDePasse,
                                  @RequestParam("role") Integer roleId,
                                  @RequestParam("salaire") Double montant,
-                                 @RequestParam("date_embauche") java.sql.Date dateEmbauche) {
+                                 @RequestParam("dateEmbauche") java.sql.Date dateEmbauche) {
         Utilisateurs employe = new Utilisateurs();
         employe.setNom(nom);
         employe.setPrenom(prenom);
