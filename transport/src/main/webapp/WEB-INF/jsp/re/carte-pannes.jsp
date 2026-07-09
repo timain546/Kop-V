@@ -96,22 +96,28 @@
             </div>
             
             <div class="divide-y divide-slate-100">
-                <% for(Pannes p : pannes) { %>
+                <%
+                    for(Pannes p : pannes) {
+                        String statutReparation = p.getStatutReparationActuel().getLibelle();
+                %>
                     <div onclick="focusPanne(-21.4526, 47.0857, 'RN7 - Proche Fianarantsoa', 'V-00839')" class="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between hover:bg-slate-50/80 cursor-pointer transition active:bg-slate-100 gap-4">
                         <div class="flex items-center gap-4 flex-1">
-                            <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center flex-shrink-0 text-sm">
-                                <i class="fa-solid fa-triangle-exclamation"></i>
-                            </div>
+                            <% if(statutReparation.equalsIgnoreCase("en panne")) { %>
+                                <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center flex-shrink-0 text-sm" id="panne-<%= p.getId() %>">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                </div>
+                            <% } else { %>
+                                <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0 text-sm" id="panne-<%= p.getId() %>">
+                                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                                </div>
+                            <% } %>
                             <div>
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <span class="font-bold text-sm text-slate-700">Voyage V-00<%= p.getVoyage().getId() %></span>
-                                    <%
-                                        String statutReparation = p.getStatutReparationActuel().getLibelle();
-                                        if(statutReparation.equalsIgnoreCase("en panne")) {
-                                    %>
-                                        <span class="text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.2 rounded-md">En panne</span>
+                                    <% if(statutReparation.equalsIgnoreCase("en panne")) { %>
+                                        <span class="text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.2 rounded-md" id="statut-panne-<%= p.getId() %>">En panne</span>
                                     <% } else { %>
-                                        <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-100 px-2 py-0.2 rounded-md">En cours de dépannage</span>
+                                        <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-100 px-2 py-0.2 rounded-md" id="statut-panne-<%= p.getId() %>">En cours de dépannage</span>
                                     <% } %>
                                 </div>
                                 <%
@@ -125,9 +131,9 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="flex items-center justify-between sm:justify-end gap-3 sm:border-t-0 pt-2 sm:pt-0 border-t border-slate-50">
+                        <div class="flex items-center justify-between sm:justify-end gap-3 sm:border-t-0 pt-2 sm:pt-0 border-t border-slate-50" id="action-panne-<%= p.getId() %>">
                             <% if(statutReparation.equalsIgnoreCase("en panne")) { %>
-                                <button onclick="event.stopPropagation(); prendreEnCharge(<%= p.id %>);" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-3 py-2 rounded-xl shadow-sm active:scale-95 transition whitespace-nowrap">
+                                <button onclick="event.stopPropagation(); prendreEnCharge(<%= p.getId() %>);" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-3 py-2 rounded-xl shadow-sm active:scale-95 transition whitespace-nowrap">
                                     Prendre en charge
                                 </button>
                             <% } else { %>
@@ -156,7 +162,6 @@
 
         // Variable pour stocker le marqueur de panne actif
         let currentMarker = null;
-        let currentPolyline = null;
 
         // Fonction appelée lors du clic sur une ligne de panne
         function focusPanne(lat, lng, lieu, refVoyage) {
@@ -165,7 +170,6 @@
 
             // Supprimer l'ancien marqueur s'il existe
             if (currentMarker) map.removeLayer(currentMarker);
-            if (currentPolyline) map.removeLayer(currentPolyline);
 
             // Ajouter le marqueur de la panne (Rouge)
             currentMarker = L.marker([lat, lng]).addTo(map)
@@ -178,14 +182,13 @@
                 [lat, lng], // Le point de panne
                 [lat - 0.5, lng + 0.5]
             ];
-            currentPolyline = L.polyline(pointsTrajet, {color: '#10b981', weight: 4, opacity: 0.7}).addTo(map);
 
             // Scroller en douceur vers la carte pour qu'elle soit bien visible si l'utilisateur a défilé vers le bas
             document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         function prendreEnCharge(idPanne) {
-            let url = "http://localhost:8080/re/api/panne/prendre-en-charge/" + idPanne;
+            const url = "http://localhost:8080/re/api/panne/prendre-en-charge/" + idPanne;
 
             fetch(url, {
                 method: 'GET',
@@ -196,6 +199,17 @@
             .then(response => response.json().then(data => !response.ok ? Promise.reject(data.message) : data))
             .then(data => {
                 alert(data.message);
+
+                const badge = document.getElementById("panne-" + idPanne);
+                badge.className = "w-9 h-9 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0 text-sm";
+                badge.innerHTML = '<i class="fa-solid fa-screwdriver-wrench"></i>';
+
+                const statutBadge = document.getElementById("statut-panne-" + idPanne);
+                statutBadge.className = "text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-100 px-2 py-0.2 rounded-md";
+                statutBadge.textContent = "En cours de dépannage";
+
+                const actionDiv = document.getElementById("action-panne-" + idPanne);
+                actionDiv.innerHTML = '<div class="text-[11px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg border border-slate-200 whitespace-nowrap">Attente Chauffeur</div>';
             })
             .catch(errorMessage => {
                 console.log("Erreur AJAX:" + errorMessage);

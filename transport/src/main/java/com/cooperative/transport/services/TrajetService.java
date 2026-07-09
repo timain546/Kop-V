@@ -16,6 +16,9 @@ import com.cooperative.transport.repositories.GareRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.io.WKTReader;
+
 @Service
 public class TrajetService {
     @Autowired
@@ -84,6 +87,13 @@ public class TrajetService {
             throw new Exception("Le trajet entre les gares " + gareDepart.getNom() + " et " + gareArrivee.getNom() + " existe déjà");
         }
 
+        if(trajetDTO.getTraceWkt() != null && !trajetDTO.getTraceWkt().isEmpty()) {
+            WKTReader reader = new WKTReader();
+            LineString lineString = (LineString) reader.read(trajetDTO.getTraceWkt());
+            lineString.setSRID(4326);
+            nouveautrajet.setTrace(lineString);
+        }
+
         trajetRepo.save(nouveautrajet);
     }
 
@@ -100,6 +110,13 @@ public class TrajetService {
         Trajets trajetExistant = trajetRepo.findByGareDepartAndGareArrivee(gareDepart.getId(), gareArrivee.getId());
         if (trajetExistant != null && !trajetExistant.getId().equals(trajetAModifier.getId())) {
             throw new Exception("Un autre trajet existe déjà entre " + gareDepart.getNom() + " et " + gareArrivee.getNom());
+        }
+
+        if(trajetDTO.getTraceWkt() != null && !trajetDTO.getTraceWkt().isEmpty()) {
+            WKTReader reader = new WKTReader();
+            LineString lineString = (LineString) reader.read(trajetDTO.getTraceWkt());
+            lineString.setSRID(4326);
+            trajetAModifier.setTrace(lineString);
         }
 
         trajetAModifier.setGareDepart(gareDepart);

@@ -88,8 +88,7 @@ public class PanneService {
     public void prendreEnChargePanne(Integer panneId) {
 
         Optional<Pannes> panneOpt = panneRepository.findById(panneId);
-        Optional<StatutReparation> statutReparationOpt = statutReparationRepository
-                .findByLibelle("en cours de depannage");
+        Optional<StatutReparation> statutReparationOpt = statutReparationRepository.findByLibelle("en cours de depannage");
 
         if (!panneOpt.isPresent()) {
             throw new IllegalArgumentException("Panne non trouvée");
@@ -102,15 +101,15 @@ public class PanneService {
         StatutReparation statutRep = statutReparationOpt.get();
 
         panne.setStatutReparationActuel(statutRep);
-        Pannes newpanne = panneRepository.save(panne);
+        Pannes panneModifier = panneRepository.save(panne);
 
         Reparation reparation = new Reparation();
-        reparation.setPanne(newpanne);
+        reparation.setId(null);
+        reparation.setPanne(panneModifier);
         reparation.setStatutReparation(statutRep);
         reparation.setDateModification(LocalDate.now());
         reparation.setCout(null);
 
         reparationRepository.save(reparation);
-
     }
 }

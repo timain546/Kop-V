@@ -11,17 +11,25 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.FetchType;
 
+import org.locationtech.jts.geom.LineString;
+
 import lombok.Getter;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 import java.time.LocalDate;
 import java.math.BigDecimal;
 
+import org.locationtech.jts.io.WKTWriter;
+
 @Entity
 @Table(name = "trajets")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Trajets {
 
     @Id
@@ -42,15 +50,15 @@ public class Trajets {
     @Column(name = "date_suppression")
     private LocalDate dateSuppression;
 
+    @Column(columnDefinition = "geometry(LineString,4326)")
+    private LineString trace;
+
     @OneToMany(mappedBy = "trajet")
     private List<Voyages> voyages;
 
-    public Trajets() {
-    }
-
-    public Trajets(Gares gareDepart, Gares gareArrivee, BigDecimal distanceKm) {
-        this.gareDepart = gareDepart;
-        this.gareArrivee = gareArrivee;
-        this.distanceKm = distanceKm;
+    public String getTraceAsWkt() {
+        if (this.trace == null) return null;
+        WKTWriter writer = new WKTWriter();
+        return writer.write(this.trace);
     }
 }

@@ -15,4 +15,5 @@ public class TrajetDTO {
     private Integer gareDepart;
     private Integer gareArrivee;
     private Double distanceKm;
+    private String traceWkt;
 }

@@ -30,7 +30,7 @@ public class PanneController {
         return "re/carte-pannes";
     }
 
-    @GetMapping("/api/panne/prendre-en-charge/{id}")
+    @GetMapping("/api/panne/prendre-en-charge/{idPanne}")
     public ResponseEntity<Map<String, Object>> prendreEnChargePanne(@PathVariable Integer idPanne) {
         Map<String, Object> response = new HashMap<>();
         try {
