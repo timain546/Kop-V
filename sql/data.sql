@@ -6,7 +6,10 @@ INSERT INTO utilisateurs (nom, prenom, id_role, email, mot_de_passe) VALUES
 ('Rakoto', 'John', 1, 'john@gmail.com', '1234'), 
 ('Rabe', 'Jean', 1, 'jean@gmail.com', '1234'),   
 ('Rado', 'Paul', 1, 'paul@gmail.com', '1234'),   
-('Randria', 'Alice', 2, 'alice@gmail.com', '1234');
+('Randria', 'Alice', 2, 'alice@gmail.com', '1234'),
+('Rajaonarivelo', 'Hery', 1, 'herya@gmail.com', '1234'),
+('Rajao', 'Zo', 1, 'andry@gmail.com', '1234'),
+('Razefa', 'Zefa', 1, 'zefa@gmail.com', '1234');
 
 INSERT INTO categorie_vehicule (libelle) VALUES
 ('VIP'),
@@ -53,14 +56,20 @@ INSERT INTO voyage_statut (id_voyage, id_statut, date_modification) VALUES
 (1, 2, '2026-06-01'),
 (2, 3, '2026-06-01');
 
-INSERT INTO salaires (id_employe, montant, date_modification) VALUES
+INSERT INTO salaires (id_employe, salaire, date_modification) VALUES
 (1, 2000.00, '2026-01-01'),
 (2, 2500.00, '2026-01-01'),
 (3, 3000.00, '2026-01-01'),
-(4, 3500.00, '2026-01-01');
+(4, 3500.00, '2026-01-01'),
+(5, 2500.00, '2026-01-01'),
+(6, 2350.00, '2026-01-01'),
+(7, 3400.00, '2026-01-01');
 
 INSERT INTO contrats_employes (id_employe, date_embauche, date_renvoi) VALUES
 (1, '2026-01-01', NULL),
 (2, '2026-02-01', NULL),
 (3, '2026-03-01', NULL),
-(4, '2026-04-01', NULL);
+(4, '2026-04-01', NULL),
+(5, '2026-02-01', NULL),
+(6, '2026-03-01', NULL),
+(7, '2026-04-01', NULL);

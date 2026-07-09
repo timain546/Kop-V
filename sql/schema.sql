@@ -114,7 +114,7 @@ CREATE TABLE reparation(
 create table salaires(
     id SERIAL PRIMARY KEY,
     id_employe INT NOT NULL REFERENCES utilisateurs(id) ON DELETE CASCADE,
-    montant NUMERIC(10, 2) NOT NULL,
+    salaire NUMERIC(10, 2) NOT NULL,
     date_modification DATE NOT NULL DEFAULT NOW()
 );
 

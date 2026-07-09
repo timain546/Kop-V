@@ -20,6 +20,7 @@ public class Salaires {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private double salaire;
 
     @ManyToOne(fetch =FetchType.LAZY)
