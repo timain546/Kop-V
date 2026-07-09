@@ -126,9 +126,8 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-between sm:justify-end gap-3 sm:border-t-0 pt-2 sm:pt-0 border-t border-slate-50">
-                            <span class="text-[11px] font-medium text-slate-400">Il y a 12 min</span>
                             <% if(statutReparation.equalsIgnoreCase("en panne")) { %>
-                                <button onclick="event.stopPropagation(); prendreEnCharge(this);" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-3 py-2 rounded-xl shadow-sm active:scale-95 transition whitespace-nowrap">
+                                <button onclick="event.stopPropagation(); prendreEnCharge(<%= p.id %>);" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-3 py-2 rounded-xl shadow-sm active:scale-95 transition whitespace-nowrap">
                                     Prendre en charge
                                 </button>
                             <% } else { %>
@@ -185,21 +184,23 @@
             document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        // Fonction pour changer le statut côté RE ("Prendre en charge")
-        function prendreEnCharge(button) {
-            const container = button.closest('.flex');
-            const badge = container.querySelector('.bg-rose-50');
-            const iconContainer = container.querySelector('.bg-rose-50');
+        function prendreEnCharge(idPanne) {
+            let url = "http://localhost:8080/re/api/panne/prendre-en-charge/" + idPanne;
 
-            // Transformation visuelle dynamique pour simuler l'état "En cours de dépannage"
-            badge.className = "text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-100 px-2 py-0.2 rounded-md";
-            badge.innerText = "En cours de dépannage";
-            
-            iconContainer.className = "w-9 h-9 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0 text-sm";
-            iconContainer.innerHTML = '<i class="fa-solid fa-screwdriver-wrench"></i>';
-
-            // Remplacement du bouton par un texte indicatif
-            button.outerHTML = '<div class="text-[11px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg border border-slate-200 whitespace-nowrap">Attente Chauffeur</div>';
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json().then(data => !response.ok ? Promise.reject(data.message) : data))
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(errorMessage => {
+                console.log("Erreur AJAX:" + errorMessage);
+                alert(errorMessage);
+            });
         }
     </script>
 </body>
