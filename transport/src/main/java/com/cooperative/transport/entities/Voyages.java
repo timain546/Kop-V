@@ -50,4 +50,7 @@ public class Voyages {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_statut_actuel", nullable = false)
     private StatutVoyage statutActuel;
+
+    @Column(name = "carburant", precision = 10, scale = 2)
+    private BigDecimal carburant;
 }

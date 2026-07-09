@@ -167,6 +167,20 @@ public class VoyageController {
                 return "re/formulaire-voyage";
             }
 
+            Double carburant = voyageDTO.getCarburant();
+            if(carburant == null) {
+                model.addAttribute("errorMessage", "Le carburant est obligatoire");
+                model.addAttribute("listeTrajets", service.findAllTrajets());
+                return "re/formulaire-voyage";
+            }
+
+            double carburantValue = carburant.doubleValue();
+            if(carburantValue <= 0) {
+                model.addAttribute("errorMessage", "Le carburant doit être supérieur à zéro");
+                model.addAttribute("listeTrajets", service.findAllTrajets());
+                return "re/formulaire-voyage";
+            }
+
             service.creerNouveauVoyage(voyageDTO);
             return "redirect:/re/voyage/list";
 
