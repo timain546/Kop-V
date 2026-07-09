@@ -252,7 +252,7 @@ public class ReservationController {
 
     @PostMapping("/guichet/reservation/{idReservation}/annulation")
 
-    public String postAnnulation(Model model, @PathVariable Long idReservation,
+    public String postAnnulation(Model model, @PathVariable Integer idReservation,
             @RequestParam(required = false, defaultValue = "10") BigDecimal pourcentageFrais,
             @RequestParam(required = false, defaultValue = "") String motif) {
         ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
