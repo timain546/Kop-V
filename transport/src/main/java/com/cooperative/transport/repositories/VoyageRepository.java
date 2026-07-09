@@ -54,12 +54,12 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
         LEFT JOIN places p
             ON p.id_vehicule = vh.id
 
-        LEFT JOIN reservations_fille rf
-            ON rf.id_place = p.id
-
         LEFT JOIN reservations_mere rm
-            ON rm.id = rf.id_reservation_mere
-           AND rm.id_voyage = v.id
+            ON rm.id_voyage = v.id
+
+        LEFT JOIN reservations_fille rf
+            ON rf.id_reservation_mere = rm.id
+           AND rf.id_place = p.id
 
         WHERE v.date_heure_depart::DATE
               BETWEEN :date1
