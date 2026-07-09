@@ -7,7 +7,6 @@ import com.cooperative.transport.entities.Voyages;
 import com.cooperative.transport.entities.Trajets;
 import com.cooperative.transport.entities.Vehicules;
 import com.cooperative.transport.entities.Utilisateurs;
-import com.cooperative.transport.entities.VoyageStatut;
 import com.cooperative.transport.services.VoyageService;
 
 import org.springframework.ui.Model;
@@ -46,7 +45,7 @@ public class VoyageController {
             if(v.getStatutActuel().getLibelle().equalsIgnoreCase("En cours")) nbActif++;
         }
 
-        model.addAttribute("nbActif", new Integer(nbActif));
+        model.addAttribute("nbActif", Integer.valueOf(nbActif));
         model.addAttribute("listeVoyages", voyages);
         return "re/liste-voyages";
     }

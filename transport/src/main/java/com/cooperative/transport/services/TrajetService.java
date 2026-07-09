@@ -15,7 +15,6 @@ import com.cooperative.transport.repositories.GareRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TrajetService {
@@ -94,7 +93,7 @@ public class TrajetService {
 
         Gares gareDepart = gareRepo.findById(trajetDTO.getGareDepart())
             .orElseThrow(() -> new Exception("Impossible de trouver la gare de départ G-00" + trajetDTO.getGareDepart()));
-            
+
         Gares gareArrivee = gareRepo.findById(trajetDTO.getGareArrivee())
             .orElseThrow(() -> new Exception("Impossible de trouver la gare d'arrivée G-00" + trajetDTO.getGareArrivee()));
 
@@ -106,7 +105,7 @@ public class TrajetService {
         trajetAModifier.setGareDepart(gareDepart);
         trajetAModifier.setGareArrivee(gareArrivee);
         trajetAModifier.setDistanceKm(BigDecimal.valueOf(trajetDTO.getDistanceKm()));
-        
+
         trajetRepo.save(trajetAModifier);
     }
 }

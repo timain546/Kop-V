@@ -13,7 +13,6 @@ import jakarta.persistence.FetchType;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 import java.time.LocalDate;
 
 @Entity
@@ -21,7 +20,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class IndisponibiliteVehicule {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

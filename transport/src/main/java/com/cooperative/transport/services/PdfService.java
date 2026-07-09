@@ -202,20 +202,6 @@ public class PdfService {
         }
     }
 
-    private void addLogo(Document document) {
-        try {
-            ClassPathResource resource = new ClassPathResource("static/images/logo.jpeg");
-            Image logo = Image.getInstance(resource.getURL());
-
-            logo.scaleToFit(120, 120);
-            logo.setAlignment(Image.ALIGN_CENTER);
-
-            document.add(logo);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private String formatAriary(BigDecimal amount) {
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.FRENCH);
         formatter.setMaximumFractionDigits(0);

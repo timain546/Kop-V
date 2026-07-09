@@ -1,6 +1,5 @@
 package com.cooperative.transport.dto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
 
