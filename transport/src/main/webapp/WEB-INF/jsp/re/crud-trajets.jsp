@@ -211,44 +211,64 @@
         const ROUTES_PREDEFINIES = {
             // Antananarivo (1) -> Toamasina (2) via la RN2
             "1-2": {
-                distance: 360.00,
+                distance: 358.50,
                 coords: [
-                    [-18.8792, 47.5162], [-18.9167, 47.7833], [-18.9333, 48.4667], [-18.1500, 49.2167], [-18.1500, 49.4000]
+                    [-18.8792, 47.5162], [-18.9105, 47.7852], [-18.9412, 48.0124], 
+                    [-18.9348, 48.2215], [-18.9512, 48.4210], [-18.8105, 48.5632], 
+                    [-18.5214, 48.8145], [-18.3325, 49.0214], [-18.2104, 49.2015], 
+                    [-18.1610, 49.3852], [-18.1500, 49.4000]
                 ]
             },
             // Toamasina (2) -> Antananarivo (1) [Retour]
             "2-1": {
-                distance: 360.00,
+                distance: 358.50,
                 coords: [
-                    [-18.1500, 49.4000], [-18.1500, 49.2167], [-18.9333, 48.4667], [-18.9167, 47.7833], [-18.8792, 47.5162]
+                    [-18.1500, 49.4000], [-18.1610, 49.3852], [-18.2104, 49.2015], 
+                    [-18.3325, 49.0214], [-18.5214, 48.8145], [-18.8105, 48.5632], 
+                    [-18.9512, 48.4210], [-18.9348, 48.2215], [-18.9412, 48.0124], 
+                    [-18.9105, 47.7852], [-18.8792, 47.5162]
                 ]
             },
             // Toamasina (2) -> Antsirabe (3) via RN2 + RN7
             "2-3": {
-                distance: 530.00,
+                distance: 527.30,
                 coords: [
-                    [-18.1500, 49.4000], [-18.1500, 49.2167], [-18.9333, 48.4667], [-18.8792, 47.5162], [-19.3400, 47.3000], [-19.8667, 47.0333]
+                    [-18.1500, 49.4000], [-18.1610, 49.3852], [-18.2104, 49.2015], 
+                    [-18.3325, 49.0214], [-18.5214, 48.8145], [-18.8105, 48.5632], 
+                    [-18.9512, 48.4210], [-18.9348, 48.2215], [-18.9412, 48.0124], 
+                    [-18.9105, 47.7852], [-18.8792, 47.5162], [-19.0512, 47.4812], 
+                    [-19.2214, 47.4210], [-19.4521, 47.3105], [-19.6201, 47.2104], 
+                    [-19.7852, 47.0852], [-19.8667, 47.0333]
                 ]
             },
             // Antsirabe (3) -> Toamasina (2) [Retour]
             "3-2": {
-                distance: 530.00,
+                distance: 527.30,
                 coords: [
-                    [-19.8667, 47.0333], [-19.3400, 47.3000], [-18.8792, 47.5162], [-18.9333, 48.4667], [-18.1500, 49.2167], [-18.1500, 49.4000]
+                    [-19.8667, 47.0333], [-19.7852, 47.0852], [-19.6201, 47.2104], 
+                    [-19.4521, 47.3105], [-19.2214, 47.4210], [-19.0512, 47.4812], 
+                    [-18.8792, 47.5162], [-18.9105, 47.7852], [-18.9412, 48.0124], 
+                    [-18.9348, 48.2215], [-18.9512, 48.4210], [-18.8105, 48.5632], 
+                    [-18.5214, 48.8145], [-18.3325, 49.0214], [-18.2104, 49.2015], 
+                    [-18.1610, 49.3852], [-18.1500, 49.4000]
                 ]
             },
             // Antsirabe (3) -> Antananarivo (1) via la RN7
             "3-1": {
-                distance: 170.00,
+                distance: 168.80,
                 coords: [
-                    [-19.8667, 47.0333], [-19.3400, 47.3000], [-19.1000, 47.4500], [-18.8792, 47.5162]
+                    [-19.8667, 47.0333], [-19.7852, 47.0852], [-19.6201, 47.2104], 
+                    [-19.4521, 47.3105], [-19.2214, 47.4210], [-19.0512, 47.4812], 
+                    [-18.8792, 47.5162]
                 ]
             },
             // Antananarivo (1) -> Antsirabe (3) [Retour]
             "1-3": {
-                distance: 170.00,
+                distance: 168.80,
                 coords: [
-                    [-18.8792, 47.5162], [-19.1000, 47.4500], [-19.3400, 47.3000], [-19.8667, 47.0333]
+                    [-18.8792, 47.5162], [-19.0512, 47.4812], [-19.2214, 47.4210], 
+                    [-19.4521, 47.3105], [-19.6201, 47.2104], [-19.7852, 47.0852], 
+                    [-19.8667, 47.0333]
                 ]
             }
         };
@@ -281,7 +301,7 @@
                 return;
             }
 
-            const cleRoute = `${idDepart}-${idArrivee}`;
+            const cleRoute = idDepart + "-" + idArrivee;
             const routeTrouvee = ROUTES_PREDEFINIES[cleRoute];
 
             if (routeTrouvee) {
@@ -307,16 +327,13 @@
             routeCoordinates = [];
         }
 
-        // ✏️ Mode Édition : Récupère la polyligne existante (WKT PostGIS) et l'affiche en Orange
+        // Mode Édition : Récupère la polyligne existante (WKT PostGIS) et l'affiche en Orange
         function chargerDonneesEdition(id, idGareDepart, idGareArrivee, distance, traceWkt) {
             masquerMessage();
             nettoyerCalqueStatique();
             idTrajetEnCours = id;
 
-            document.getElementById("form-title").innerHTML = `
-                <i class="fa-solid fa-pen text-amber-500"></i> 
-                <span>Modifier le trajet T-00${id}</span>
-            `;
+            document.getElementById("form-title").innerHTML = '<i class="fa-solid fa-pen text-amber-500"> </i><span>Modifier le trajet T-00' + id + '</span>';
 
             document.getElementById("select-gare-depart").value = idGareDepart;
             document.getElementById("select-gare-arrivee").value = idGareArrivee;
@@ -389,8 +406,8 @@
             }
 
             // Génération conforme de la géométrie au format attendu par PostGIS: Longitude Latitude
-            const pointsWkt = routeCoordinates.map(c => `${c.lng} ${c.lat}`).join(", ");
-            const wktLineString = `LINESTRING(${pointsWkt})`;
+            const pointsWkt = routeCoordinates.map(c => c.lng + " " + c.lat).join(", ");
+            const wktLineString = 'LINESTRING(' + pointsWkt + ')';
 
             const data = {
                 gareDepart: parseInt(document.getElementById("select-gare-depart").value),
