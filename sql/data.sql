@@ -56,7 +56,7 @@ INSERT INTO voyage_statut (id_voyage, id_statut, date_modification) VALUES
 INSERT INTO salaires (id_employe, montant, date_modification) VALUES
 (1, 2000.00, '2026-01-01'),
 (2, 2500.00, '2026-01-01'),
-(3, 3000.00, '2026-01-01');
+(3, 3000.00, '2026-01-01'),
 (4, 3500.00, '2026-01-01');
 
 INSERT INTO contrats_employes (id_employe, date_embauche, date_renvoi) VALUES
@@ -64,9 +64,3 @@ INSERT INTO contrats_employes (id_employe, date_embauche, date_renvoi) VALUES
 (2, '2026-02-01', NULL),
 (3, '2026-03-01', NULL),
 (4, '2026-04-01', NULL);
-
-
-insert into statut_employe (libelle) values
-('Engagé'),
-('Renvoyé'),
-('Reambauché')

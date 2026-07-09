@@ -122,7 +122,7 @@ create table contrats_employes(
     id SERIAL PRIMARY KEY,
     id_employe INT NOT NULL REFERENCES utilisateurs(id) ON DELETE CASCADE,
     date_embauche DATE NOT NULL,
-    date_renvoi DATE DEFAULT NULL,
+    date_renvoi DATE DEFAULT NULL
 );
 
 create table statut_employe(
