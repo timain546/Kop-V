@@ -10,6 +10,18 @@ Table utilisateurs:
     - email UNIQUE
     - mot_de_passe
 
+Table statut_employe:
+    - id
+    - libelle // Engagé, Renvoyé, Reambauché
+
+Table employe_statut:
+    - id
+    - id_employe
+    - id_statut
+    - date_modification
+
+Table
+
 Table categorie_vehicule:
     - id
     - libelle (VIP, Premium, Standard)
