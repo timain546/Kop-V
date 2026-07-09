@@ -181,7 +181,7 @@ Table pannes:
 
 Table statut_reparation:
     - id
-    - libelle (en attente, en cours de depannage, resolu)
+    - libelle (en panne, en cours de depannage, resolu)
 
 Table reparation:
     - id

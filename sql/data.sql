@@ -52,3 +52,4 @@ INSERT INTO voyage_statut (id_voyage, id_statut, date_modification) VALUES
 (3, 1, '2026-06-01'),
 (1, 2, '2026-06-01'),
 (2, 3, '2026-06-01');
+
