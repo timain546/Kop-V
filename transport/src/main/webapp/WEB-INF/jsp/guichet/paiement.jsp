@@ -12,9 +12,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Paiement — KOP-V</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/guichet/styles.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/guichet/common.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/guichet/paiement.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/styles.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/common.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/paiement.css" />
   </head>
   <body>
     <div class="app-shell">
