@@ -99,8 +99,11 @@
                 <%
                     for(Pannes p : pannes) {
                         String statutReparation = p.getStatutReparationActuel().getLibelle();
+                        Voyages voyage = p.getVoyage();
+                        Vehicules vehicule = voyage.getVehicule();
+                        Trajets trajet = voyage.getTrajet();
                 %>
-                    <div onclick="focusPanne(-21.4526, 47.0857, 'RN7 - Proche Fianarantsoa', 'V-00839')" class="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between hover:bg-slate-50/80 cursor-pointer transition active:bg-slate-100 gap-4">
+                    <div onclick="focusPanne('<%= trajet.getTraceAsWkt() %>')" class="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between hover:bg-slate-50/80 cursor-pointer transition active:bg-slate-100 gap-4">
                         <div class="flex items-center gap-4 flex-1">
                             <% if(statutReparation.equalsIgnoreCase("en panne")) { %>
                                 <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center flex-shrink-0 text-sm" id="panne-<%= p.getId() %>">
@@ -120,11 +123,7 @@
                                         <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-100 px-2 py-0.2 rounded-md" id="statut-panne-<%= p.getId() %>">En cours de dépannage</span>
                                     <% } %>
                                 </div>
-                                <%
-                                    Voyages voyage = p.getVoyage();
-                                    Vehicules vehicule = voyage.getVehicule();
-                                    Trajets trajet = voyage.getTrajet();
-                                %>
+                                
                                 <p class="text-xs font-semibold text-slate-500 mt-0.5"><%= trajet.getGareDepart().getVille() %> ➔ <%= trajet.getGareArrivee().getVille() %> (<%= vehicule.getModele() %> <%= vehicule.getImmatriculation() %>)</p>
                                 <p class="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
                                     <i class="fa-solid fa-location-dot text-rose-400"></i> GPS: -21.4526, 47.0857 (RN7)
@@ -161,30 +160,50 @@
         }).addTo(map);
 
         // Variable pour stocker le marqueur de panne actif
-        let currentMarker = null;
+        let currentPolylineLayer = null;
+        let routeCoordinates = [];
+
+        function nettoyerCalqueStatique() {
+            if (currentPolylineLayer) {
+                map.removeLayer(currentPolylineLayer);
+                currentPolylineLayer = null;
+            }
+            routeCoordinates = [];
+        }
 
         // Fonction appelée lors du clic sur une ligne de panne
-        function focusPanne(lat, lng, lieu, refVoyage) {
-            // Repositionner la carte avec une animation fluide
-            map.setView([lat, lng], 11);
+        function focusPanne(traceWkt) {
+            nettoyerCalqueStatique();
 
-            // Supprimer l'ancien marqueur s'il existe
-            if (currentMarker) map.removeLayer(currentMarker);
+            if (traceWkt && traceWkt !== 'null' && traceWkt.includes("LINESTRING")) {
+                try {
+                    let cleanWkt = traceWkt;
+                    if (cleanWkt.includes(";")) cleanWkt = cleanWkt.split(";")[1];
 
-            // Ajouter le marqueur de la panne (Rouge)
-            currentMarker = L.marker([lat, lng]).addTo(map)
-                .bindPopup(`<b>Panne sur le ${refVoyage}</b><br>${lieu}`)
-                .openPopup();
+                    const startIdx = cleanWkt.indexOf("(");
+                    const endIdx = cleanWkt.lastIndexOf(")");
+                    
+                    if (startIdx !== -1 && endIdx !== -1) {
+                        const coordString = cleanWkt.substring(startIdx + 1, endIdx);
+                        const pairs = coordString.split(",").map(p => p.trim()).filter(p => p.length > 0);
+                        
+                        const latLngs = pairs.map(p => {
+                            const parts = p.split(/\s+/);
+                            return L.latLng(parseFloat(parts[1]), parseFloat(parts[0])); // Conversion Lng/Lat standard PostGIS
+                        }).filter(c => !isNaN(c.lat) && !isNaN(c.lng));
 
-            // Simulation visuelle du tracé du trajet (Ligne verte claire)
-            const pointsTrajet = [
-                [lat + 0.5, lng - 0.5],
-                [lat, lng], // Le point de panne
-                [lat - 0.5, lng + 0.5]
-            ];
-
-            // Scroller en douceur vers la carte pour qu'elle soit bien visible si l'utilisateur a défilé vers le bas
-            document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        if (latLngs.length >= 2) {
+                            routeCoordinates = latLngs.map(l => ({ lat: l.lat, lng: l.lng }));
+                            
+                            // Affichage immédiat en Orange du tracé déjà sauvegardé en BDD
+                            currentPolylineLayer = L.polyline(latLngs, { color: '#f59e0b', weight: 5, opacity: 0.9 }).addTo(map);
+                            map.fitBounds(currentPolylineLayer.getBounds());
+                        }
+                    }
+                } catch (error) {
+                    console.error("Erreur parsing tracé fixe :", error);
+                }
+            }
         }
 
         function prendreEnCharge(idPanne) {
