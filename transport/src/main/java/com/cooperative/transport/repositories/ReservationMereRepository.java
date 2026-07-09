@@ -42,6 +42,13 @@ public interface ReservationMereRepository extends JpaRepository<ReservationsMer
                 ORDER BY rs.date_modification DESC
                 LIMIT 1
             ), '')                         AS statutReservation,
+            COALESCE((
+                SELECT a.prix_remboursement
+                FROM annulations a
+                WHERE a.id_reservation = rm.id
+                ORDER BY a.date_annulation DESC
+                LIMIT 1
+            ), 0)                           AS prixRemboursement,
             sum(v.tarif)                   AS tarif
         FROM reservations_mere rm
             JOIN client c              ON c.id = rm.id_client

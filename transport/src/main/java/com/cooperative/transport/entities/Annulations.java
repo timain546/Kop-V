@@ -31,6 +31,9 @@ public class Annulations {
     @Column(name = "motif", nullable = false, length = 200)
     private String motif;
 
+    @Column(name = "prix_remboursement")
+    private BigDecimal prixRemboursement;
+
     public Annulations() {}
 
 

@@ -1,6 +1,7 @@
 package com.cooperative.transport.services;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -187,12 +188,22 @@ public class ReservationService {
     }
 
     @Transactional
-    public void annulerReservation(ReservationsMere reservation, BigDecimal frais, String motif) {
+    public void annulerReservation(ReservationsMere reservation, BigDecimal pourcentageFrais, String motif) {
         StatutReservation statutAnnulee = getOrCreateStatutReservation("Annulée");
 
         if (reservationStatutRepository.existsByReservationAndStatut(reservation, statutAnnulee)) {
             throw new InvalidParameterException("La réservation est déjà annulée");
         }
+
+        if (pourcentageFrais.compareTo(BigDecimal.ZERO) < 0 || pourcentageFrais.compareTo(BigDecimal.valueOf(100)) > 0) {
+            throw new InvalidParameterException("Le pourcentage doit être compris entre 0 et 100");
+        }
+
+        BigDecimal montantDejaPaye = paiementRepository.getPaiementTotal(reservation).orElse(BigDecimal.ZERO);
+        BigDecimal frais = montantDejaPaye
+                .multiply(pourcentageFrais)
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+        BigDecimal prixRemboursement = montantDejaPaye.subtract(frais);
 
         ReservationStatut rs = new ReservationStatut();
         rs.setReservation(reservation);
@@ -205,6 +216,7 @@ public class ReservationService {
         annulation.setDateAnnulation(LocalDateTime.now());
         annulation.setFraisAnnulation(frais);
         annulation.setMotif(motif);
+        annulation.setPrixRemboursement(prixRemboursement);
         annulationRepository.save(annulation);
     }
 
