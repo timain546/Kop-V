@@ -22,6 +22,6 @@ public interface PanneRepository extends JpaRepository<Pannes, Integer> {
         "chauffeur",
         "motifPanne"
     })
-    @Query("SELECT p.* FROM pannes p WHERE p.id_statut_reparation_actuel != (SELECT s.id FROM statut_reparation s WHERE s.libelle = 'resolu')",nativeQuery = true);
+    @Query("SELECT p FROM Pannes p WHERE p.statutReparationActuel.libelle != 'resolu' ORDER BY p.dateSignalement DESC")
     List<Pannes> findAllPannesSignale();
 }

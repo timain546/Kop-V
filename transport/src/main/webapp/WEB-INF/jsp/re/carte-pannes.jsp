@@ -106,7 +106,7 @@
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <span class="font-bold text-sm text-slate-700">Voyage V-00<%= p.getVoyage().getId() %></span>
                                     <%
-                                        String statutReparation = p.getStatutReparationActuel();
+                                        String statutReparation = p.getStatutReparationActuel().getLibelle();
                                         if(statutReparation.equalsIgnoreCase("en panne")) {
                                     %>
                                         <span class="text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.2 rounded-md">En panne</span>
