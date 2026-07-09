@@ -167,7 +167,7 @@
                     </summary>
                     <div class="ticket-actions-menu">
                       <a href="${pageContext.request.contextPath}/guichet/reservation/${reservation.idReservation}/annulation" class="ticket-action ticket-action-danger">Annuler</a>
-                      <a href="${pageContext.request.contextPath}/facture/pdf" class="ticket-action">Exporter</a>
+                      <a href="${pageContext.request.contextPath}/guichet/reservation/${reservation.idReservation}/pdf" class="ticket-action">Exporter</a>
                       <a href="${pageContext.request.contextPath}/guichet/reservation/${reservation.idReservation}/paiement" class="ticket-action">Payer le reste</a>
                     </div>
                   </details>

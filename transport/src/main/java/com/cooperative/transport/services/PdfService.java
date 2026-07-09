@@ -2,10 +2,18 @@ package com.cooperative.transport.services;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import com.cooperative.transport.entities.ReservationsFille;
+import com.cooperative.transport.entities.ReservationsMere;
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -113,6 +121,105 @@ public class PdfService {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public byte[] generateReservationPdf(ReservationsMere reservation, List<ReservationsFille> places) {
+
+        try {
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            Document document = new Document(PageSize.A4, 40, 40, 40, 40);
+
+            PdfWriter.getInstance(document, out);
+            document.open();
+
+            Font titleFont = new Font(Font.HELVETICA, 22, Font.BOLD, new Color(34, 139, 34));
+            Font subtitleFont = new Font(Font.HELVETICA, 12, Font.NORMAL, Color.DARK_GRAY);
+            Font textFont = new Font(Font.HELVETICA, 11);
+            Font totalFont = new Font(Font.HELVETICA, 14, Font.BOLD, new Color(34, 139, 34));
+
+            Paragraph title = new Paragraph("FACTURE DE RESERVATION", titleFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+
+            Paragraph company = new Paragraph("KOP-V\nVoyagez en toute confiance", subtitleFont);
+            company.setAlignment(Element.ALIGN_CENTER);
+            document.add(company);
+
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm", Locale.FRENCH);
+            int quantity = places.size();
+            BigDecimal unitPrice = reservation.getVoyage().getTarif();
+            BigDecimal total = unitPrice.multiply(BigDecimal.valueOf(quantity));
+            String seats = places.stream()
+                    .map(reservationFille -> reservationFille.getPlace().getNumero())
+                    .collect(Collectors.joining(", "));
+
+            document.add(new Paragraph(" "));
+            document.add(new Paragraph("Numero : KOPV-" + reservation.getId(), textFont));
+            document.add(new Paragraph("Date de reservation : " + reservation.getDateReservation().format(dateFormatter), textFont));
+            document.add(new Paragraph("Client : " + reservation.getClient().getNom(), textFont));
+            document.add(new Paragraph("Telephone : " + reservation.getClient().getTelephone(), textFont));
+            document.add(new Paragraph("Statut paiement : " + reservation.getStatutPaiement().getLibelle(), textFont));
+            document.add(new Paragraph("Sieges : " + seats, textFont));
+
+            document.add(new Paragraph(" "));
+
+            PdfPTable table = new PdfPTable(4);
+            table.setWidthPercentage(100);
+            table.setWidths(new float[] {4,2,2,2});
+
+            addHeader(table, "Trajet");
+            addHeader(table, "Date");
+            addHeader(table, "Qte");
+            addHeader(table, "Prix");
+
+            String route = reservation.getVoyage().getTrajet().getGareDepart().getVille()
+                    + " -> "
+                    + reservation.getVoyage().getTrajet().getGareArrivee().getVille();
+
+            table.addCell(route);
+            table.addCell(reservation.getVoyage().getDateHeureDepart().format(dateFormatter));
+            table.addCell(String.valueOf(quantity));
+            table.addCell(formatAriary(unitPrice));
+
+            document.add(table);
+
+            document.add(new Paragraph(" "));
+
+            Paragraph totalParagraph = new Paragraph("TOTAL : " + formatAriary(total), totalFont);
+            totalParagraph.setAlignment(Element.ALIGN_RIGHT);
+            document.add(totalParagraph);
+
+            document.add(new Paragraph(" "));
+            document.add(new Paragraph("Merci pour votre confiance.", subtitleFont));
+
+            document.close();
+
+            return out.toByteArray();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void addLogo(Document document) {
+        try {
+            ClassPathResource resource = new ClassPathResource("static/images/logo.jpeg");
+            Image logo = Image.getInstance(resource.getURL());
+
+            logo.scaleToFit(120, 120);
+            logo.setAlignment(Image.ALIGN_CENTER);
+
+            document.add(logo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String formatAriary(BigDecimal amount) {
+        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.FRENCH);
+        formatter.setMaximumFractionDigits(0);
+        return formatter.format(amount) + " Ar";
     }
 
     private void addHeader(PdfPTable table, String text){
