@@ -142,7 +142,7 @@ public class ReservationController {
     }
 
     @PostMapping("/guichet/reservation/new/choix-place")
-    public String postNewChoixPlace(HttpSession session, @RequestParam List<Long> idPlaces) {
+    public String postNewChoixPlace(HttpSession session, @RequestParam List<Integer> idPlaces) {
         InfoNewReservationDTO info = getInfoNewReservation(session);
         if (info == null) {
             return "redirect:/guichet/reservation/new";
@@ -195,7 +195,7 @@ public class ReservationController {
     }
 
     @GetMapping("/guichet/reservation/{idReservation}/paiement")
-    public String paiement(Model model, @PathVariable Long idReservation) {
+    public String paiement(Model model, @PathVariable Integer idReservation) {
         ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
         List<ModePaiement> modesPaiements = modePaiementRepository.findAll();
         List<Paiements> paiements = paiementRepository.findByReservation(reservation);
@@ -212,7 +212,7 @@ public class ReservationController {
     }
 
     @PostMapping("/guichet/reservation/{idReservation}/paiement")
-    public String postPaiement(@PathVariable Long idReservation, Model model,
+    public String postPaiement(@PathVariable Integer idReservation, Model model,
             @RequestParam BigDecimal montant, @RequestParam ModePaiement modePaiement,
             @RequestParam(required = false, defaultValue = "") String reference) {
         ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
@@ -240,7 +240,7 @@ public class ReservationController {
     }
 
     @GetMapping("/guichet/reservation/{idReservation}/annulation")
-    public String annulation(Model model, @PathVariable Long idReservation) {
+    public String annulation(Model model, @PathVariable Integer idReservation) {
         ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
 
         model.addAttribute("reservation", reservation);
@@ -249,7 +249,7 @@ public class ReservationController {
     }
 
     @PostMapping("/guichet/reservation/{idReservation}/annulation")
-    public String postAnnulation(Model model, @PathVariable Long idReservation,
+    public String postAnnulation(Model model, @PathVariable Integer idReservation,
             @RequestParam(required = false, defaultValue = "0") BigDecimal frais,
             @RequestParam(required = false, defaultValue = "") String motif) {
         ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
@@ -320,7 +320,7 @@ public class ReservationController {
 
 
     @GetMapping("/guichet/reservation/{idReservation}/pdf")
-    public ResponseEntity<byte[]> downloadReservationPdf(@PathVariable Long idReservation) {
+    public ResponseEntity<byte[]> downloadReservationPdf(@PathVariable Integer idReservation) {
 
         ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
         List<ReservationsFille> places = reservationFilleRepository.findByReservationMere(reservation);

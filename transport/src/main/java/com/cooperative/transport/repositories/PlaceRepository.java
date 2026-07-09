@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 
-public interface PlaceRepository extends JpaRepository<Places, Long> {
+public interface PlaceRepository extends JpaRepository<Places, Integer> {
 
     public Optional<Places> findByVehiculeAndNumero(Vehicules vehicule, String numero);
 }

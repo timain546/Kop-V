@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.cooperative.transport.entities.ReservationsMere;
 
-public interface PaiementRepository extends JpaRepository<Paiements, Long> {
+public interface PaiementRepository extends JpaRepository<Paiements, Integer> {
 
     @Query("""
         SELECT SUM(p.montant)

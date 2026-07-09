@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.cooperative.transport.entities.ModePaiement;
 
-public interface ModePaiementRepository extends JpaRepository<ModePaiement, Long> {
+public interface ModePaiementRepository extends JpaRepository<ModePaiement, Integer> {
 
     public Optional<ModePaiement> findByLibelle(String libelle);
 }

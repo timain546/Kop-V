@@ -9,7 +9,7 @@ import com.cooperative.transport.entities.PlaceStatut;
 import com.cooperative.transport.entities.Places;
 import com.cooperative.transport.entities.Voyages;
 
-public interface PlaceStatutRepository extends JpaRepository<PlaceStatut, Long> {
+public interface PlaceStatutRepository extends JpaRepository<PlaceStatut, Integer> {
 
     public List<PlaceStatut> findByVoyage(Voyages voyage);
     public Optional<PlaceStatut> findByVoyageAndPlace(Voyages voyage, Places place);

@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.cooperative.transport.entities.Gares;
 
-public interface GareRepository extends JpaRepository<Gares, Long> {
+public interface GareRepository extends JpaRepository<Gares, Integer> {
 
     public Optional<Gares> findByVille(String ville);
 }

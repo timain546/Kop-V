@@ -6,7 +6,7 @@ import com.cooperative.transport.entities.ReservationStatut;
 import com.cooperative.transport.entities.ReservationsMere;
 import com.cooperative.transport.entities.StatutReservation;
 
-public interface ReservationStatutRepository extends JpaRepository<ReservationStatut, Long> {
+public interface ReservationStatutRepository extends JpaRepository<ReservationStatut, Integer> {
 
     public boolean existsByReservationAndStatut(ReservationsMere reservation, StatutReservation statut);
 }

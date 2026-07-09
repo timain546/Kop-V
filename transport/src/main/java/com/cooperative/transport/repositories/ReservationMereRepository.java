@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import com.cooperative.transport.dto.ReservationDTO;
 import com.cooperative.transport.entities.ReservationsMere;
 
-public interface ReservationMereRepository extends JpaRepository<ReservationsMere, Long> {
+public interface ReservationMereRepository extends JpaRepository<ReservationsMere, Integer> {
 
     @Query("""
         SELECT COUNT(rf) * rf.reservationMere.voyage.tarif
