@@ -34,6 +34,14 @@ public interface ReservationMereRepository extends JpaRepository<ReservationsMer
             ga.ville                       AS gareArrivee,
             string_agg(p.numero, ', ' ORDER BY p.numero) AS numeroPlace,
             sp.libelle                     AS statutPaiement,
+            COALESCE((
+                SELECT sr.libelle
+                FROM reservation_statut rs
+                    JOIN statut_reservation sr ON sr.id = rs.id_statut
+                WHERE rs.id_reservation = rm.id
+                ORDER BY rs.date_modification DESC
+                LIMIT 1
+            ), '')                         AS statutReservation,
             sum(v.tarif)                   AS tarif
         FROM reservations_mere rm
             JOIN client c              ON c.id = rm.id_client

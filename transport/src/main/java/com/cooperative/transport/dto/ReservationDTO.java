@@ -24,6 +24,8 @@ public interface ReservationDTO {
 
     String getStatutPaiement();
 
+    String getStatutReservation();
+
     BigDecimal getTarif();
 
 }

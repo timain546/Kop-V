@@ -501,9 +501,46 @@
   align-items: center;
   gap: 24px;
   background: #fff;
+  border: 1px solid transparent;
   border-radius: 18px;
   padding: 18px 24px;
   flex-wrap: wrap;
+}
+
+.ticket-card-cancelled {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(185, 28, 28, 0.035) 0,
+      rgba(185, 28, 28, 0.035) 8px,
+      transparent 8px,
+      transparent 18px
+    ),
+    #fff7f7;
+  border-color: rgba(185, 28, 28, 0.18);
+  box-shadow: inset 4px 0 0 var(--res-red);
+}
+
+.ticket-card-cancelled .ticket-icon,
+.ticket-card-cancelled .seat-badge {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.ticket-card-cancelled .ticket-code,
+.ticket-card-cancelled .ticket-price {
+  color: var(--res-red);
+}
+
+.ticket-card-cancelled .ticket-route,
+.ticket-card-cancelled .seats-block {
+  filter: grayscale(1);
+  opacity: 0.68;
+}
+
+.ticket-card-cancelled .route-line::before,
+.ticket-card-cancelled .route-line::after {
+  background: #94a3b8;
 }
 
 .ticket-left {

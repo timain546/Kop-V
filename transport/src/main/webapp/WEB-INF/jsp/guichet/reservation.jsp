@@ -119,7 +119,10 @@
           <!-- ================= LISTE (cartes ticket) ================= -->
           <div class="res-list">
             <c:forEach var="reservation" items="${reservations}">
-              <article class="ticket-card">
+              <c:set var="statutPaiementLower" value="${fn:toLowerCase(reservation.statutPaiement)}" />
+              <c:set var="statutReservationLower" value="${fn:toLowerCase(reservation.statutReservation)}" />
+              <c:set var="isAnnulee" value="${fn:contains(statutReservationLower, 'annul')}" />
+              <article class="ticket-card ${isAnnulee ? 'ticket-card-cancelled' : ''}">
                 <div class="ticket-left">
                   <div class="ticket-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"></path><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"></path><path d="m9 15 2 2 4-4"></path></svg>
@@ -163,15 +166,14 @@
 
                   <p class="ticket-price"><fmt:formatNumber value="${reservation.tarif}" pattern="#,##0"/> Ar</p>
 
-                  <c:set var="statutLower" value="${fn:toLowerCase(reservation.statutPaiement)}" />
                   <c:choose>
-                    <c:when test="${fn:contains(statutLower, 'annul')}">
-                      <span class="ticket-status status-annulee">${reservation.statutPaiement}</span>
+                    <c:when test="${isAnnulee}">
+                      <span class="ticket-status status-annulee">${reservation.statutReservation}</span>
                     </c:when>
-                    <c:when test="${fn:contains(statutLower, 'rembour')}">
+                    <c:when test="${fn:contains(statutPaiementLower, 'rembour')}">
                       <span class="ticket-status status-remboursee">${reservation.statutPaiement}</span>
                     </c:when>
-                    <c:when test="${fn:contains(statutLower, 'pay')}">
+                    <c:when test="${fn:contains(statutPaiementLower, 'pay')}">
                       <span class="ticket-status status-paye">${reservation.statutPaiement}</span>
                     </c:when>
                     <c:otherwise>
