@@ -26,7 +26,7 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
             "chauffeur",
             "statutActuel"
     })
-    @Query("SELECT v FROM Voyages v ORDER BY v.dateHeureDepart ASC")
+    @Query("SELECT v FROM Voyages v ORDER BY v.id ASC")
     List<Voyages> findAllCatalogueVoyage();
 
     @Query(value = "SELECT v.* FROM voyages v WHERE v.date_heure_depart >= NOW()" +
@@ -127,4 +127,5 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
             @Param("nbPlaces") Integer nbPlaces
     );
 
+    boolean existsByTrajetId(Integer trajetId);
 }

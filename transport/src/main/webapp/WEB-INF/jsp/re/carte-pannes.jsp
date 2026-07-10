@@ -8,6 +8,7 @@
 
 <%
     List<Pannes> pannes = (List<Pannes>) request.getAttribute("pannes");
+    Integer nbPanneEnAttente = (Integer) request.getAttribute("nbPanneEnAttente");
 %>
 
 <!DOCTYPE html>
@@ -35,23 +36,17 @@
             </div>
 
             <nav class="p-3 space-y-1">
-                <a href="liste-voyages.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
+                <a href="/re/voyage/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
                     <i class="fa-solid fa-route text-base"></i>
                     <span>Gestion Voyages</span>
                 </a>
-                <a href="carte-pannes.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-600 bg-emerald-50/60 font-bold text-sm transition">
+                <a href="/re/panne/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-600 bg-emerald-50/60 font-bold text-sm transition">
                     <i class="fa-solid fa-triangle-exclamation text-base"></i>
                     <span>Suivi des Pannes</span>
-                    <span class="ml-auto bg-rose-100 text-rose-600 text-[10px] font-bold px-2 py-0.5 rounded-full">2</span>
                 </a>
-                <a href="crud-trajets.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
+                <a href="/re/trajet/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
                     <i class="fa-solid fa-map-location-dot text-base"></i>
                     <span>CRUD Trajets</span>
-                </a>
-                <a href="notifications.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
-                    <i class="fa-solid fa-bell text-base"></i>
-                    <span>Notifications</span>
-                    <span class="ml-auto bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full">5</span>
                 </a>
             </nav>
         </div>
@@ -81,7 +76,7 @@
             </div>
             <div class="bg-rose-50 border border-rose-100 rounded-xl px-3 py-1.5 flex items-center gap-2 text-rose-600">
                 <i class="fa-solid fa-circle text-[8px] animate-pulse"></i>
-                <span class="text-xs font-bold uppercase tracking-wider">2 Pannes en attente</span>
+                <span class="text-xs font-bold uppercase tracking-wider" id="nbPanneEnAttente"><%= nbPanneEnAttente.intValue() %> Pannes en attente</span>
             </div>
         </div>
 
@@ -105,7 +100,7 @@
 
                         String lieuWkt = p.getLieuAsWkt();
                 %>
-                    <div onclick="focusPanne('<%= trajet.getTraceAsWkt() %>');markPanne('<%= p.getId()%>','<%= lieuWkt %>')" class="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between hover:bg-slate-50/80 cursor-pointer transition active:bg-slate-100 gap-4">
+                    <div onclick="selectionnerPanne('<%= p.getId() %>', '<%= lieuWkt %>', '<%= trajet.getTraceAsWkt() %>')" class="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between hover:bg-slate-50/80 cursor-pointer transition active:bg-slate-100 gap-4">
                         <div class="flex items-center gap-4 flex-1">
                             <% if(statutReparation.equalsIgnoreCase("en panne")) { %>
                                 <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center flex-shrink-0 text-sm" id="panne-<%= p.getId() %>">
@@ -161,8 +156,9 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Variable pour stocker le marqueur de panne actif
+        // Variables pour stocker les calques actifs
         let currentPolylineLayer = null;
+        let currentMarkerLayer = null;
         let routeCoordinates = [];
 
         function nettoyerCalqueStatique() {
@@ -174,8 +170,6 @@
             routeCoordinates = [];
         }
 
-        let currentMarkerLayer = null;
-
         function nettoyerMarkerStatique() {
 
             if (currentMarkerLayer) {
@@ -184,73 +178,26 @@
             }
         }
 
-        function markPanne(idPanne, lieuWkt) {
-    // 1. On efface toujours le marqueur précédent
-    nettoyerMarkerStatique();
-
-    // Vérification : si c'est vide ou que ça ne contient pas POINT, on s'arrête
-    if (!lieuWkt || lieuWkt === 'null' || !lieuWkt.includes("POINT")) {
-        console.warn("Pas de géométrie POINT valide pour la panne " + idPanne);
-        return;
-    }
-
-    try {
-        let cleanWkt = lieuWkt;
-        
-        // Si le WKT contient un préfixe type "SRID=4326;POINT(...)"
-        if (cleanWkt.includes(";")) {
-            cleanWkt = cleanWkt.split(";")[1];
-        }
-
-        // On cherche les parenthèses : POINT(47.0857 -21.4526)
-        const first = cleanWkt.indexOf("(");
-        const last = cleanWkt.lastIndexOf(")");
-
-        if (first !== -1 && last !== -1) {
-            // On extrait ce qu'il y a entre ( et ) -> "47.0857 -21.4526"
-            const coordonnees = cleanWkt.substring(first + 1, last).trim();
-            
-            // On sépare par l'espace
-            const parts = coordonnees.split(/\s+/);
-            
-            if (parts.length >= 2) {
-                // PostGIS : parts[0] = Longitude (X), parts[1] = Latitude (Y)
-                const long = parseFloat(parts[0]);
-                const lat = parseFloat(parts[1]);
-
-                // Vérification que ce sont bien des nombres valides
-                if (!isNaN(long) && !isNaN(lat)) {
-                    
-                    // CORRECTION : L.marker prend un tableau [lat, long] et utilise .addTo(map)
-                    currentMarkerLayer = L.marker([lat, long]).addTo(map);
-                    
-                    // CORRECTION : Utilisation des backticks (touches AltGr + 7 ou `) pour le template string
-                    currentMarkerLayer.bindPopup(`<b>Incident V-00${idPanne}</b><br>Panne localisée ici.`).openPopup();
-
-                    // Zoom fluide sur le point
-                    setTimeout(() => {
-                        map.setView([lat, long], 14, {
-                            animate: true,
-                            duration: 1.0
-                        });
-                    }, 250); // Attend que le fitBounds de focusPanne soit terminé
-                }
+        function nettoyerCarte() {
+            if (currentPolylineLayer) {
+                map.removeLayer(currentPolylineLayer);
+                currentPolylineLayer = null;
+            }
+            if (currentMarkerLayer) {
+                map.removeLayer(currentMarkerLayer);
+                currentMarkerLayer = null;
             }
         }
-    } catch (error) {
-        console.error("Erreur lors du traitement du marqueur de panne :", error);
-    }  
-}
 
-        // Fonction appelée lors du clic sur une ligne de panne
-        function focusPanne(traceWkt) {
-            nettoyerCalqueStatique();
+        function selectionnerPanne(idPanne, lieuWkt, traceWkt) {
+            nettoyerCarte();
+
+            let coordonneesPanne = null;
+            let boundsTrajet = null;
 
             if (traceWkt && traceWkt !== 'null' && traceWkt.includes("LINESTRING")) {
                 try {
-                    let cleanWkt = traceWkt;
-                    if (cleanWkt.includes(";")) cleanWkt = cleanWkt.split(";")[1];
-
+                    let cleanWkt = traceWkt.includes(";") ? traceWkt.split(";")[1] : traceWkt;
                     const startIdx = cleanWkt.indexOf("(");
                     const endIdx = cleanWkt.lastIndexOf(")");
                     
@@ -260,20 +207,55 @@
                         
                         const latLngs = pairs.map(p => {
                             const parts = p.split(/\s+/);
-                            return L.latLng(parseFloat(parts[1]), parseFloat(parts[0])); // Conversion Lng/Lat standard PostGIS
+                            return L.latLng(parseFloat(parts[1]), parseFloat(parts[0]));
                         }).filter(c => !isNaN(c.lat) && !isNaN(c.lng));
 
                         if (latLngs.length >= 2) {
-                            routeCoordinates = latLngs.map(l => ({ lat: l.lat, lng: l.lng }));
-                            
-                            // Affichage immédiat en Orange du tracé déjà sauvegardé en BDD
                             currentPolylineLayer = L.polyline(latLngs, { color: '#f59e0b', weight: 5, opacity: 0.9 }).addTo(map);
-                            map.fitBounds(currentPolylineLayer.getBounds());
+                            boundsTrajet = currentPolylineLayer.getBounds();
                         }
                     }
                 } catch (error) {
-                    console.error("Erreur parsing tracé fixe :", error);
+                    console.error("Erreur parsing tracé :", error);
                 }
+            }
+
+            if (lieuWkt && lieuWkt !== 'null' && lieuWkt.includes("POINT")) {
+                try {
+                    let cleanWkt = lieuWkt.includes(";") ? lieuWkt.split(";")[1] : lieuWkt;
+                    const first = cleanWkt.indexOf("(");
+                    const last = cleanWkt.lastIndexOf(")");
+
+                    if (first !== -1 && last !== -1) {
+                        const coordonnees = cleanWkt.substring(first + 1, last).trim();
+                        const parts = coordonnees.split(/\s+/);
+                        
+                        if (parts.length >= 2) {
+                            const long = parseFloat(parts[0]);
+                            const lat = parseFloat(parts[1]);
+
+                            if (!isNaN(long) && !isNaN(lat)) {
+                                coordonneesPanne = [lat, long];
+                                currentMarkerLayer = L.marker(coordonneesPanne).addTo(map);
+                                currentMarkerLayer.bindPopup('<b>Incident V-00' + idPanne + '</b><br>Panne localisée ici.');
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error("Erreur marqueur de panne :", error);
+                }
+            }
+
+            if (coordonneesPanne) {
+                map.flyTo(coordonneesPanne, 14, {
+                    animate: true,
+                    duration: 1.2
+                });
+                setTimeout(() => {
+                    if (currentMarkerLayer) currentMarkerLayer.openPopup();
+                }, 1200);
+            } else if (boundsTrajet) {
+                map.fitBounds(boundsTrajet, { animate: true, duration: 1.2 });
             }
         }
 
@@ -300,6 +282,13 @@
 
                 const actionDiv = document.getElementById("action-panne-" + idPanne);
                 actionDiv.innerHTML = '<div class="text-[11px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg border border-slate-200 whitespace-nowrap">Attente Chauffeur</div>';
+
+                const nbPanneEnAttenteSpan = document.getElementById("nbPanneEnAttente");
+                let nbPanneEnAttente = parseInt(nbPanneEnAttenteSpan.textContent);
+                if (!isNaN(nbPanneEnAttente) && nbPanneEnAttente > 0) {
+                    nbPanneEnAttente--;
+                    nbPanneEnAttenteSpan.textContent = nbPanneEnAttente + " Pannes en attente";
+                }
             })
             .catch(errorMessage => {
                 console.log("Erreur AJAX:" + errorMessage);

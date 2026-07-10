@@ -26,6 +26,12 @@ public class PanneController {
     @GetMapping("/panne/list")
     public String getListPannes(Model model) {
         List<Pannes> pannes = panneService.findAllPannesSignale();
+        int nbPanneEnAttente = 0;
+        for(Pannes p : pannes) {
+            if(p.getStatutReparationActuel().getLibelle().equalsIgnoreCase("en panne")) nbPanneEnAttente++;
+        }
+
+        model.addAttribute("nbPanneEnAttente", Integer.valueOf(nbPanneEnAttente));
         model.addAttribute("pannes", pannes);
         return "re/carte-pannes";
     }

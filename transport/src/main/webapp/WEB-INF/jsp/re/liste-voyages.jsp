@@ -34,23 +34,17 @@
                 </div>
             </div>
             <nav class="p-3 space-y-1">
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-600 bg-emerald-50/60 font-bold text-sm transition">
+                <a href="/re/voyagelist" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-600 bg-emerald-50/60 font-bold text-sm transition">
                     <i class="fa-solid fa-route text-base"></i>
                     <span>Gestion Voyages</span>
                 </a>
-                <a href="carte-pannes.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
+                <a href="/re/panne/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
                     <i class="fa-solid fa-triangle-exclamation text-base"></i>
                     <span>Suivi des Pannes</span>
-                    <span class="ml-auto bg-rose-100 text-rose-600 text-[10px] font-bold px-2 py-0.5 rounded-full">2</span>
                 </a>
                 <a href="/re/trajet/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
                     <i class="fa-solid fa-map-location-dot text-base"></i>
                     <span>CRUD Trajets</span>
-                </a>
-                <a href="notifications.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
-                    <i class="fa-solid fa-bell text-base"></i>
-                    <span>Notifications</span>
-                    <span class="ml-auto bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full">5</span>
                 </a>
             </nav>
         </div>
@@ -151,9 +145,6 @@
                                                 <i class="fa-solid fa-ban"></i>
                                             </div>
                                         <% } else { %>
-                                            <a href="formulaire-voyage.html?action=edit&id=<%= idVoyage %>" class="btn-edit-<%= idVoyage %> w-8 h-8 rounded-lg border border-slate-200 text-slate-500 bg-white hover:bg-slate-50 flex items-center justify-center text-xs active:scale-95 transition" title="Modifier la feuille de route">
-                                                <i class="fa-solid fa-pen"></i>
-                                            </a>
                                             <button onclick="ouvrirModalAnnulation(<%= idVoyage %>, '<%= reference %>')" class="btn-cancel-<%= idVoyage %> w-8 h-8 rounded-lg border border-rose-100 text-rose-500 bg-rose-50/30 hover:bg-rose-50 flex items-center justify-center text-xs active:scale-95 transition" title="Annuler le voyage">
                                                 <i class="fa-solid fa-ban"></i>
                                             </button>

@@ -98,8 +98,14 @@ public class TrajetService {
     }
 
     public void modifierTrajet(TrajetDTO trajetDTO) throws Exception {
+
         Trajets trajetAModifier = trajetRepo.findById(trajetDTO.getId())
             .orElseThrow(() -> new Exception("Trajet introuvable avec l'ID " + trajetDTO.getId()));
+
+        boolean utilise = voyageRepo.existsByTrajetId(trajetDTO.getId());
+        if(utilise) {
+            throw new Exception("Le trajet T-00" + trajetDTO.getId() + " est déjà assigné à un voyage");
+        }
 
         Gares gareDepart = gareRepo.findById(trajetDTO.getGareDepart())
             .orElseThrow(() -> new Exception("Impossible de trouver la gare de départ G-00" + trajetDTO.getGareDepart()));

@@ -38,16 +38,10 @@
                 <a href="/re/panne/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
                     <i class="fa-solid fa-triangle-exclamation text-base"></i>
                     <span>Suivi des Pannes</span>
-                    <span class="ml-auto bg-rose-100 text-rose-600 text-[10px] font-bold px-2 py-0.5 rounded-full">2</span>
                 </a>
                 <a href="/re/trajet/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
                     <i class="fa-solid fa-map-location-dot text-base"></i>
                     <span>CRUD Trajets</span>
-                </a>
-                <a href="/re/notifications" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
-                    <i class="fa-solid fa-bell text-base"></i>
-                    <span>Notifications</span>
-                    <span class="ml-auto bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full">5</span>
                 </a>
             </nav>
         </div>
