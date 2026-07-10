@@ -102,8 +102,10 @@
                         Voyages voyage = p.getVoyage();
                         Vehicules vehicule = voyage.getVehicule();
                         Trajets trajet = voyage.getTrajet();
+
+                        String lieuWkt = p.getLieuAsWkt();
                 %>
-                    <div onclick="focusPanne('<%= trajet.getTraceAsWkt() %>')" class="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between hover:bg-slate-50/80 cursor-pointer transition active:bg-slate-100 gap-4">
+                    <div onclick="focusPanne('<%= trajet.getTraceAsWkt() %>');markPanne('<%= p.getId()%>','<%= lieuWkt %>')" class="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between hover:bg-slate-50/80 cursor-pointer transition active:bg-slate-100 gap-4">
                         <div class="flex items-center gap-4 flex-1">
                             <% if(statutReparation.equalsIgnoreCase("en panne")) { %>
                                 <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center flex-shrink-0 text-sm" id="panne-<%= p.getId() %>">
@@ -126,7 +128,7 @@
                                 
                                 <p class="text-xs font-semibold text-slate-500 mt-0.5"><%= trajet.getGareDepart().getVille() %> ➔ <%= trajet.getGareArrivee().getVille() %> (<%= vehicule.getModele() %> <%= vehicule.getImmatriculation() %>)</p>
                                 <p class="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
-                                    <i class="fa-solid fa-location-dot text-rose-400"></i> GPS: -21.4526, 47.0857 (RN7)
+                                    <i class="fa-solid fa-location-dot text-rose-400"></i> GPS: <%= (lieuWkt != null ? lieuWkt : "Non localisé")  %>
                                 </p>
                             </div>
                         </div>
@@ -164,12 +166,81 @@
         let routeCoordinates = [];
 
         function nettoyerCalqueStatique() {
+
             if (currentPolylineLayer) {
                 map.removeLayer(currentPolylineLayer);
                 currentPolylineLayer = null;
             }
             routeCoordinates = [];
         }
+
+        let currentMarkerLayer = null;
+
+        function nettoyerMarkerStatique() {
+
+            if (currentMarkerLayer) {
+                map.removeLayer(currentMarkerLayer);
+                currentMarkerLayer = null;
+            }
+        }
+
+        function markPanne(idPanne, lieuWkt) {
+    // 1. On efface toujours le marqueur précédent
+    nettoyerMarkerStatique();
+
+    // Vérification : si c'est vide ou que ça ne contient pas POINT, on s'arrête
+    if (!lieuWkt || lieuWkt === 'null' || !lieuWkt.includes("POINT")) {
+        console.warn("Pas de géométrie POINT valide pour la panne " + idPanne);
+        return;
+    }
+
+    try {
+        let cleanWkt = lieuWkt;
+        
+        // Si le WKT contient un préfixe type "SRID=4326;POINT(...)"
+        if (cleanWkt.includes(";")) {
+            cleanWkt = cleanWkt.split(";")[1];
+        }
+
+        // On cherche les parenthèses : POINT(47.0857 -21.4526)
+        const first = cleanWkt.indexOf("(");
+        const last = cleanWkt.lastIndexOf(")");
+
+        if (first !== -1 && last !== -1) {
+            // On extrait ce qu'il y a entre ( et ) -> "47.0857 -21.4526"
+            const coordonnees = cleanWkt.substring(first + 1, last).trim();
+            
+            // On sépare par l'espace
+            const parts = coordonnees.split(/\s+/);
+            
+            if (parts.length >= 2) {
+                // PostGIS : parts[0] = Longitude (X), parts[1] = Latitude (Y)
+                const long = parseFloat(parts[0]);
+                const lat = parseFloat(parts[1]);
+
+                // Vérification que ce sont bien des nombres valides
+                if (!isNaN(long) && !isNaN(lat)) {
+                    
+                    // CORRECTION : L.marker prend un tableau [lat, long] et utilise .addTo(map)
+                    currentMarkerLayer = L.marker([lat, long]).addTo(map);
+                    
+                    // CORRECTION : Utilisation des backticks (touches AltGr + 7 ou `) pour le template string
+                    currentMarkerLayer.bindPopup(`<b>Incident V-00${idPanne}</b><br>Panne localisée ici.`).openPopup();
+
+                    // Zoom fluide sur le point
+                    setTimeout(() => {
+                        map.setView([lat, long], 14, {
+                            animate: true,
+                            duration: 1.0
+                        });
+                    }, 250); // Attend que le fitBounds de focusPanne soit terminé
+                }
+            }
+        }
+    } catch (error) {
+        console.error("Erreur lors du traitement du marqueur de panne :", error);
+    }  
+}
 
         // Fonction appelée lors du clic sur une ligne de panne
         function focusPanne(traceWkt) {

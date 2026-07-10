@@ -19,6 +19,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.locationtech.jts.io.WKTWriter;
+
 @Entity
 @Table(name = "pannes")
 @Data
@@ -43,8 +45,8 @@ public class Pannes {
     @Column(name = "date_signalement")
     private java.time.LocalDate dateSignalement;
 
-    @Column(name = "lieu", length = 255)
-    private String lieu;
+    @Column(name = "lieu", columnDefinition = "geometry(Point,4326)")
+    private org.locationtech.jts.geom.Point lieu;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_motif_panne")
@@ -63,4 +65,10 @@ public class Pannes {
     @OneToMany(mappedBy = "panne")
     @OrderBy("dateModification DESC")
     private List<Reparation> reparations;
+
+    public String getLieuAsWkt() {
+        if (this.lieu == null) return null;
+        WKTWriter writer = new WKTWriter();
+        return writer.write(this.lieu);
+    }
 }
