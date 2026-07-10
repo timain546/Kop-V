@@ -1,10 +1,18 @@
 package com.cooperative.transport.entities;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 @Entity
-@Table(name = "vehicule")
+@Table(name = "vehicules")
 public class Vehicule {
 
     @Id
@@ -27,11 +35,14 @@ public class Vehicule {
     @Column(nullable = false)
     private CategorieVehicule categorie;
 
-    @Column(name = "prix_achat", nullable = false)
+    @Column(name = "prix", nullable = false)
     private Double prixAchat;
 
     @Column(name = "date_vente")
     private LocalDate dateVente;
+
+    @Column(name = "date_achat", nullable = false)
+    private LocalDate dateAchat;
 
     public Vehicule() {}
 
@@ -68,4 +79,7 @@ public class Vehicule {
 
     public LocalDate getDateVente() { return dateVente; }
     public void setDateVente(LocalDate dateVente) { this.dateVente = dateVente; }
+
+    public LocalDate getDateAchat() { return dateAchat; }
+    public void setDateAchat(LocalDate dateAchat) { this.dateAchat = dateAchat; }
 }
