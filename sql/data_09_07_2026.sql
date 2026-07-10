@@ -69,3 +69,8 @@ insert into paiements (date_paiement,montant,reference_transaction,id_mode_paiem
 ('2026-07-10',30, 'REF004', 1, 16),
 ('2026-08-10',30, 'REF005', 2, 17),
 ('2026-09-10',30, 'REF006', 3, 18);
+
+insert into annulations(date_annulation,frais_annulation,motif,prix_remboursement,id_reservation) values
+('2026-07-10',5,'Annulation pour cause personnelle',25,16),
+('2026-08-10',5,'Annulation pour cause de santé',25,17),
+('2026-09-10',5,'Annulation pour cause de travail',25,18);

@@ -82,3 +82,4 @@ INSERT INTO contrats_employes (id_employe, date_embauche, date_renvoi) VALUES
 (5, '2026-02-01', NULL),
 (6, '2026-03-01', NULL),
 (7, '2026-04-01', NULL);
+

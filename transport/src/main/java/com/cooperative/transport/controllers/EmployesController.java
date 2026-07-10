@@ -137,7 +137,7 @@ public class EmployesController {
         employe.setRole(role);
         employesService.updateEmploye(employe);
 
-        return "redirect:/employes/list";
+        return "redirect:/admin/employes/list";
     }
 
     @PostMapping("/employes/supprimerEmploye")
@@ -150,7 +150,7 @@ public class EmployesController {
       employeStatut.setEmploye(employesService.findEmpById(id));
       employeStatut.setStatutEmploye(statutEmployeService.findStatutById(2));
       employeStatutService.updateEmployeStatut(employeStatut);
-      return "redirect:/employes/list";
+      return "redirect:/admin/employes/list";
     }
     @GetMapping("/employes/form")
     public String afficherFormulaire(Model model) {
@@ -190,7 +190,7 @@ public class EmployesController {
         employeStatut.setStatutEmploye(statutEmployeService.findStatutById(1));
         employeStatut.setDateModification(dateEmbauche);
         employeStatutService.updateEmployeStatut(employeStatut);
-        return "redirect:/employes/list";
+        return "redirect:/admin/employes/list";
     }
     @PostMapping("/employes/reembaucher")
     public String reembaucherEmploye(@RequestParam("id") Integer id) {
@@ -206,7 +206,7 @@ public class EmployesController {
         employeStatut.setDateModification(new java.sql.Date(System.currentTimeMillis()));
         employeStatutService.updateEmployeStatut(employeStatut);
 
-        return "redirect:/employes/list";
+        return "redirect:/admin/employes/list";
     }
 
 }

@@ -15,6 +15,7 @@ import com.cooperative.transport.dto.VoyageDisponibleDTO;
 import com.cooperative.transport.entities.Trajets;
 import com.cooperative.transport.entities.Utilisateurs;
 import com.cooperative.transport.entities.Voyages;
+import java.math.BigDecimal;
 
 @Repository
 public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
@@ -126,5 +127,12 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
 
             @Param("nbPlaces") Integer nbPlaces
     );
+
+    @Query(value = "SELECT COALESCE(SUM(carburant), 0) FROM voyages " +
+       "WHERE id_statut_actuel = 3 " +
+       "AND EXTRACT(MONTH FROM date_heure_depart + (duree_estimee_minutes || ' minutes')::INTERVAL) = :mois "+
+       "AND EXTRACT(YEAR FROM date_heure_depart + (duree_estimee_minutes || ' minutes')::INTERVAL) =:annee", 
+       nativeQuery = true)
+    BigDecimal getCarburantparMois(@Param("mois") int mois, @Param("annee") int annee);
 
 }
