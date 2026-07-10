@@ -20,8 +20,6 @@ Table employe_statut:
     - id_statut
     - date_modification
 
-Table
-
 Table categorie_vehicule:
     - id
     - libelle (VIP, Premium, Standard)
