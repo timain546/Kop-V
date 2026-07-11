@@ -2,6 +2,7 @@ package com.cooperative.transport.controllers;
 
 import com.cooperative.transport.dto.PanneDTO;
 import com.cooperative.transport.dto.VoyageListDTO;
+import com.cooperative.transport.entities.StatutVoyage;
 import com.cooperative.transport.entities.MotifPanne;
 import com.cooperative.transport.entities.Utilisateurs;
 import com.cooperative.transport.repositories.MotifPanneRepository;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Controller
@@ -28,8 +30,8 @@ public class ChauffeurController {
     private final UtilisateurRepository utilisateurRepository;
     private final MotifPanneRepository motifPanneRepository;
 
-    // ID du chauffeur de démonstration (Rakoto Jean, id=2 d'après les données d'insertion)
-    private static final Integer DEMO_CHAUFFEUR_ID = 2;
+    // ID du chauffeur de démonstration (Rakoto Jean, id=1 d'après les données d'insertion)
+    private static final Integer DEMO_CHAUFFEUR_ID = 1;
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
@@ -51,14 +53,11 @@ public class ChauffeurController {
     public String voyages(Model model,
                           @RequestParam(required = false) String statut,
                           @RequestParam(required = false) String search) {
-        List<VoyageListDTO> voyages;
+        List<VoyageListDTO> voyages = new ArrayList<>();
+        List<StatutVoyage> statuts = new ArrayList<>();
 
         if (statut != null && !statut.isEmpty()) {
-            if ("a_venir".equals(statut)) {
-                voyages = voyageService.getUpcomingVoyagesByChauffeur(DEMO_CHAUFFEUR_ID);
-            } else {
-                voyages = voyageService.getVoyagesByChauffeurAndStatut(DEMO_CHAUFFEUR_ID, statut.replace("_", " "));
-            }
+            voyages = voyageService.getVoyagesByChauffeurAndStatut(DEMO_CHAUFFEUR_ID, statut);
         } else {
             voyages = voyageService.getVoyagesByChauffeur(DEMO_CHAUFFEUR_ID);
         }
@@ -80,8 +79,11 @@ public class ChauffeurController {
                     .collect(java.util.stream.Collectors.toList());
         }
 
+        statuts = voyageService.findAllStatutVoyage();
+
         Optional<Utilisateurs> chauffeurOpt = utilisateurRepository.findById(DEMO_CHAUFFEUR_ID);
         model.addAttribute("voyages", voyages);
+        model.addAttribute("listeStatuts", statuts);
         model.addAttribute("statut", statut);
         model.addAttribute("search", search);
         model.addAttribute("chauffeurId", DEMO_CHAUFFEUR_ID);

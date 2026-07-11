@@ -137,4 +137,15 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
        nativeQuery = true)
     BigDecimal getCarburantparMois(@Param("mois") int mois, @Param("annee") int annee);
 
+    @EntityGraph(attributePaths = {
+        "trajet",
+        "trajet.gareDepart",
+        "trajet.gareArrivee",
+        "vehicule",
+        "vehicule.categorie",
+        "chauffeur",
+        "statutActuel"
+    })
+    @Query("SELECT v FROM Voyages v WHERE v.chauffeur.id = :chauffeurId AND v.statutActuel.libelle = :statut")
+    List<Voyages> findAllVoyagesByChauffeurIdAndStatut(Integer chauffeurId, String statut);
 }
