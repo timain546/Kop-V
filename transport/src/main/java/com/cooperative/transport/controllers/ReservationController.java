@@ -81,14 +81,21 @@ public class ReservationController {
 
     @GetMapping("/guichet/reservation/new")
     public String newIndex(HttpSession session, Model model) {
+        InfoNewReservationDTO info = getInfoNewReservation(session);
+        if (info == null) {
+            info = new InfoNewReservationDTO();
+        }
+
         List<Gares> gares = gareRepository.findAll();
         model.addAttribute("gares", gares);
+
+        model.addAttribute("info", info);
 
         return "guichet/new-reservation";
     }
 
     @PostMapping("/guichet/reservation/new")
-    public String newIndex(HttpSession session, @ModelAttribute InfoNewReservationDTO info) {
+    public String postNewIndex(HttpSession session, @ModelAttribute InfoNewReservationDTO info) {
         session.setAttribute("infoNewReservation", info);
 
         return "redirect:/guichet/reservation/new/choix-voyage";
