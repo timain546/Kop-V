@@ -1,6 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<%@ page import="java.util.List" %>
+<%@ page import="com.cooperative.transport.entities.StatutVoyage" %>
+
+<%
+    List<StatutVoyage> statuts = (List<StatutVoyage>) request.getAttribute("listeStatuts");
+%>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -54,18 +62,28 @@
                 <a href="/chauffeur/voyages" class="filter-tab-v ${empty statut ? 'active' : ''}">
                     <i class="fas fa-list"></i> Tous
                 </a>
-                <a href="/chauffeur/voyages?statut=en_cours" class="filter-tab-v ${statut == 'en_cours' ? 'active' : ''}">
-                    <i class="fas fa-spinner"></i> En cours
-                </a>
-                <a href="/chauffeur/voyages?statut=a_venir" class="filter-tab-v ${statut == 'a_venir' ? 'active' : ''}">
-                    <i class="fas fa-clock"></i> À venir
-                </a>
-                <a href="/chauffeur/voyages?statut=terminé" class="filter-tab-v ${statut == 'terminé' ? 'active' : ''}">
-                    <i class="fas fa-check-circle"></i> Arrivés
-                </a>
-                <a href="/chauffeur/voyages?statut=en_panne" class="filter-tab-v ${statut == 'en_panne' ? 'active' : ''}">
-                    <i class="fas fa-exclamation-circle"></i> En panne
-                </a>
+                <%
+                    for(StatutVoyage s : statuts) {
+                        String libelleStatut = s.getLibelle();
+                        request.setAttribute("currentLibelle", libelleStatut);
+                %>
+                    <a href="/chauffeur/voyages?statut=<%= libelleStatut %>" class="filter-tab-v ${statut == currentLibelle ? 'active' : ''}">
+                        
+                        <% if(libelleStatut.equalsIgnoreCase("En cours")) { %>
+                            <i class="fas fa-spinner"></i>
+                        <% } else if(libelleStatut.equalsIgnoreCase("Plannifié")) { %>
+                            <i class="fas fa-clock"></i>
+                        <% } else if(libelleStatut.equalsIgnoreCase("Terminé")) { %>
+                            <i class="fas fa-check-circle"></i>
+                        <% } else if(libelleStatut.equalsIgnoreCase("En panne")) { %>
+                            <i class="fas fa-exclamation-circle"></i>
+                        <% } else if(libelleStatut.equalsIgnoreCase("Annulé")) { %>
+                            <i class="fas fa-times-circle"></i>
+                        <% } %> 
+                        <%= libelleStatut %>
+                    </a>
+                <% } %>
+
             </div>
             <form class="search-form" action="/chauffeur/voyages" method="get">
                 <c:if test="${not empty statut}">
@@ -124,7 +142,7 @@
                                         <strong>Voyage #${voyage.id}</strong>
                                     </c:otherwise>
                                 </c:choose>
-                                <span class="voyage-id-tag">T-${voyage.id}</span>
+                                <span class="voyage-id-tag">V-00${voyage.id}</span>
                             </div>
                             <div class="route-details">
                                 <span>

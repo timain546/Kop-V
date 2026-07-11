@@ -159,11 +159,10 @@ public class VoyageService {
     }
 
     public List<VoyageListDTO> getVoyagesByChauffeurAndStatut(Integer chauffeurId, String statut) {
-        List<Voyages> voyages = voyageRepository.findByChauffeurId(chauffeurId);
+        List<Voyages> voyages = voyageRepository.findAllVoyagesByChauffeurIdAndStatut(chauffeurId, statut);
         return voyages.stream()
-                .map(this::mapToVoyageListDTO)
-                .filter(dto -> statut.equalsIgnoreCase(dto.getStatutLibelle()))
-                .collect(Collectors.toList());
+                        .map(this::mapToVoyageListDTO)
+                        .collect(Collectors.toList());
     }
 
     public List<VoyageListDTO> getActiveVoyagesByChauffeur(Integer chauffeurId) {
@@ -250,8 +249,11 @@ public class VoyageService {
         return dto;
     }
 
-
     public List<VoyageDisponibleDTO> getVoyagesDisponibles(LocalDate date1, LocalDate date2, Integer nbPlaces, String villeDepart, String villeArrivee) {
         return voyageRepository.findByDateBetweenAndVilleAndNbPlaces(date1, date2, villeDepart, villeArrivee, nbPlaces);
+    }
+
+    public List<StatutVoyage> findAllStatutVoyage() {
+        return statutVoyageRepository.findAll();
     }
 }
