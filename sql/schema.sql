@@ -74,7 +74,7 @@ CREATE TABLE voyage_statut(
     id SERIAL PRIMARY KEY,
     id_voyage INT NOT NULL REFERENCES voyages(id) ON DELETE CASCADE,
     id_statut INT NOT NULL REFERENCES statut_voyage(id) ON DELETE CASCADE,
-    date_modification DATE NOT NULL DEFAULT NOW()
+    date_modification DATETIME NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE indisponibilite_vehicule(
