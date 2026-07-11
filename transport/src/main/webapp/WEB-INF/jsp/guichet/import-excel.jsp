@@ -43,6 +43,7 @@
               <div>
                 <h1 class="passenger-title">Importation d’un fichier Excel</h1>
                 <p class="passenger-subtitle">Importez les réservations provenant d’un fichier Excel.</p>
+                <a href="${pageContext.request.contextPath}/assets/reservation-template.xlsx" download class="next-btn">Télécharger le template</a>
               </div>
             </div>
 

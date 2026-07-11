@@ -152,6 +152,11 @@ public class ReservationService {
         paiement.setModePaiement(modePaiement);
         paiement.setDatePaiement(LocalDateTime.now());
         paiement.setReferenceTransaction(reference);
+
+        if (paiement.getModePaiement().getLibelle().equals("Espèces") && (paiement.getReferenceTransaction() != null && !paiement.getReferenceTransaction().equals(""))) {
+            throw new InvalidParameterException("La référence de transaction doit être vide pour un paiement en espèce");
+        }
+
         paiementRepository.save(paiement);
 
         return reservation;
