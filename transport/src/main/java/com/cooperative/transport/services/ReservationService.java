@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -242,12 +243,12 @@ public class ReservationService {
     }
 
     @Transactional
-	public List<ReservationsMere> importReservationsFromExcel(MultipartFile file) {
-        List<ReservationsMere> reservations = new ArrayList<>();
+	public List<ReservationDTO> importReservationsFromExcel(MultipartFile file) {
         if (! file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
             throw new InvalidParameterException("Le fichier doit être un fichier Excel (.xlsx)");
         }
 
+        List<Integer> idReservations = new ArrayList<>();
         try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
             Sheet sheet = workbook.getSheetAt(0);
 
@@ -280,7 +281,7 @@ public class ReservationService {
             }
 
             // Lecture des données
-            for (int i = 1; i < sheet.getLastRowNum(); i++) {
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
                 LocalDateTime date = row.getCell(columnIndexes.get("Date")).getLocalDateTimeCellValue();
                 String nomClient = row.getCell(columnIndexes.get("Nom du client")).getStringCellValue();
@@ -293,7 +294,9 @@ public class ReservationService {
                 double montantPaye = row.getCell(columnIndexes.get("Montant payé")).getNumericCellValue();
                 String libelleModePaiement = row.getCell(columnIndexes.get("Mode de paiement")).getStringCellValue();
                 Cell cell = row.getCell(columnIndexes.get("Référence de paiement"));
-				String reference = cell == null ? null : cell.getStringCellValue();
+                String reference = cell == null ? null : new DataFormatter().formatCellValue(cell);
+
+                String[] placesStr = placesCSV.split(",");
 
                 Client client = clientRepository.findByTelephone(telephoneClient).orElseGet(() -> {
                     Client c = new Client();
@@ -312,17 +315,17 @@ public class ReservationService {
                 Trajets trajet = trajetRepository.findByGareDepartAndGareArrivee(gareDepart, gareArrivee).orElseThrow(() -> {
                     return new InvalidParameterException("Le trajet n’existe pas : " + libelleGareDepart + " → " + libelleGareArrivee);
                 });
-                Voyages voyage = voyageRepository.findByTrajetAndDateHeureDepartAndCategorie(trajet, dateHeureDepart, categorie).orElseThrow(() -> {
-                    return new InvalidParameterException("Le voyage n’existe pas : "
+                List<Voyages> voyages = voyageRepository.findByTrajetAndDateHeureDepartAndCategorie(trajet, dateHeureDepart, categorie);
+                if (voyages.size() == 0) {
+                    throw new InvalidParameterException("Le voyage n’existe pas : "
                         + libelleGareDepart + " → " + libelleGareArrivee + " le " + dateHeureDepart.toLocalDate()
                         + " à " + dateHeureDepart.toLocalTime() + " (" + categorie + ")");
-                });
+                }
+                Voyages voyage = voyages.get(0);
 
                 ModePaiement modePaiement = modePaiementRepository.findByLibelle(libelleModePaiement).orElseThrow(() -> {
                     return new InvalidParameterException("Le mode de paiement n’existe pas : " + libelleModePaiement);
                 });
-
-                String[] placesStr = placesCSV.split(",");
 
                 if (montantPaye < 0) {
                     throw new InvalidParameterException("Le montant est invalide");
@@ -377,11 +380,11 @@ public class ReservationService {
                 paiement.setReservation(reservation);
                 paiement.setMontant(BigDecimal.valueOf(montantPaye));
                 paiement.setModePaiement(modePaiement);
-                paiement.setDatePaiement(LocalDateTime.now());
+                paiement.setDatePaiement(date);
                 paiement.setReferenceTransaction(reference);
                 paiementRepository.save(paiement);
 
-                reservations.add(reservation);
+                idReservations.add(reservation.getId());
             }
         }
         catch (InvalidParameterException e) {
@@ -391,6 +394,6 @@ public class ReservationService {
             throw new InvalidParameterException("Une erreur s’est produite : " + e);
         }
 
-        return reservations;
+        return reservationMereRepository.findReservationsByIds(idReservations);
     }
 }

@@ -44,7 +44,7 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
                                                          @Param("date") LocalDateTime date);
 
     @Query("SELECT v FROM Voyages v WHERE v.trajet = :trajet AND v.dateHeureDepart = :dateHeureDepart AND v.vehicule.categorie.libelle = :categorie")
-    public Optional<Voyages> findByTrajetAndDateHeureDepartAndCategorie(Trajets trajet, LocalDateTime dateHeureDepart, String categorie);
+    public List<Voyages> findByTrajetAndDateHeureDepartAndCategorie(Trajets trajet, LocalDateTime dateHeureDepart, String categorie);
 
     @Query(value = """
         SELECT

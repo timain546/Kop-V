@@ -316,7 +316,7 @@ public class ReservationController {
     @PostMapping("/guichet/reservation/import-excel")
     public String postImportExcel(@RequestParam("file") MultipartFile file, Model model) {
         try {
-            List<ReservationsMere> reservations = reservationService.importReservationsFromExcel(file);
+            List<ReservationDTO> reservations = reservationService.importReservationsFromExcel(file);
             model.addAttribute("reservations", reservations);
         } catch (Exception e) {
             model.addAttribute("erreur", e.getMessage());

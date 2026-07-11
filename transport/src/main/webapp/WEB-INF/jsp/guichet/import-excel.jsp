@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/styles.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/common.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/paiement.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/reservation.css" />
   </head>
   <body>
     <div class="app-shell">
@@ -79,6 +80,85 @@
               <button type="submit" class="next-btn">Importer</button>
             </div>
           </form>
+
+          <div class="res-list">
+            <c:forEach var="reservation" items="${reservations}">
+              <c:set var="statutPaiementLower" value="${fn:toLowerCase(reservation.statutPaiement)}" />
+              <c:set var="statutReservationLower" value="${fn:toLowerCase(reservation.statutReservation)}" />
+              <c:set var="isAnnulee" value="${fn:contains(statutReservationLower, 'annul')}" />
+              <article class="ticket-card ${isAnnulee ? 'ticket-card-cancelled' : ''}">
+                <div class="ticket-left">
+                  <div class="ticket-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"></path><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"></path><path d="m9 15 2 2 4-4"></path></svg>
+                  </div>
+                  <div>
+                    <p class="ticket-code">KOPV-${reservation.idReservation}</p>
+                    <p class="ticket-client">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                      ${reservation.client}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="ticket-route">
+                  <div class="route-point">
+                    <p class="route-time">${reservation.dateVoyage.format(DateTimeFormatter.ofPattern("HH:mm"))}</p>
+                    <p class="route-city">${reservation.gareDepart}</p>
+                  </div>
+                  <div class="route-line-wrap">
+                    <span class="route-date-badge">
+                      ${reservation.dateVoyage.format(DateTimeFormatter.ofPattern("EEE dd MMM yyyy", Locale.FRENCH))}
+                    </span>
+                    <div class="route-line"></div>
+                  </div>
+                  <div class="route-point route-point-end">
+                    <p class="route-city">${reservation.gareArrivee}</p>
+                  </div>
+                </div>
+
+                <div class="ticket-side">
+                  <div class="seats-block">
+                    <span class="seats-label">
+                      SIÈGES
+                    </span>
+                    <div class="seats-badges">
+                      <c:forEach var="place" items="${fn:split(reservation.numeroPlace, ',')}">
+                        <span class="seat-badge">${fn:trim(place)}</span>
+                      </c:forEach>
+                    </div>
+                  </div>
+
+                  <div class="ticket-money">
+                    <p class="ticket-price"><fmt:formatNumber value="${reservation.tarif}" pattern="#,##0"/> Ar</p>
+                    <c:if test="${isAnnulee}">
+                      <p class="ticket-refund">
+                        Remboursé <fmt:formatNumber value="${reservation.prixRemboursement}" pattern="#,##0"/> Ar
+                      </p>
+                    </c:if>
+                  </div>
+
+                  <c:choose>
+                    <c:when test="${isAnnulee}">
+                      <span class="ticket-status status-annulee">${reservation.statutReservation}</span>
+                    </c:when>
+                    <c:when test="${fn:contains(statutPaiementLower, 'rembour')}">
+                      <span class="ticket-status status-remboursee">${reservation.statutPaiement}</span>
+                    </c:when>
+                    <c:when test="${fn:contains(statutPaiementLower, 'pay')}">
+                      <span class="ticket-status status-paye">${reservation.statutPaiement}</span>
+                    </c:when>
+                    <c:otherwise>
+                      <span class="ticket-status status-attente">${reservation.statutPaiement}</span>
+                    </c:otherwise>
+                  </c:choose>
+                </div>
+              </article>
+            </c:forEach>
+
+            <c:if test="${empty reservations}">
+              <p class="res-empty">Les réservations importées apparaîtront ici.</p>
+            </c:if>
+          </div>
         </main>
       </div>
     </div>
