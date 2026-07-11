@@ -98,6 +98,8 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
 
           AND g_arr.ville = :villeArrivee
 
+          AND v.id_statut_actuel = (SELECT s.id FROM statut_voyage s WHERE s.libelle = 'Plannifié')
+
         GROUP BY
             v.id,
             v.date_heure_depart,
@@ -129,11 +131,11 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
     );
 
     boolean existsByTrajetId(Integer trajetId);
-    
+
     @Query(value = "SELECT COALESCE(SUM(carburant), 0) FROM voyages " +
        "WHERE id_statut_actuel = 3 " +
        "AND EXTRACT(MONTH FROM date_heure_depart + (duree_estimee_minutes || ' minutes')::INTERVAL) = :mois "+
-       "AND EXTRACT(YEAR FROM date_heure_depart + (duree_estimee_minutes || ' minutes')::INTERVAL) =:annee", 
+       "AND EXTRACT(YEAR FROM date_heure_depart + (duree_estimee_minutes || ' minutes')::INTERVAL) =:annee",
        nativeQuery = true)
     BigDecimal getCarburantparMois(@Param("mois") int mois, @Param("annee") int annee);
 
