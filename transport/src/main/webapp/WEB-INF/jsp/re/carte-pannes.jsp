@@ -8,6 +8,7 @@
 
 <%
     List<Pannes> pannes = (List<Pannes>) request.getAttribute("pannes");
+    Integer nbPanneEnAttente = (Integer) request.getAttribute("nbPanneEnAttente");
 %>
 
 <!DOCTYPE html>
@@ -35,23 +36,17 @@
             </div>
 
             <nav class="p-3 space-y-1">
-                <a href="liste-voyages.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
+                <a href="/re/voyage/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
                     <i class="fa-solid fa-route text-base"></i>
                     <span>Gestion Voyages</span>
                 </a>
-                <a href="carte-pannes.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-600 bg-emerald-50/60 font-bold text-sm transition">
+                <a href="/re/panne/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-600 bg-emerald-50/60 font-bold text-sm transition">
                     <i class="fa-solid fa-triangle-exclamation text-base"></i>
                     <span>Suivi des Pannes</span>
-                    <span class="ml-auto bg-rose-100 text-rose-600 text-[10px] font-bold px-2 py-0.5 rounded-full">2</span>
                 </a>
-                <a href="crud-trajets.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
+                <a href="/re/trajet/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
                     <i class="fa-solid fa-map-location-dot text-base"></i>
                     <span>CRUD Trajets</span>
-                </a>
-                <a href="notifications.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
-                    <i class="fa-solid fa-bell text-base"></i>
-                    <span>Notifications</span>
-                    <span class="ml-auto bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full">5</span>
                 </a>
             </nav>
         </div>
@@ -81,7 +76,7 @@
             </div>
             <div class="bg-rose-50 border border-rose-100 rounded-xl px-3 py-1.5 flex items-center gap-2 text-rose-600">
                 <i class="fa-solid fa-circle text-[8px] animate-pulse"></i>
-                <span class="text-xs font-bold uppercase tracking-wider">2 Pannes en attente</span>
+                <span class="text-xs font-bold uppercase tracking-wider" id="nbPanneEnAttente"><%= nbPanneEnAttente.intValue() %> Pannes en attente</span>
             </div>
         </div>
 
@@ -96,39 +91,45 @@
             </div>
             
             <div class="divide-y divide-slate-100">
-                <% for(Pannes p : pannes) { %>
-                    <div onclick="focusPanne(-21.4526, 47.0857, 'RN7 - Proche Fianarantsoa', 'V-00839')" class="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between hover:bg-slate-50/80 cursor-pointer transition active:bg-slate-100 gap-4">
+                <%
+                    for(Pannes p : pannes) {
+                        String statutReparation = p.getStatutReparationActuel().getLibelle();
+                        Voyages voyage = p.getVoyage();
+                        Vehicules vehicule = voyage.getVehicule();
+                        Trajets trajet = voyage.getTrajet();
+
+                        String lieuWkt = p.getLieuAsWkt();
+                %>
+                    <div onclick="selectionnerPanne('<%= p.getId() %>', '<%= lieuWkt %>', '<%= trajet.getTraceAsWkt() %>')" class="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between hover:bg-slate-50/80 cursor-pointer transition active:bg-slate-100 gap-4">
                         <div class="flex items-center gap-4 flex-1">
-                            <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center flex-shrink-0 text-sm">
-                                <i class="fa-solid fa-triangle-exclamation"></i>
-                            </div>
+                            <% if(statutReparation.equalsIgnoreCase("en panne")) { %>
+                                <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center flex-shrink-0 text-sm" id="panne-<%= p.getId() %>">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                </div>
+                            <% } else { %>
+                                <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0 text-sm" id="panne-<%= p.getId() %>">
+                                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                                </div>
+                            <% } %>
                             <div>
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <span class="font-bold text-sm text-slate-700">Voyage V-00<%= p.getVoyage().getId() %></span>
-                                    <%
-                                        String statutReparation = p.getStatutReparationActuel().getLibelle();
-                                        if(statutReparation.equalsIgnoreCase("en panne")) {
-                                    %>
-                                        <span class="text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.2 rounded-md">En panne</span>
+                                    <% if(statutReparation.equalsIgnoreCase("en panne")) { %>
+                                        <span class="text-[10px] font-bold text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.2 rounded-md" id="statut-panne-<%= p.getId() %>">En panne</span>
                                     <% } else { %>
-                                        <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-100 px-2 py-0.2 rounded-md">En cours de dépannage</span>
+                                        <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-100 px-2 py-0.2 rounded-md" id="statut-panne-<%= p.getId() %>">En cours de dépannage</span>
                                     <% } %>
                                 </div>
-                                <%
-                                    Voyages voyage = p.getVoyage();
-                                    Vehicules vehicule = voyage.getVehicule();
-                                    Trajets trajet = voyage.getTrajet();
-                                %>
+                                
                                 <p class="text-xs font-semibold text-slate-500 mt-0.5"><%= trajet.getGareDepart().getVille() %> ➔ <%= trajet.getGareArrivee().getVille() %> (<%= vehicule.getModele() %> <%= vehicule.getImmatriculation() %>)</p>
                                 <p class="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
-                                    <i class="fa-solid fa-location-dot text-rose-400"></i> GPS: -21.4526, 47.0857 (RN7)
+                                    <i class="fa-solid fa-location-dot text-rose-400"></i> GPS: <%= (lieuWkt != null ? lieuWkt : "Non localisé")  %>
                                 </p>
                             </div>
                         </div>
-                        <div class="flex items-center justify-between sm:justify-end gap-3 sm:border-t-0 pt-2 sm:pt-0 border-t border-slate-50">
-                            <span class="text-[11px] font-medium text-slate-400">Il y a 12 min</span>
+                        <div class="flex items-center justify-between sm:justify-end gap-3 sm:border-t-0 pt-2 sm:pt-0 border-t border-slate-50" id="action-panne-<%= p.getId() %>">
                             <% if(statutReparation.equalsIgnoreCase("en panne")) { %>
-                                <button onclick="event.stopPropagation(); prendreEnCharge(this);" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-3 py-2 rounded-xl shadow-sm active:scale-95 transition whitespace-nowrap">
+                                <button onclick="event.stopPropagation(); prendreEnCharge(<%= p.getId() %>);" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-3 py-2 rounded-xl shadow-sm active:scale-95 transition whitespace-nowrap">
                                     Prendre en charge
                                 </button>
                             <% } else { %>
@@ -155,51 +156,144 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Variable pour stocker le marqueur de panne actif
-        let currentMarker = null;
-        let currentPolyline = null;
+        // Variables pour stocker les calques actifs
+        let currentPolylineLayer = null;
+        let currentMarkerLayer = null;
+        let routeCoordinates = [];
 
-        // Fonction appelée lors du clic sur une ligne de panne
-        function focusPanne(lat, lng, lieu, refVoyage) {
-            // Repositionner la carte avec une animation fluide
-            map.setView([lat, lng], 11);
+        function nettoyerCalqueStatique() {
 
-            // Supprimer l'ancien marqueur s'il existe
-            if (currentMarker) map.removeLayer(currentMarker);
-            if (currentPolyline) map.removeLayer(currentPolyline);
-
-            // Ajouter le marqueur de la panne (Rouge)
-            currentMarker = L.marker([lat, lng]).addTo(map)
-                .bindPopup(`<b>Panne sur le ${refVoyage}</b><br>${lieu}`)
-                .openPopup();
-
-            // Simulation visuelle du tracé du trajet (Ligne verte claire)
-            const pointsTrajet = [
-                [lat + 0.5, lng - 0.5],
-                [lat, lng], // Le point de panne
-                [lat - 0.5, lng + 0.5]
-            ];
-            currentPolyline = L.polyline(pointsTrajet, {color: '#10b981', weight: 4, opacity: 0.7}).addTo(map);
-
-            // Scroller en douceur vers la carte pour qu'elle soit bien visible si l'utilisateur a défilé vers le bas
-            document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (currentPolylineLayer) {
+                map.removeLayer(currentPolylineLayer);
+                currentPolylineLayer = null;
+            }
+            routeCoordinates = [];
         }
 
-        // Fonction pour changer le statut côté RE ("Prendre en charge")
-        function prendreEnCharge(button) {
-            const container = button.closest('.flex');
-            const badge = container.querySelector('.bg-rose-50');
-            const iconContainer = container.querySelector('.bg-rose-50');
+        function nettoyerMarkerStatique() {
 
-            // Transformation visuelle dynamique pour simuler l'état "En cours de dépannage"
-            badge.className = "text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-100 px-2 py-0.2 rounded-md";
-            badge.innerText = "En cours de dépannage";
-            
-            iconContainer.className = "w-9 h-9 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0 text-sm";
-            iconContainer.innerHTML = '<i class="fa-solid fa-screwdriver-wrench"></i>';
+            if (currentMarkerLayer) {
+                map.removeLayer(currentMarkerLayer);
+                currentMarkerLayer = null;
+            }
+        }
 
-            // Remplacement du bouton par un texte indicatif
-            button.outerHTML = '<div class="text-[11px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg border border-slate-200 whitespace-nowrap">Attente Chauffeur</div>';
+        function nettoyerCarte() {
+            if (currentPolylineLayer) {
+                map.removeLayer(currentPolylineLayer);
+                currentPolylineLayer = null;
+            }
+            if (currentMarkerLayer) {
+                map.removeLayer(currentMarkerLayer);
+                currentMarkerLayer = null;
+            }
+        }
+
+        function selectionnerPanne(idPanne, lieuWkt, traceWkt) {
+            nettoyerCarte();
+
+            let coordonneesPanne = null;
+            let boundsTrajet = null;
+
+            if (traceWkt && traceWkt !== 'null' && traceWkt.includes("LINESTRING")) {
+                try {
+                    let cleanWkt = traceWkt.includes(";") ? traceWkt.split(";")[1] : traceWkt;
+                    const startIdx = cleanWkt.indexOf("(");
+                    const endIdx = cleanWkt.lastIndexOf(")");
+                    
+                    if (startIdx !== -1 && endIdx !== -1) {
+                        const coordString = cleanWkt.substring(startIdx + 1, endIdx);
+                        const pairs = coordString.split(",").map(p => p.trim()).filter(p => p.length > 0);
+                        
+                        const latLngs = pairs.map(p => {
+                            const parts = p.split(/\s+/);
+                            return L.latLng(parseFloat(parts[1]), parseFloat(parts[0]));
+                        }).filter(c => !isNaN(c.lat) && !isNaN(c.lng));
+
+                        if (latLngs.length >= 2) {
+                            currentPolylineLayer = L.polyline(latLngs, { color: '#f59e0b', weight: 5, opacity: 0.9 }).addTo(map);
+                            boundsTrajet = currentPolylineLayer.getBounds();
+                        }
+                    }
+                } catch (error) {
+                    console.error("Erreur parsing tracé :", error);
+                }
+            }
+
+            if (lieuWkt && lieuWkt !== 'null' && lieuWkt.includes("POINT")) {
+                try {
+                    let cleanWkt = lieuWkt.includes(";") ? lieuWkt.split(";")[1] : lieuWkt;
+                    const first = cleanWkt.indexOf("(");
+                    const last = cleanWkt.lastIndexOf(")");
+
+                    if (first !== -1 && last !== -1) {
+                        const coordonnees = cleanWkt.substring(first + 1, last).trim();
+                        const parts = coordonnees.split(/\s+/);
+                        
+                        if (parts.length >= 2) {
+                            const long = parseFloat(parts[0]);
+                            const lat = parseFloat(parts[1]);
+
+                            if (!isNaN(long) && !isNaN(lat)) {
+                                coordonneesPanne = [lat, long];
+                                currentMarkerLayer = L.marker(coordonneesPanne).addTo(map);
+                                currentMarkerLayer.bindPopup('<b>Incident V-00' + idPanne + '</b><br>Panne localisée ici.');
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error("Erreur marqueur de panne :", error);
+                }
+            }
+
+            if (coordonneesPanne) {
+                map.flyTo(coordonneesPanne, 14, {
+                    animate: true,
+                    duration: 1.2
+                });
+                setTimeout(() => {
+                    if (currentMarkerLayer) currentMarkerLayer.openPopup();
+                }, 1200);
+            } else if (boundsTrajet) {
+                map.fitBounds(boundsTrajet, { animate: true, duration: 1.2 });
+            }
+        }
+
+        function prendreEnCharge(idPanne) {
+            const url = "http://localhost:8080/re/api/panne/prendre-en-charge/" + idPanne;
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json().then(data => !response.ok ? Promise.reject(data.message) : data))
+            .then(data => {
+                alert(data.message);
+
+                const badge = document.getElementById("panne-" + idPanne);
+                badge.className = "w-9 h-9 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0 text-sm";
+                badge.innerHTML = '<i class="fa-solid fa-screwdriver-wrench"></i>';
+
+                const statutBadge = document.getElementById("statut-panne-" + idPanne);
+                statutBadge.className = "text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-100 px-2 py-0.2 rounded-md";
+                statutBadge.textContent = "En cours de dépannage";
+
+                const actionDiv = document.getElementById("action-panne-" + idPanne);
+                actionDiv.innerHTML = '<div class="text-[11px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-lg border border-slate-200 whitespace-nowrap">Attente Chauffeur</div>';
+
+                const nbPanneEnAttenteSpan = document.getElementById("nbPanneEnAttente");
+                let nbPanneEnAttente = parseInt(nbPanneEnAttenteSpan.textContent);
+                if (!isNaN(nbPanneEnAttente) && nbPanneEnAttente > 0) {
+                    nbPanneEnAttente--;
+                    nbPanneEnAttenteSpan.textContent = nbPanneEnAttente + " Pannes en attente";
+                }
+            })
+            .catch(errorMessage => {
+                console.log("Erreur AJAX:" + errorMessage);
+                alert(errorMessage);
+            });
         }
     </script>
 </body>

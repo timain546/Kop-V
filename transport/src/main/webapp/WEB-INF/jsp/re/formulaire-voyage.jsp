@@ -38,16 +38,10 @@
                 <a href="/re/panne/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
                     <i class="fa-solid fa-triangle-exclamation text-base"></i>
                     <span>Suivi des Pannes</span>
-                    <span class="ml-auto bg-rose-100 text-rose-600 text-[10px] font-bold px-2 py-0.5 rounded-full">2</span>
                 </a>
                 <a href="/re/trajet/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
                     <i class="fa-solid fa-map-location-dot text-base"></i>
                     <span>CRUD Trajets</span>
-                </a>
-                <a href="/re/notifications" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
-                    <i class="fa-solid fa-bell text-base"></i>
-                    <span>Notifications</span>
-                    <span class="ml-auto bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full">5</span>
                 </a>
             </nav>
         </div>
@@ -188,6 +182,20 @@
                         <label class="font-bold text-slate-500 uppercase tracking-wider">Prix unitaire de la Place</label>
                         <div class="relative">
                             <input id="input-prix" type="number" name="tarif" min="0" placeholder="Ex: 35000" class="w-full bg-white border border-slate-200 focus:border-emerald-400 px-3 py-2 rounded-xl outline-none transition font-bold text-slate-700 pr-12">
+                            <span class="absolute right-3 top-2 text-slate-400 font-bold text-[11px]">Ar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50/50 border border-slate-100 p-4 rounded-xl space-y-3">
+                    <div class="flex items-center gap-2 border-b border-slate-100 pb-1.5">
+                        <i class="fa-solid fa-hand-holding-dollar text-emerald-500 text-sm"></i>
+                        <h4 class="font-bold text-slate-700">Montant carburant</h4>
+                    </div>
+                    <div class="space-y-1.5 max-w-xs">
+                        <label class="font-bold text-slate-500 uppercase tracking-wider">Prix carburant</label>
+                        <div class="relative">
+                            <input id="input-prix" type="number" name="carburant" min="0" placeholder="Ex: 35000" class="w-full bg-white border border-slate-200 focus:border-emerald-400 px-3 py-2 rounded-xl outline-none transition font-bold text-slate-700 pr-12">
                             <span class="absolute right-3 top-2 text-slate-400 font-bold text-[11px]">Ar</span>
                         </div>
                     </div>

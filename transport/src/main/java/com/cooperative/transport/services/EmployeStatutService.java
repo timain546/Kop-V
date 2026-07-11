@@ -6,9 +6,6 @@ import com.cooperative.transport.repositories.EmployeStatutRepository;
 
 import com.cooperative.transport.entities.EmployeStatut;
 
-import java.util.List;
-
-import org.springframework.data.annotation.Id;
 @Service
 public class EmployeStatutService {
     @Autowired

@@ -42,7 +42,8 @@ CREATE TABLE trajets(
     id_gare_depart INT NOT NULL REFERENCES gares(id) ON DELETE CASCADE,
     id_gare_arrivee INT NOT NULL REFERENCES gares(id) ON DELETE CASCADE,
     distance_km NUMERIC(10, 2) NOT NULL,
-    date_suppression TIMESTAMP DEFAULT NULL
+    date_suppression TIMESTAMP DEFAULT NULL,
+    trace GEOMETRY(LineString, 4326) DEFAULT NULL
 );
 
 CREATE TABLE statut_voyage(
@@ -58,7 +59,8 @@ CREATE TABLE voyages(
     duree_estimee_minutes INT NOT NULL,
     tarif NUMERIC(10, 2) NOT NULL,
     date_heure_depart TIMESTAMP NOT NULL,
-    id_statut_actuel INT REFERENCES statut_voyage(id) NOT NULL
+    id_statut_actuel INT REFERENCES statut_voyage(id) NOT NULL,
+    carburant NUMERIC(10, 2) DEFAULT NULL
 );
 
 CREATE TABLE tarif_voyage(
@@ -90,7 +92,7 @@ CREATE TABLE motif_panne(
 
 CREATE TABLE statut_reparation(
     id SERIAL PRIMARY KEY,
-    libelle VARCHAR(50) NOT NULL 
+    libelle VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE pannes(
@@ -98,8 +100,8 @@ CREATE TABLE pannes(
     id_voyage INT NOT NULL REFERENCES voyages(id) ON DELETE CASCADE,
     id_chauffeur INT NOT NULL REFERENCES utilisateurs(id) ON DELETE CASCADE,
     date_signalement DATE NOT NULL,
-    lieu GEOMETRY(POINT, 4326) DEFAULT NULL,  
-    id_motif_panne INT NOT NULL REFERENCES motif_panne(id) ON DELETE CASCADE,    
+    lieu GEOMETRY(POINT, 4326) DEFAULT NULL,
+    id_motif_panne INT NOT NULL REFERENCES motif_panne(id) ON DELETE CASCADE,
     description VARCHAR(60) NOT NULL,
     photo_url VARCHAR(500) DEFAULT NULL
 );
@@ -107,7 +109,7 @@ CREATE TABLE pannes(
 CREATE TABLE reparation(
     id SERIAL PRIMARY KEY,
     id_panne INT NOT NULL REFERENCES pannes(id) ON DELETE CASCADE,
-    id_statut_reparation INT NOT NULL REFERENCES statut_reparation(id) ON DELETE CASCADE, 
+    id_statut_reparation INT NOT NULL REFERENCES statut_reparation(id) ON DELETE CASCADE,
     date_modification DATE NOT NULL DEFAULT NOW(),
     cout NUMERIC(10, 2) DEFAULT NULL
 );

@@ -61,7 +61,7 @@ public class ChauffeurRestController {
 
             PanneDTO panne = panneService.createPanne(voyageId, chauffeurId, lieu, motifPanneLibelle, description, photoUrl);
             return ResponseEntity.status(HttpStatus.CREATED).body(panne);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(createErrorResponse(e.getMessage()));
         }
     }

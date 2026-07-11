@@ -10,6 +10,16 @@ Table utilisateurs:
     - email UNIQUE
     - mot_de_passe
 
+Table statut_employe:
+    - id
+    - libelle // Engagé, Renvoyé, Reambauché
+
+Table employe_statut:
+    - id
+    - id_employe
+    - id_statut
+    - date_modification
+
 Table categorie_vehicule:
     - id
     - libelle (VIP, Premium, Standard)
@@ -41,6 +51,7 @@ Table trajets:
     - id_gare_arrivee
     - distance_km NUMERIC(10,2)
     - date_suppression
+    - trace GEOMETRY(LineString,4326)
 
 Table point_ramassage:
     - id
@@ -133,6 +144,7 @@ Table annulations:
     - id
     - id_reservation
     - date_annulation
+    - prix_remboursement
     - frais_annulation
     - motif
 

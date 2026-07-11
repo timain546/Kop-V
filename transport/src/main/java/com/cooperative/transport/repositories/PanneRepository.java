@@ -22,6 +22,9 @@ public interface PanneRepository extends JpaRepository<Pannes, Integer> {
         "chauffeur",
         "motifPanne"
     })
-    @Query("SELECT p FROM Pannes p WHERE p.statutReparationActuel.libelle != 'resolu' ORDER BY p.dateSignalement DESC")
+    @Query("SELECT p FROM Pannes p " +
+       "WHERE LOWER(p.statutReparationActuel.libelle) != 'resolu' " +
+       "AND LOWER(p.voyage.statutActuel.libelle) = 'en panne' " +
+       "ORDER BY p.dateSignalement DESC")
     List<Pannes> findAllPannesSignale();
 }

@@ -1,10 +1,12 @@
 package com.cooperative.transport.repositories;
 
-import com.cooperative.transport.entities.*;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
-@Repository
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.cooperative.transport.entities.Gares;
+
 public interface GareRepository extends JpaRepository<Gares, Integer> {
-    
+
+    public Optional<Gares> findByVille(String ville);
 }

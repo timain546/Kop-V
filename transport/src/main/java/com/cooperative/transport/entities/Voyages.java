@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -50,4 +48,7 @@ public class Voyages {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_statut_actuel", nullable = false)
     private StatutVoyage statutActuel;
+
+    @Column(name = "carburant", precision = 10, scale = 2)
+    private BigDecimal carburant;
 }

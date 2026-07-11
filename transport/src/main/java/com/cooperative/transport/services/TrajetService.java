@@ -15,7 +15,9 @@ import com.cooperative.transport.repositories.GareRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.io.WKTReader;
 
 @Service
 public class TrajetService {
@@ -85,16 +87,29 @@ public class TrajetService {
             throw new Exception("Le trajet entre les gares " + gareDepart.getNom() + " et " + gareArrivee.getNom() + " existe déjà");
         }
 
+        if(trajetDTO.getTraceWkt() != null && !trajetDTO.getTraceWkt().isEmpty()) {
+            WKTReader reader = new WKTReader();
+            LineString lineString = (LineString) reader.read(trajetDTO.getTraceWkt());
+            lineString.setSRID(4326);
+            nouveautrajet.setTrace(lineString);
+        }
+
         trajetRepo.save(nouveautrajet);
     }
 
     public void modifierTrajet(TrajetDTO trajetDTO) throws Exception {
+
         Trajets trajetAModifier = trajetRepo.findById(trajetDTO.getId())
             .orElseThrow(() -> new Exception("Trajet introuvable avec l'ID " + trajetDTO.getId()));
 
+        boolean utilise = voyageRepo.existsByTrajetId(trajetDTO.getId());
+        if(utilise) {
+            throw new Exception("Le trajet T-00" + trajetDTO.getId() + " est déjà assigné à un voyage");
+        }
+
         Gares gareDepart = gareRepo.findById(trajetDTO.getGareDepart())
             .orElseThrow(() -> new Exception("Impossible de trouver la gare de départ G-00" + trajetDTO.getGareDepart()));
-            
+
         Gares gareArrivee = gareRepo.findById(trajetDTO.getGareArrivee())
             .orElseThrow(() -> new Exception("Impossible de trouver la gare d'arrivée G-00" + trajetDTO.getGareArrivee()));
 
@@ -103,10 +118,17 @@ public class TrajetService {
             throw new Exception("Un autre trajet existe déjà entre " + gareDepart.getNom() + " et " + gareArrivee.getNom());
         }
 
+        if(trajetDTO.getTraceWkt() != null && !trajetDTO.getTraceWkt().isEmpty()) {
+            WKTReader reader = new WKTReader();
+            LineString lineString = (LineString) reader.read(trajetDTO.getTraceWkt());
+            lineString.setSRID(4326);
+            trajetAModifier.setTrace(lineString);
+        }
+
         trajetAModifier.setGareDepart(gareDepart);
         trajetAModifier.setGareArrivee(gareArrivee);
         trajetAModifier.setDistanceKm(BigDecimal.valueOf(trajetDTO.getDistanceKm()));
-        
+
         trajetRepo.save(trajetAModifier);
     }
 }

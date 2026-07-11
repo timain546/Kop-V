@@ -179,3 +179,5 @@ __pycache__/
 
 Workspace/
 .vscode/
+transport/src/main/resources/application.properties
+sql/schema.sql

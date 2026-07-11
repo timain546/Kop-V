@@ -1,0 +1,96 @@
+/* Page 4 only */
+.main-grid.passenger-grid { grid-template-columns: 1fr; }
+@media (min-width:1024px){ .main-grid.passenger-grid { grid-template-columns: 1fr 340px; } }
+
+.passenger-section { display:grid; gap:1rem; }
+.passenger-head { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; }
+.passenger-title { margin-top:.5rem; font-size:1.5rem; font-weight:700; letter-spacing:-0.02em; }
+.passenger-subtitle { margin-top:.25rem; font-size:.875rem; color:var(--muted-foreground); }
+
+.profile-fill-btn {
+  display:none;
+  border:1px solid color-mix(in oklab, var(--primary) 30%, transparent);
+  background:color-mix(in oklab, var(--primary) 5%, transparent);
+  color:var(--primary);
+  border-radius:.6rem;
+  padding:.5rem .75rem;
+  font-size:.75rem;
+  font-weight:600;
+  align-items:center;
+  gap:.35rem;
+}
+.profile-fill-btn:hover { background:color-mix(in oklab, var(--primary) 10%, transparent); }
+@media (min-width:768px){ .profile-fill-btn { display:inline-flex; } }
+
+.passenger-cards { display:grid; gap:1rem; }
+.passenger-card { border:1px solid var(--border); border-radius:var(--radius-2xl); background:var(--card); padding:1.25rem; }
+@media (min-width:768px){ .passenger-card { padding:1.5rem; } }
+
+.passenger-card-head { margin-bottom:1rem; }
+.passenger-identity { display:flex; align-items:center; gap:.75rem; }
+.passenger-number {
+  width:2.25rem; height:2.25rem; border-radius:999px;
+  background:var(--primary); color:var(--primary-foreground);
+  display:grid; place-items:center; font-size:.875rem; font-weight:700;
+}
+.passenger-name { font-size:.875rem; font-weight:600; }
+.passenger-seat { font-size:.75rem; color:var(--muted-foreground); }
+.passenger-badge {
+  margin-left:.4rem; background:var(--accent); color:var(--accent-foreground);
+  border-radius:999px; padding:.1rem .45rem; font-size:10px; text-transform:uppercase; letter-spacing:.06em; font-weight:700;
+}
+
+.passenger-form-grid { display:grid; grid-template-columns:1fr; gap:.75rem; }
+@media (min-width:768px){ .passenger-form-grid { grid-template-columns:1fr 1fr; } }
+.field-span-2 { grid-column:1 / -1; }
+
+.field {
+  border:1px solid var(--border); border-radius:var(--radius-xl);
+  background:var(--background); padding:.75rem 1rem;
+}
+.field:focus-within {
+  border-color:var(--primary);
+  box-shadow:0 0 0 2px color-mix(in oklab, var(--primary) 15%, transparent);
+}
+.field-label {
+  display:flex; align-items:center; gap:.35rem;
+  font-size:10px; text-transform:uppercase; letter-spacing:.06em; font-weight:600;
+  color:var(--muted-foreground);
+}
+.field-input {
+  margin-top:.25rem; width:100%; border:0; outline:0; background:transparent;
+  font-size:.875rem; font-weight:500; color:var(--foreground);
+}
+.field-input::placeholder { color:color-mix(in oklab, var(--muted-foreground) 60%, transparent); }
+
+.terms-note {
+  border:1px solid var(--border);
+  border-radius:var(--radius-xl);
+  background:color-mix(in oklab, var(--muted) 40%, transparent);
+  padding:.75rem; display:flex; gap:.5rem;
+  font-size:11px; color:var(--muted-foreground);
+}
+
+.passenger-actions {
+  border-top:1px solid var(--border);
+  padding-top:1rem;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.back-btn {
+  border:0; background:transparent; font-size:.75rem; font-weight:600;
+  color:var(--muted-foreground); cursor:pointer;
+}
+.back-btn:hover { color:var(--foreground); }
+
+.next-btn {
+  border:0; border-radius:var(--radius-xl); background:var(--primary); color:var(--primary-foreground);
+  padding:.75rem 1.25rem; font-size:.875rem; font-weight:700; cursor:pointer;
+  box-shadow:0 1px 3px rgba(0,0,0,.1);
+}
+.next-btn:hover { opacity:.9; }
+
+.summary-divider { border-top:1px solid var(--border); }
+.trip-mini { font-size:.75rem; color:var(--muted-foreground); margin-top:.2rem; }
+.summary-total { display:flex; justify-content:space-between; align-items:baseline; }
+.summary-total span { font-size:.75rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted-foreground); font-weight:600; }
+.summary-total strong { font-size:1.25rem; color:var(--primary); }
