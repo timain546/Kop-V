@@ -24,4 +24,22 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateurs, Integ
     List<Object[]> findEmploye();
     @Query("SELECT DISTINCT e,s,r FROM Utilisateurs e LEFT JOIN e.salaires s JOIN e.role r where (s.dateModification = (SELECT MAX(s2.dateModification) FROM Salaires s2 WHERE s2.employe.id = e.id ) or s is null) and e.id = :id")
     List<Object[]> findEmployeById(Integer id);
+
+    @Query("SELECT DISTINCT e,s,r FROM Utilisateurs e " +
+       "LEFT JOIN e.salaires s " +
+       "JOIN e.role r " +
+       "WHERE (s.dateModification = (SELECT MAX(s2.dateModification) FROM Salaires s2 WHERE s2.employe.id = e.id) OR s IS NULL) " +
+       "AND (CAST(:nom AS string) IS NULL OR LOWER(e.nom) LIKE LOWER(CONCAT('%', CAST(:nom AS string), '%'))) " +
+       "AND (CAST(:prenom AS string) IS NULL OR LOWER(e.prenom) LIKE LOWER(CONCAT('%', CAST(:prenom AS string), '%'))) " +
+       "AND (CAST(:email AS string) IS NULL OR LOWER(e.email) LIKE LOWER(CONCAT('%', CAST(:email AS string), '%'))) " +
+       "AND (CAST(:salaireMin AS double) IS NULL OR s.salaire >= :salaireMin) " +
+       "AND (CAST(:salaireMax AS double) IS NULL OR s.salaire <= :salaireMax) " +
+       "ORDER BY e.nom ASC")
+    List<Object[]> findwithcritere(
+        @Param("nom") String nom,
+        @Param("prenom") String prenom,
+        @Param("email") String email,
+        @Param("salaireMin") Double salaireMin,
+        @Param("salaireMax") Double salaireMax);
+
 }

@@ -23,6 +23,7 @@ import com.cooperative.transport.services.EmployesService;
 import com.cooperative.transport.services.RoleService;
 import com.cooperative.transport.services.SalaireService;
 import com.cooperative.transport.services.StatutEmployeService;
+import com.cooperative.transport.services.UtilisateurService;
 
 @Controller
 @RequestMapping("/admin")
@@ -50,32 +51,40 @@ public class EmployesController {
     }
 
     @GetMapping("/employes/list")
-    public String getListeEmployes(Model model) {
-        List<Object[]> employes = employesService.findEmp();
-        List<String> statut = new ArrayList<>();
+public String getListeEmployes(
+        @RequestParam(required = false) String nom,
+        @RequestParam(required = false) String prenom,
+        @RequestParam(required = false) String email,
+        @RequestParam(required = false) Double salaireMin,
+        @RequestParam(required = false) Double salaireMax,
+        Model model) {
+    
+    List<Object[]> employes = employesService.findwithcritere(nom, prenom, email, salaireMin, salaireMax);
+    
+    List<String> statut = new ArrayList<>();
+    
+    for (Object[] row : employes) {
+        Utilisateurs employe = (Utilisateurs) row[0];
+        Integer statutId = employeStatutService.findIdbyIdemp(employe.getId());
         
-        for (Object[] row : employes) {
-            Utilisateurs employe = (Utilisateurs) row[0];
-            Integer statutId = employeStatutService.findIdbyIdemp(employe.getId());
-            
-            // Sécurisation contre le Null ID
-            if (statutId == null) {
-                System.out.println("Aucun ID de statut pour l'employé " + employe.getNom());
-                statut.add("Inconnu / Aucun");
-            } else {
-                StatutEmploye statutList = statutEmployeService.findStatutById(statutId);
-                if (statutList != null) {
-                    System.out.println("Statut pour l'employé " + employe.getNom() + ": " + statutList.getLibelle());
-                    statut.add(statutList.getLibelle());
-                } else {
-                    statut.add("Statut introuvable");
-                }
-            }
+        if (statutId == null) {
+            statut.add("Inconnu / Aucun");
+        } else {
+            StatutEmploye statutList = statutEmployeService.findStatutById(statutId);
+            statut.add(statutList != null ? statutList.getLibelle() : "Statut introuvable");
         }
-        model.addAttribute("statut", statut);
-        model.addAttribute("listeEmployes", employes);
-        return "admin/list-employes";
     }
+    
+    model.addAttribute("nomRecherche", nom);
+    model.addAttribute("prenomRecherche", prenom);
+    model.addAttribute("emailRecherche", email);
+    model.addAttribute("salaireMinRecherche", salaireMin);
+    model.addAttribute("salaireMaxRecherche", salaireMax);
+    model.addAttribute("statut", statut);
+    model.addAttribute("listeEmployes", employes);
+    
+    return "admin/list-employes";
+}
 
     @PostMapping("/employes/modifier")
     public String modifierEmploye(@RequestParam("id") Integer id, @RequestParam("role") String role, Model model) {
