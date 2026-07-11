@@ -119,6 +119,7 @@ public class ReservationController {
             return "redirect:/guichet/reservation/new";
         }
 
+        voyage.getVehicule().getCategorie().getLibelle();
         info.setVoyage(voyage);
 
         return "redirect:/guichet/reservation/new/choix-place";

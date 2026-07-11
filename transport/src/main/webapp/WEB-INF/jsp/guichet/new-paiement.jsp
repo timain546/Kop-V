@@ -167,7 +167,7 @@
               <p class="trip-mini">
                 ${info.voyage.heureDepart}
                 → ${info.voyage.heureArrivee}
-                · ${info.voyage.vehicule.categorieVehicule.libelle}
+                · ${info.voyage.vehicule.categorie.libelle}
               </p>
             </div>
               <div>
