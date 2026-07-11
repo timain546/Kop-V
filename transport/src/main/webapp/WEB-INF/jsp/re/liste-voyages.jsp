@@ -7,8 +7,12 @@
 <%@ page import="com.cooperative.transport.entities.Vehicules" %>
 
 <%
-    Integer nbActif = (Integer) request.getAttribute("nbActif");
+    Long nbActif = (Long) request.getAttribute("nbActif");
     List<Voyages> voyages = (List<Voyages>) request.getAttribute("listeVoyages");
+    
+    Integer currentPage = (request.getAttribute("currentPage") != null) ? (Integer) request.getAttribute("currentPage") : 1;
+    Integer totalPages = (request.getAttribute("totalPages") != null) ? (Integer) request.getAttribute("totalPages") : 1; 
+    Integer currentSize = (request.getAttribute("currentSize") != null) ? (Integer) request.getAttribute("currentSize") : 6;
 %>
 
 <!DOCTYPE html>
@@ -66,7 +70,7 @@
         <div class="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden flex flex-col">
             <div class="bg-slate-50/70 border-b border-slate-100 px-4 py-3 flex justify-between items-center">
                 <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Rotations planifiées</span>
-                <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full"><%= nbActif.intValue() %> Voyages actifs</span>
+                <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full"><%= nbActif.longValue() %> Voyages actifs</span>
             </div>
 
             <div class="overflow-x-auto">
@@ -156,7 +160,58 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+
+            <div class="bg-slate-50/50 border-t border-slate-100 px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-slate-500"> 
+                <div class="flex items-center gap-2">
+                    <span>Afficher</span>
+                    <select id="change-size-select" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-slate-700 font-bold focus:outline-none focus:border-emerald-500 cursor-pointer shadow-sm text-xs">
+                        <option value="3" <%= currentSize == 3 ? "selected" : "" %>>3</option>
+                        <option value="5" <%= currentSize == 5 ? "selected" : "" %>>5</option>
+                        <option value="10" <%= currentSize == 10 ? "selected" : "" %>>10</option>
+                        <option value="20" <%= currentSize == 20 ? "selected" : "" %>>20</option>
+                        <option value="50" <%= currentSize == 50 ? "selected" : "" %>>50</option>
+                    </select>
+                    <span>voyages par page</span>
+                </div>
+            
+                <div class="flex items-center gap-4">
+                    <div>
+                        Page <span class="text-slate-700 font-bold"><%= currentPage %></span> sur <span class="text-slate-700 font-bold"><%= totalPages %></span>
+                    </div>
+
+                    <div class="flex items-center gap-1.5">
+                        <% if (currentPage > 1) { %>
+                            <a href="?page=<%= currentPage - 1 %>&size=<%= currentSize %>" class="px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition active:scale-95 flex items-center gap-1">
+                                <i class="fa-solid fa-chevron-left text-[10px]"></i> Précédent
+                            </a>
+                        <% } else { %>
+                            <button disabled class="px-3 py-2 rounded-xl border border-slate-100 bg-slate-50/50 text-slate-300 cursor-not-allowed flex items-center gap-1">
+                                <i class="fa-solid fa-chevron-left text-[10px]"></i> Précédent
+                            </button>
+                        <% } %>
+                        
+                        <div class="hidden sm:flex items-center gap-1">
+                            <% for (int i = 1; i <= totalPages; i++) { %>
+                                <% if (i == currentPage) { %>
+                                    <span class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold shadow-md shadow-emerald-50"><%= i %></span>
+                                <% } else { %>
+                                    <a href="?page=<%= i %>&size=<%= currentSize %>" class="w-8 h-8 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 flex items-center justify-center transition active:scale-95"><%= i %></a>
+                                <% } %>
+                            <% } %>
+                        </div>
+                    
+                        <% if (currentPage < totalPages) { %>
+                            <a href="?page=<%= currentPage + 1 %>&size=<%= currentSize %>" class="px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition active:scale-95 flex items-center gap-1">
+                                Suivant <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </a>
+                        <% } else { %>
+                            <button disabled class="px-3 py-2 rounded-xl border border-slate-100 bg-slate-50/50 text-slate-300 cursor-not-allowed flex items-center gap-1">
+                                Suivant <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </button>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
     </main>
 
     <div id="cancel-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition duration-200">
@@ -244,6 +299,15 @@
                 fermerModalAnnulation();
             });
         }
+
+        document.getElementById('change-size-select').addEventListener('change', function() {
+            const newSize = this.value;
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set('page', '1'); 
+            currentUrl.searchParams.set('size', newSize);
+
+            window.location.href = currentUrl.toString();
+        });
     </script>
 </body>
 </html>

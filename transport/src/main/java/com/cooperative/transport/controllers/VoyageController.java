@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import java.util.Optional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
+import java.lang.String;
 
 @Controller
 @RequestMapping("/re")
@@ -38,15 +40,21 @@ public class VoyageController {
     private VoyageService service;
 
     @GetMapping("/voyage/list")
-    public String getListeVoyages(Model model) {
-        List<Voyages> voyages = service.findAllVoyages();
-        int nbActif = 0;
-        for(Voyages v : voyages) {
-            if(v.getStatutActuel().getLibelle().equalsIgnoreCase("En cours")) nbActif++;
-        }
+    public String getListeVoyages(@RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size, Model model) {
 
-        model.addAttribute("nbActif", Integer.valueOf(nbActif));
-        model.addAttribute("listeVoyages", voyages);
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("dateHeureDepart").descending());
+        Page<Voyages> pageVoyages = service.findPaginated(pageable);
+
+        Long nbActif = service.findAllVoyages().stream()
+                .filter(v -> v.getStatutActuel().getLibelle().equalsIgnoreCase("en cours")).count();
+
+        model.addAttribute("nbActif", nbActif);
+        model.addAttribute("listeVoyages", pageVoyages.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", pageVoyages.getTotalPages());
+        model.addAttribute("currentSize", size);
+
         return "re/liste-voyages";
     }
 
@@ -57,11 +65,12 @@ public class VoyageController {
         try {
             Optional<Voyages> optionalVoyage = service.findVoyageById(id);
 
-            if(!optionalVoyage.isEmpty()) {
+            if (!optionalVoyage.isEmpty()) {
                 Voyages voyage = optionalVoyage.get();
                 String libelleStatut = voyage.getStatutActuel().getLibelle();
 
-                if(libelleStatut.equalsIgnoreCase("En cours") || libelleStatut.equalsIgnoreCase("Terminé") || libelleStatut.equalsIgnoreCase("Annulé")) {
+                if (libelleStatut.equalsIgnoreCase("En cours") || libelleStatut.equalsIgnoreCase("Terminé")
+                        || libelleStatut.equalsIgnoreCase("Annulé")) {
                     response.put("status", "error");
                     response.put("message", "Impossible d'annuler un voyage déjà en cours ou terminé");
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -79,7 +88,7 @@ public class VoyageController {
                 response.put("message", "Voyage introuvable");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             response.put("status", "error");
             response.put("message", "Une erreur interne est survenue : " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -96,41 +105,40 @@ public class VoyageController {
 
     @GetMapping("/api/vehicule-dispo/list")
     public ResponseEntity<List<VehiculesDisponibleDTO>> getListeVehiculesDisponible(
-        @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-        @RequestParam(value = "heure", required = false) String heureStr
-    ) {
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(value = "heure", required = false) String heureStr) {
 
         LocalTime heure = (heureStr == null || heureStr.trim().isEmpty())
-                      ? LocalTime.MIDNIGHT
-                      : LocalTime.parse(heureStr);
+                ? LocalTime.MIDNIGHT
+                : LocalTime.parse(heureStr);
 
         LocalDateTime dateEtHeure = date.atTime(heure);
 
         List<Vehicules> vehicules = service.findAllVehiculesDispo(dateEtHeure);
 
         List<VehiculesDisponibleDTO> vehiculesDTO = vehicules.stream()
-            .map(v -> new VehiculesDisponibleDTO(v.getId(), v.getImmatriculation(), v.getModele(), v.getNombrePlaces()))
-            .toList();
+                .map(v -> new VehiculesDisponibleDTO(v.getId(), v.getImmatriculation(), v.getModele(),
+                        v.getNombrePlaces()))
+                .toList();
 
         return ResponseEntity.ok(vehiculesDTO);
     }
 
     @GetMapping("/api/chauffeur-dispo/list")
     public ResponseEntity<List<ChauffeurDTO>> getListeChauffeurDisponible(
-        @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-        @RequestParam(value = "heure", required = false) String heureStr
-    ) {
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(value = "heure", required = false) String heureStr) {
         LocalTime heure = (heureStr == null || heureStr.trim().isEmpty())
-                        ? LocalTime.MIDNIGHT
-                        : LocalTime.parse(heureStr);
+                ? LocalTime.MIDNIGHT
+                : LocalTime.parse(heureStr);
 
         LocalDateTime dateEtHeure = date.atTime(heure);
 
         List<Utilisateurs> chauffeurs = service.findAllChauffeurDispo(dateEtHeure);
 
         List<ChauffeurDTO> chauffeursDTO = chauffeurs.stream()
-            .map(c -> new ChauffeurDTO(c.getId(), c.getNom(), c.getPrenom()))
-            .toList();
+                .map(c -> new ChauffeurDTO(c.getId(), c.getNom(), c.getPrenom()))
+                .toList();
 
         return ResponseEntity.ok(chauffeursDTO);
     }
@@ -139,42 +147,42 @@ public class VoyageController {
     public String enregistrerVoyage(@ModelAttribute VoyageDTO voyageDTO, Model model) {
         try {
             Integer dureeMinutes = voyageDTO.getDureeEstimeeMinutes();
-            if(dureeMinutes == null) {
+            if (dureeMinutes == null) {
                 model.addAttribute("errorMessage", "La durée estimée est obligatoire");
                 model.addAttribute("listeTrajets", service.findAllTrajets());
                 return "re/formulaire-voyage";
             }
 
             int duree = dureeMinutes.intValue();
-            if(duree <= 0) {
+            if (duree <= 0) {
                 model.addAttribute("errorMessage", "La durée estimée doit être supérieure à zéro");
                 model.addAttribute("listeTrajets", service.findAllTrajets());
                 return "re/formulaire-voyage";
             }
 
             Double tarifVoyage = voyageDTO.getTarif();
-            if(tarifVoyage == null) {
+            if (tarifVoyage == null) {
                 model.addAttribute("errorMessage", "Le tarif est obligatoire");
                 model.addAttribute("listeTrajets", service.findAllTrajets());
                 return "re/formulaire-voyage";
             }
 
             double tarif = tarifVoyage.doubleValue();
-            if(tarif <= 0) {
+            if (tarif <= 0) {
                 model.addAttribute("errorMessage", "Le tarif doit être supérieur à zéro");
                 model.addAttribute("listeTrajets", service.findAllTrajets());
                 return "re/formulaire-voyage";
             }
 
             Double carburant = voyageDTO.getCarburant();
-            if(carburant == null) {
+            if (carburant == null) {
                 model.addAttribute("errorMessage", "Le carburant est obligatoire");
                 model.addAttribute("listeTrajets", service.findAllTrajets());
                 return "re/formulaire-voyage";
             }
 
             double carburantValue = carburant.doubleValue();
-            if(carburantValue <= 0) {
+            if (carburantValue <= 0) {
                 model.addAttribute("errorMessage", "Le carburant doit être supérieur à zéro");
                 model.addAttribute("listeTrajets", service.findAllTrajets());
                 return "re/formulaire-voyage";
@@ -183,7 +191,7 @@ public class VoyageController {
             service.creerNouveauVoyage(voyageDTO);
             return "redirect:/re/voyage/list";
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             model.addAttribute("errorMessage", "Une erreur interne est survenue: " + e.getMessage());
             model.addAttribute("listeTrajets", service.findAllTrajets());
             return "re/formulaire-voyage";
