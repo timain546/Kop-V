@@ -1,27 +1,23 @@
 /* ========== KOP-V Chauffeur Dashboard ========== */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+
 
 :root {
-    --primary: #16a34a;
-    --primary-dark: #15803d;
-    --primary-light: #dcfce7;
-    --primary-lighter: #f0fdf4;
+    --primary: var(--primary);
+    --primary-dark: var(--primary-dark);
+    --primary-light: var(--primary-lighter);
+    --primary-lighter: var(--bg-body);
     --secondary: #3b82f6;
-    --danger: #ef4444;
+    --danger: var(--danger);
     --warning: #f59e0b;
-    --dark: #1e293b;
-    --dark-700: #334155;
-    --gray: #64748b;
-    --gray-light: #94a3b8;
-    --light: #f8fafc;
-    --white: #ffffff;
-    --border: #e2e8f0;
+    --dark: var(--text-primary);
+    --dark-700: var(--text-primary);
+    --gray: var(--text-muted);
+    --gray-light: var(--text-light);
+    --light: var(--bg-body);
+    --white: var(--bg-card);
+    --border: var(--border);
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
     --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
     --shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
@@ -31,12 +27,7 @@
     --radius-xl: 20px;
 }
 
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--light);
-    color: var(--dark);
-    min-height: 100vh;
-}
+
 
 /* ========== Navbar ========== */
 .navbar {
@@ -157,7 +148,7 @@ body {
     border: none;
     cursor: pointer;
     transition: all 0.25s ease;
-    font-family: inherit;
+    
 }
 
 .btn-export {
@@ -169,7 +160,7 @@ body {
 .btn-export:hover {
     border-color: var(--primary);
     color: var(--primary);
-    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.15);
+    box-shadow: 0 2px 8px var(--primary);
 }
 
 .btn-success {
@@ -180,7 +171,7 @@ body {
 .btn-success:hover {
     background: var(--primary-dark);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    box-shadow: 0 4px 12px var(--primary);
 }
 
 .btn-danger {
@@ -341,7 +332,7 @@ body {
     background: var(--primary-light);
     color: var(--primary-dark);
     font-weight: 600;
-    border-color: #bbf7d0;
+    border-color: var(--primary-light);
 }
 
 /* ========== Search Bar ========== */
@@ -365,7 +356,7 @@ body {
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     font-size: 0.875rem;
-    font-family: inherit;
+    
     color: var(--dark);
     background: var(--light);
     transition: all 0.25s ease;
@@ -375,7 +366,7 @@ body {
     outline: none;
     border-color: var(--primary);
     background: var(--white);
-    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    box-shadow: 0 0 0 3px var(--primary);
 }
 
 .search-bar input::placeholder {
@@ -403,7 +394,7 @@ body {
 
 .voyage-card:hover {
     border-color: var(--primary);
-    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.08);
+    box-shadow: 0 4px 12px var(--primary);
     transform: translateX(4px);
 }
 
@@ -528,9 +519,9 @@ body {
 }
 
 .status-panne {
-    background: #fef2f2;
-    color: #b91c1c;
-    border: 1px solid #fecaca;
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid var(--danger-border);
 }
 
 /* ========== Sidebar Profile ========== */
@@ -582,7 +573,7 @@ body {
     font-size: 1.8rem;
     font-weight: 800;
     margin: 0 auto 16px;
-    box-shadow: 0 4px 16px rgba(22, 163, 74, 0.3);
+    box-shadow: 0 4px 16px var(--primary);
 }
 
 .profile-role {
@@ -712,7 +703,7 @@ body {
 .empty-state i {
     font-size: 3rem;
     margin-bottom: 16px;
-    color: #bbf7d0;
+    color: var(--primary-light);
 }
 
 .empty-state p {

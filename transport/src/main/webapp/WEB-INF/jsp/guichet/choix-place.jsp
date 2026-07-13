@@ -12,7 +12,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Choix des places — KOP-V</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/styles.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/global.css" />
+    <script>!function(){var t=localStorage.getItem('kop-v-theme')||('matchMedia' in window&&matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)}();</script>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/common.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/choix-place.css" />
   </head>
@@ -57,7 +59,13 @@
             </div>
           </nav>
 
-          <div class="help-text">Aide ? <strong>+261 34 00 000 00</strong></div>
+          <div class="topbar-actions" style="display:flex; align-items:center; gap:16px;">
+              <div class="help-text">Aide ? <strong>+261 34 00 000 00</strong></div>
+              <button class="theme-toggle" onclick="toggleTheme()" title="Changer de thème" style="position:relative;top:0;right:0;">
+                  <i class="fas fa-sun theme-icon-light"></i>
+                  <i class="fas fa-moon theme-icon-dark"></i>
+              </button>
+            </div>
         </div>
       </header>
 
@@ -200,6 +208,7 @@
         </aside>
       </div>
     </div>
+      <script src="${pageContext.request.contextPath}/assets/js/animations.js"></script>
   </body>
 
   <script>

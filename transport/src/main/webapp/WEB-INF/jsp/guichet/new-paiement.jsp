@@ -12,7 +12,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Informations paiements — KOP-V</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/styles.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/global.css" />
+    <script>!function(){var t=localStorage.getItem('kop-v-theme')||('matchMedia' in window&&matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)}();</script>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/common.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/paiement.css" />
   </head>
@@ -41,7 +43,13 @@
             <div class="step active"><svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20a6 6 0 0 0-12 0"></path><circle cx="12" cy="10" r="4"></circle><circle cx="12" cy="12" r="10"></circle></svg><span>Passagers</span></div>
           </nav>
 
-          <div class="help-text">Aide ? <strong>+261 34 00 000 00</strong></div>
+          <div class="topbar-actions" style="display:flex; align-items:center; gap:16px;">
+              <div class="help-text">Aide ? <strong>+261 34 00 000 00</strong></div>
+              <button class="theme-toggle" onclick="toggleTheme()" title="Changer de thème" style="position:relative;top:0;right:0;">
+                  <i class="fas fa-sun theme-icon-light"></i>
+                  <i class="fas fa-moon theme-icon-dark"></i>
+              </button>
+            </div>
         </div>
       </header>
 
@@ -189,5 +197,6 @@
         </aside>
       </div>
     </div>
+      <script src="${pageContext.request.contextPath}/assets/js/animations.js"></script>
   </body>
 </html>

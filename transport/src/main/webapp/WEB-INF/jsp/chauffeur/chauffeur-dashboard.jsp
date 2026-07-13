@@ -8,7 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KOP-V - Tableau de bord Chauffeur</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/global.css">
     <link rel="stylesheet" href="/assets/css/chauffeur-dashboard.css">
+    <script>!function(){var t=localStorage.getItem('kop-v-theme')||('matchMedia' in window&&matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)}();</script>
 </head>
 <body>
 
@@ -29,6 +31,10 @@
                     <i class="fas fa-exclamation-triangle"></i> Signaler panne
                 </a>
             </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Changer de thème">
+                <i class="fas fa-sun theme-icon-light"></i>
+                <i class="fas fa-moon theme-icon-dark"></i>
+            </button>
         </div>
     </nav>
 
@@ -343,5 +349,6 @@
             }
         }
     </script>
+    <script src="/assets/js/animations.js"></script>
 </body>
 </html>

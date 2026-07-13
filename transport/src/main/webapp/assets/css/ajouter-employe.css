@@ -1,24 +1,11 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f0fdf4;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px;
-    color: #1e293b;
-}
+
+
 
 .form-card {
-    background-color: #ffffff;
+    background-color: var(--bg-card);
     border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(34, 197, 94, 0.1);
+    box-shadow: 0 8px 32px var(--primary-light);
     padding: 48px 44px;
     width: 100%;
     max-width: 520px;
@@ -44,7 +31,7 @@ body {
 .form-icon {
     width: 64px;
     height: 64px;
-    background: #dcfce7;
+    background: var(--primary-lighter);
     border-radius: 16px;
     display: flex;
     align-items: center;
@@ -54,15 +41,15 @@ body {
 }
 
 h1 {
-    font-family: Arial, Helvetica, sans-serif;
-    color: #15803d;
+    
+    color: var(--primary-dark);
     font-size: 26px;
     font-weight: 700;
     letter-spacing: -0.5px;
 }
 
 .form-subtitle {
-    color: #64748b;
+    color: var(--text-muted);
     font-size: 14px;
     margin-top: 8px;
 }
@@ -72,7 +59,7 @@ h1 {
 }
 
 label {
-    font-family: Arial, Helvetica, sans-serif;
+    
     display: block;
     color: #374151;
     font-size: 14px;
@@ -82,21 +69,21 @@ label {
 
 label::after {
     content: " *";
-    color: #16a34a;
+    color: var(--primary);
 }
 
 input[type="text"],
 input[type="date"],
 input[type="password"],
 select {
-    font-family: Arial, Helvetica, sans-serif;
+    
     width: 100%;
     padding: 14px 18px;
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--border);
     border-radius: 12px;
     font-size: 15px;
-    color: #1e293b;
-    background-color: #fafafa;
+    color: var(--text-primary);
+    background-color: var(--bg-body);
     transition: all 0.25s ease;
     outline: none;
 }
@@ -105,14 +92,14 @@ input[type="text"]:focus,
 input[type="date"]:focus,
 input[type="password"]:focus,
 select:focus {
-    border-color: #16a34a;
-    background-color: #ffffff;
-    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
+    border-color: var(--primary);
+    background-color: var(--bg-card);
+    box-shadow: 0 0 0 4px var(--primary);
 }
 
 input[type="text"]::placeholder,
 input[type="password"]::placeholder {
-    color: #94a3b8;
+    color: var(--text-light);
 }
 
 select {
@@ -128,10 +115,10 @@ select option {
 }
 
 .btn-submit {
-    font-family: Arial, Helvetica, sans-serif;
+    
     width: 100%;
     padding: 16px;
-    background-color: #16a34a;
+    background-color: var(--primary);
     color: white;
     border: none;
     border-radius: 12px;
@@ -140,13 +127,13 @@ select option {
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 8px;
-    box-shadow: 0 4px 16px rgba(22, 163, 74, 0.3);
+    box-shadow: 0 4px 16px var(--primary);
 }
 
 .btn-submit:hover {
-    background-color: #15803d;
+    background-color: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(22, 163, 74, 0.4);
+    box-shadow: 0 8px 24px var(--primary);
 }
 
 .btn-submit:active {
@@ -154,13 +141,13 @@ select option {
 }
 
 .btn-retour {
-    font-family: Arial, Helvetica, sans-serif;
+    
     display: block;
     width: 100%;
     padding: 14px;
     background-color: transparent;
-    color: #64748b;
-    border: 2px solid #e2e8f0;
+    color: var(--text-muted);
+    border: 2px solid var(--border);
     border-radius: 12px;
     font-size: 14px;
     font-weight: 600;
@@ -172,16 +159,16 @@ select option {
 }
 
 .btn-retour:hover {
-    border-color: #16a34a;
-    color: #16a34a;
-    background-color: #f0fdf4;
+    border-color: var(--primary);
+    color: var(--primary);
+    background-color: var(--bg-body);
 }
 
 .divider {
     display: flex;
     align-items: center;
     margin: 24px 0;
-    color: #94a3b8;
+    color: var(--text-light);
     font-size: 13px;
 }
 
@@ -190,7 +177,7 @@ select option {
     content: "";
     flex: 1;
     height: 1px;
-    background-color: #e2e8f0;
+    background-color: var(--border);
 }
 
 .divider span {
@@ -198,11 +185,7 @@ select option {
 }
 
 @media (max-width: 600px) {
-    body {
-        padding: 16px;
-        align-items: flex-start;
-        padding-top: 40px;
-    }
+    
     .form-card {
         padding: 32px 24px;
         border-radius: 16px;

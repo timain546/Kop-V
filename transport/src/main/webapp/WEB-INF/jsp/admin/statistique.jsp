@@ -36,11 +36,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistiques</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/stats.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/global.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/stats.css">
+    <script>!function(){var t=localStorage.getItem('kop-v-theme')||('matchMedia' in window&&matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)}();</script>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="nav-brand" href="${pageContext.request.contextPath}/admin/list">
+                <i class="fas fa-bus"></i> KOP-V
+            </a>
+            <div class="nav-links">
+                <a class="nav-link" href="${pageContext.request.contextPath}/admin/list">
+                    <i class="fas fa-users"></i> Employés
+                </a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/admin/ajouter">
+                    <i class="fas fa-user-plus"></i> Ajouter
+                </a>
+                <a class="nav-link active" href="${pageContext.request.contextPath}/admin/stats">
+                    <i class="fas fa-chart-bar"></i> Statistiques
+                </a>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Changer de thème">
+                <i class="fas fa-sun theme-icon-light"></i>
+                <i class="fas fa-moon theme-icon-dark"></i>
+            </button>
+        </div>
+    </nav>
     <div class="container">
-        <h1>📊 Statistiques - <%= annee %></h1>
+        <h1><i class="fas fa-chart-bar"></i> Statistiques - <%= annee %></h1>
         
         <div class="filter-form">
             <form action="stats" method="get">
@@ -170,10 +195,12 @@
                                     return context.label + ': ' + context.parsed + ' Ar (' + percentage + '%)';
                                 }
                         }
+                        }
                     }
                 }
             }
         });
     </script>
+    <script src="${pageContext.request.contextPath}/assets/js/animations.js"></script>
 </body>
 </html>

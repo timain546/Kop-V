@@ -26,8 +26,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Employes</title>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/list-employes.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/global.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/list-employes.css">
+    <script>!function(){var t=localStorage.getItem('kop-v-theme')||('matchMedia' in window&&matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)}();</script>
+</head>
 <body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="nav-brand" href="${pageContext.request.contextPath}/admin/list">
+                <i class="fas fa-bus"></i> KOP-V
+            </a>
+            <div class="nav-links">
+                <a class="nav-link active" href="${pageContext.request.contextPath}/admin/list">
+                    <i class="fas fa-users"></i> Employés
+                </a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/admin/ajouter">
+                    <i class="fas fa-user-plus"></i> Ajouter
+                </a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/admin/stats">
+                    <i class="fas fa-chart-bar"></i> Statistiques
+                </a>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Changer de thème">
+                <i class="fas fa-sun theme-icon-light"></i>
+                <i class="fas fa-moon theme-icon-dark"></i>
+            </button>
+        </div>
+    </nav>
     <div class="container">
         <div class="header">
             <h1>Liste des employes</h1>
@@ -149,7 +175,7 @@
                     } else { %>
                         <tr>
                             <td colspan="7" class="aucun-employe">
-                                <div class="aucun-employe-icon">&#128100;</div>
+                                <div class="aucun-employe-icon"><i class="fas fa-user-slash" style="font-size:2rem;color:var(--text-light)"></i></div>
                                 Aucun employe trouve dans la base de donnees
                             </td>
                         </tr>
@@ -158,5 +184,6 @@
             </table>
         </div>
     </div>
+    <script src="${pageContext.request.contextPath}/assets/js/animations.js"></script>
 </body>
 </html>
