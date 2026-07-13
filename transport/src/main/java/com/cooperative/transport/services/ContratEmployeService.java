@@ -1,27 +1,27 @@
 package com.cooperative.transport.services;
 import com.cooperative.transport.entities.ContratsEmployes;
-import com.cooperative.transport.repositories.ContratRepository;
+import com.cooperative.transport.repositories.ContratEmployeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ContratService {
+public class ContratEmployeService {
     @Autowired
-    private ContratRepository contratRepository;
+    private ContratEmployeRepository contratEmployeRepository;
     public List<ContratsEmployes> findAllContrats() {
-        return contratRepository.findAll();
+        return contratEmployeRepository.findAll();
     }
     public void saveContrat(ContratsEmployes contrat) {
-        contratRepository.save(contrat);
+        contratEmployeRepository.save(contrat);
     }
     public ContratsEmployes findContratById(Integer id) {
-        return contratRepository.findById(id).orElse(null);
+        return contratEmployeRepository.findById(id).orElse(null);
     }
     public ContratsEmployes findContratByIdEmp(Integer id) {
-        return contratRepository.findByIdEmp(id);
+        return contratEmployeRepository.findByIdEmp(id);
     }
     public void updateContrat(ContratsEmployes contrat) {
-        contratRepository.save(contrat);
+        contratEmployeRepository.save(contrat);
     }
 }

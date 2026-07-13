@@ -17,7 +17,7 @@ import com.cooperative.transport.entities.Role;
 import com.cooperative.transport.entities.Salaires;
 import com.cooperative.transport.entities.StatutEmploye;
 import com.cooperative.transport.entities.Utilisateurs;
-import com.cooperative.transport.services.ContratService;
+import com.cooperative.transport.services.ContratEmployeService;
 import com.cooperative.transport.services.EmployeStatutService;
 import com.cooperative.transport.services.EmployesService;
 import com.cooperative.transport.services.RoleService;
@@ -40,8 +40,8 @@ public class EmployesController {
     @Autowired
     private StatutEmployeService statutEmployeService;
     @Autowired
-    private ContratService contratService;
-    
+    private ContratEmployeService contratService;
+
 
     @GetMapping("/employes/test-simple")
     @ResponseBody
@@ -58,15 +58,15 @@ public String getListeEmployes(
         @RequestParam(required = false) Double salaireMin,
         @RequestParam(required = false) Double salaireMax,
         Model model) {
-    
+
     List<Object[]> employes = employesService.findwithcritere(nom, prenom, email, salaireMin, salaireMax);
-    
+
     List<String> statut = new ArrayList<>();
-    
+
     for (Object[] row : employes) {
         Utilisateurs employe = (Utilisateurs) row[0];
         Integer statutId = employeStatutService.findIdbyIdemp(employe.getId());
-        
+
         if (statutId == null) {
             statut.add("Inconnu / Aucun");
         } else {
@@ -74,7 +74,7 @@ public String getListeEmployes(
             statut.add(statutList != null ? statutList.getLibelle() : "Statut introuvable");
         }
     }
-    
+
     model.addAttribute("nomRecherche", nom);
     model.addAttribute("prenomRecherche", prenom);
     model.addAttribute("emailRecherche", email);
@@ -82,7 +82,7 @@ public String getListeEmployes(
     model.addAttribute("salaireMaxRecherche", salaireMax);
     model.addAttribute("statut", statut);
     model.addAttribute("listeEmployes", employes);
-    
+
     return "admin/list-employes";
 }
 
