@@ -95,6 +95,8 @@ Table places:
     - id
     - id_vehicule
     - numero
+    - x
+    - y
 
 Table client:
     - id

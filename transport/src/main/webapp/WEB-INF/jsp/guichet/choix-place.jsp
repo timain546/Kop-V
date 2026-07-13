@@ -68,7 +68,7 @@
               <p class="hero-kicker">Étape 3 / 4</p>
               <h1 class="seats-title">Choisissez vos places</h1>
               <p class="seats-subtitle">
-                KOP-V ${info.voyage.vehicule.categorieVehicule.libelle}
+                KOP-V ${info.voyage.vehicule.categorie.libelle}
                 · Véhicule à ${places.size()} places
                 · départ ${info.voyage.heureDepart}
               </p>
@@ -188,7 +188,7 @@
                 <p class="trip-mini">
                   ${info.voyage.heureDepart}
                   → ${info.voyage.heureArrivee}
-                  · ${info.voyage.vehicule.categorieVehicule.libelle}
+                  · ${info.voyage.vehicule.categorie.libelle}
                 </p>
               </div>
               <div class="summary-divider"></div>

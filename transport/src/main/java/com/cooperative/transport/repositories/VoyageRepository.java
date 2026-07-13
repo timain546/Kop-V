@@ -44,8 +44,7 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
             @Param("date") LocalDateTime date);
 
     @Query("SELECT v FROM Voyages v WHERE v.trajet = :trajet AND v.dateHeureDepart = :dateHeureDepart AND v.vehicule.categorie.libelle = :categorie")
-    public Optional<Voyages> findByTrajetAndDateHeureDepartAndCategorie(Trajets trajet, LocalDateTime dateHeureDepart,
-            String categorie);
+    public List<Voyages> findByTrajetAndDateHeureDepartAndCategorie(Trajets trajet, LocalDateTime dateHeureDepart, String categorie);
 
     @Query(value = """
             SELECT
@@ -99,6 +98,7 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
 
               AND g_arr.ville = :villeArrivee
 
+<<<<<<< HEAD
             GROUP BY
                 v.id,
                 v.date_heure_depart,
@@ -110,6 +110,21 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
                 vh.modele,
                 cat.libelle,
                 v.tarif
+=======
+          AND v.id_statut_actuel = (SELECT s.id FROM statut_voyage s WHERE s.libelle = 'Plannifié')
+
+        GROUP BY
+            v.id,
+            v.date_heure_depart,
+            g_dep.nom,
+            g_arr.nom,
+            v.duree_estimee_minutes,
+            t.distance_km,
+            vh.immatriculation,
+            vh.modele,
+            cat.libelle,
+            v.tarif
+>>>>>>> guichet
 
             HAVING COUNT(DISTINCT p.id) - COUNT(DISTINCT rf.id) >= :nbPlaces
 

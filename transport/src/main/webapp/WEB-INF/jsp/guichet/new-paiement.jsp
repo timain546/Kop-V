@@ -81,7 +81,7 @@
                       </svg>
                       Nom complet
                     </span>
-                    <input name="nomClient" class="field-input" type="text" placeholder="Ex. Rakoto Andrianina" />
+                    <input name="nomClient" class="field-input" type="text" placeholder="Ex. Rakoto Andrianina" required />
                   </label>
 
                   <label class="field">
@@ -91,7 +91,7 @@
                       </svg>
                       Téléphone
                     </span>
-                    <input name="telephoneClient" class="field-input" type="tel" placeholder="034 00 000 00" />
+                    <input name="telephoneClient" class="field-input" type="tel" placeholder="034 00 000 00" required />
                   </label>
 
                   <label class="field">
@@ -99,7 +99,7 @@
                       <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm icon-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote-icon lucide-banknote"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
                       Montant
                     </span>
-                    <input name="montant" class="field-input" type="number" placeholder="Ex. 10 000 Ar" />
+                    <input name="montant" class="field-input" type="number" placeholder="Ex. 10 000 Ar" required />
                   </label>
 
                   <label class="field">
@@ -167,7 +167,7 @@
               <p class="trip-mini">
                 ${info.voyage.heureDepart}
                 → ${info.voyage.heureArrivee}
-                · ${info.voyage.vehicule.categorieVehicule.libelle}
+                · ${info.voyage.vehicule.categorie.libelle}
               </p>
             </div>
               <div>

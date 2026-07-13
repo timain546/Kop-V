@@ -92,7 +92,7 @@
                 <div class="field-control">
                   <select name="gareDepart">
                     <c:forEach var="gare" items="${gares}">
-                      <option value="${gare.id}">${gare.ville}</option>
+                      <option value="${gare.id}" ${(info.gareDepart != null && info.gareDepart.id == gare.id) ? 'selected' : ''}>${gare.ville}</option>
                     </c:forEach>
                   </select>
                 </div>
@@ -116,7 +116,7 @@
                 <div class="field-control">
                   <select name="gareArrivee">
                     <c:forEach var="gare" items="${gares}">
-                      <option value="${gare.id}">${gare.ville}</option>
+                      <option value="${gare.id}" ${(info.gareArrivee != null && info.gareArrivee.id == gare.id) ? 'selected' : ''}>${gare.ville}</option>
                     </c:forEach>
                   </select>
                 </div>
@@ -130,7 +130,7 @@
                   </svg>
                   Date de départ de
                 </span>
-                <div class="field-control"><input name="dateMin" type="date" value="2026-07-02" /></div>
+                <div class="field-control"><input name="dateMin" type="date" value="${info.dateMin != null ? info.dateMin : '2026-07-02'}" /></div>
               </label>
 
               <label class="field">
@@ -141,7 +141,7 @@
                   </svg>
                   À
                 </span>
-                <div class="field-control"><input name="dateMax" type="date" value="2026-07-20" /></div>
+                <div class="field-control"><input name="dateMax" type="date" value="${info.dateMax != null ? info.dateMax : '2026-07-20'}" /></div>
               </label>
 
               <label class="field">
@@ -156,7 +156,7 @@
                 </span>
                 <div class="field-control passenger-picker">
                   <button class="circle-btn" type="button">−</button>
-                  <input name="nbPlaces" type="number" min="1" value="1" />
+                  <input name="nbPlaces" type="number" min="1" value="${info.nbPlaces != 0 ? info.nbPlaces : 1}" />
                   <%-- <span class="passenger-count">1</span> --%>
                   <button class="circle-btn" type="button">+</button>
                 </div>
