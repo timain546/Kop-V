@@ -15,35 +15,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kopv - CRUD Trajets Statiques Ultra-Rapides</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="/assets/css/global.css">
+    <link rel="stylesheet" href="/assets/css/re-global.css">
+    <script>!function(){var t=localStorage.getItem('kop-v-theme')||('matchMedia' in window&&matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t)}();</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-800 flex select-none font-sans">
+<body class=" min-h-screen text-primary flex select-none font-sans">
 
-    <aside class="w-64 bg-white border-r border-emerald-100 flex flex-col justify-between h-screen sticky top-0 z-40 shadow-sm flex-shrink-0">
+    <aside class="w-64  border-r border-emerald-100 flex flex-col justify-between h-screen sticky top-0 z-40  flex-shrink-0">
         <div>
             <div class="px-4 py-4 border-b border-emerald-50 flex items-center gap-2.5">
-                <div class="bg-emerald-500 text-white w-9 h-9 rounded-xl flex items-center justify-center shadow-md shadow-emerald-100">
+                <div class="bg-emerald-500 text-white w-9 h-9  flex items-center justify-center shadow-md shadow-emerald-100">
                     <i class="fa-solid fa-bus text-lg"></i>
                 </div>
                 <div>
-                    <h1 class="text-sm font-black text-slate-800 tracking-tight">KOP-V</h1>
-                    <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-wider">Management</p>
+                    <h1 class="text-sm font-black text-primary tracking-tight">KOP-V</h1>
+                    <p class="text-[10px] text-primary font-bold uppercase tracking-wider">Management</p>
                 </div>
             </div>
 
             <nav class="p-3 space-y-1">
-                <a href="/re/voyage/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
+                <a href="/re/voyage/list" class="flex items-center gap-3 px-3 py-2.5  text-muted hover:text-primary hover: font-semibold text-sm transition">
                     <i class="fa-solid fa-route text-base"></i>
                     <span>Gestion Voyages</span>
                 </a>
-                <a href="/re/panne/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-semibold text-sm transition">
+                <a href="/re/panne/list" class="flex items-center gap-3 px-3 py-2.5  text-muted hover:text-primary hover: font-semibold text-sm transition">
                     <i class="fa-solid fa-triangle-exclamation text-base"></i>
                     <span>Suivi des Pannes</span>
                 </a>
-                <a href="/re/trajet/list" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-600 bg-emerald-50/60 font-bold text-sm transition">
+                <a href="/re/trajet/list" class="flex items-center gap-3 px-3 py-2.5  text-primary bg-emerald-50/60 font-bold text-sm transition">
                     <i class="fa-solid fa-map-location-dot text-base"></i>
                     <span>CRUD Trajets</span>
                 </a>
@@ -52,13 +54,13 @@
 
         <div class="p-4 border-t border-slate-100 flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs">RE</div>
+                <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-secondary font-bold text-xs">RE</div>
                 <div class="truncate max-w-[120px]">
-                    <p class="text-xs font-bold text-slate-700 truncate">RE</p>
-                    <p class="text-[10px] text-slate-400 truncate">Exploitant</p>
+                    <p class="text-xs font-bold text-primary truncate">RE</p>
+                    <p class="text-[10px] text-light truncate">Exploitant</p>
                 </div>
             </div>
-            <button class="w-8 h-8 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center text-sm active:scale-95 transition">
+            <button class="w-8 h-8  bg-rose-50 text-rose-500 flex items-center justify-center text-sm active:scale-95 transition">
                 <i class="fa-solid fa-power-off"></i>
             </button>
         </div>
@@ -67,63 +69,63 @@
     <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
 
         <div>
-            <h2 class="text-xl font-bold text-slate-800">Configuration des Trajets Prédéfinis (SIG)</h2>
-            <p class="text-xs text-slate-400">Sélectionnez vos gares : les tracés des routes nationales (RN2, RN7) s'affichent instantanément sans aucun calcul.</p>
+            <h2 class="section-header-title">Configuration des Trajets Prédéfinis (SIG)</h2>
+            <p class="section-subtitle">Sélectionnez vos gares : les tracés des routes nationales (RN2, RN7) s'affichent instantanément sans aucun calcul.</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
 
-            <div class="bg-white border border-slate-100 rounded-xl shadow-sm p-4 space-y-4 lg:col-span-1">
+            <div class=" border border-slate-100   p-4 space-y-4 lg:col-span-1">
                 <div class="border-b border-slate-100 pb-2">
-                    <h3 id="form-title" class="text-sm font-bold text-slate-700 flex items-center gap-2">
-                        <i class="fa-solid fa-circle-plus text-emerald-500"></i>
+                    <h3 id="form-title" class="text-sm font-bold text-primary flex items-center gap-2">
+                        <i class="fa-solid fa-circle-plus text-primary"></i>
                         <span>Ajouter un nouveau trajet</span>
                     </h3>
                 </div>
 
-                <div id="form-feedback" class="hidden text-xs p-3 rounded-xl font-medium border"></div>
+                <div id="form-feedback" class="hidden text-xs p-3  font-medium border"></div>
 
                 <form class="space-y-3.5 text-xs" id="form-trajet">
                     <div class="space-y-1.5">
-                        <label class="font-bold text-slate-500 uppercase tracking-wider">Gare de départ</label>
+                        <label class="font-bold text-muted uppercase tracking-wider">Gare de départ</label>
                         <div class="relative">
-                            <select id="select-gare-depart" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-400 focus:bg-white px-3 py-2.5 rounded-xl outline-none transition font-semibold text-slate-700 appearance-none cursor-pointer" required>
+                            <select id="select-gare-depart" class="w-full  border border-slate-200 focus:border-emerald-400 focus: px-3 py-2.5  outline-none transition font-semibold text-primary appearance-none cursor-pointer" required>
                                 <option value="" disabled selected>-- Choisir une gare de départ --</option>
                                 <% for(Gares g : gares) { %>
                                     <option value="<%= g.getId() %>"><%= g.getNom() %> (<%= g.getVille() %>)</option>
                                 <% } %>
                             </select>
-                            <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-slate-400">
+                            <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-light">
                                 <i class="fa-solid fa-chevron-down"></i>
                             </div>
                         </div>
                     </div>
 
                     <div class="space-y-1.5">
-                        <label class="font-bold text-slate-500 uppercase tracking-wider">Gare de destination</label>
+                        <label class="font-bold text-muted uppercase tracking-wider">Gare de destination</label>
                         <div class="relative">
-                            <select id="select-gare-arrivee" class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-400 focus:bg-white px-3 py-2.5 rounded-xl outline-none transition font-semibold text-slate-700 appearance-none cursor-pointer" required>
+                            <select id="select-gare-arrivee" class="w-full  border border-slate-200 focus:border-emerald-400 focus: px-3 py-2.5  outline-none transition font-semibold text-primary appearance-none cursor-pointer" required>
                                 <option value="" disabled selected>-- Choisir une gare d'arrivée --</option>
                                 <% for(Gares g : gares) { %>
                                     <option value="<%= g.getId() %>"><%= g.getNom() %> (<%= g.getVille() %>)</option>
                                 <% } %>
                             </select>
-                            <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-slate-400">
+                            <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-light">
                                 <i class="fa-solid fa-chevron-down"></i>
                             </div>
                         </div>
                     </div>
 
                     <div class="space-y-1">
-                        <label class="font-bold text-slate-500 uppercase tracking-wider">Distance fixe (km)</label>
-                        <input type="number" step="0.01" id="input-distance" min="0" class="w-full bg-slate-100 border border-slate-200 px-3 py-2 rounded-xl outline-none font-medium text-slate-600" readonly placeholder="Distance automatique...">
+                        <label class="font-bold text-muted uppercase tracking-wider">Distance fixe (km)</label>
+                        <input type="number" step="0.01" id="input-distance" min="0" class="w-full bg-slate-100 border border-slate-200 px-3 py-2  outline-none font-medium text-secondary" readonly placeholder="Distance automatique...">
                     </div>
 
                     <div class="pt-2 flex gap-2">
-                        <button type="submit" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl shadow-md shadow-emerald-50 active:scale-95 transition">
+                        <button type="submit" class="btn btn-primary">
                             Enregistrer la ligne
                         </button>
-                        <button type="button" onclick="annulerEdition()" class="bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold px-3 py-2.5 rounded-xl active:scale-95 transition" title="Annuler">
+                        <button type="button" onclick="annulerEdition()" class="bg-slate-100 hover:bg-slate-200 text-muted font-bold px-3 py-2.5  active:scale-95 transition" title="Annuler">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </div>
@@ -132,50 +134,50 @@
 
             <div class="lg:col-span-2 space-y-6">
                 
-                <div class="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden p-1">
-                    <div class="px-3 py-2 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                            <i class="fa-solid fa-earth-africa text-emerald-500"></i> Affichage Instantané des Routes RN2 / RN7
+                <div class=" border border-slate-100   overflow-hidden p-1">
+                    <div class="px-3 py-2 border-b border-slate-100 flex justify-between items-center /50">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-muted flex items-center gap-1.5">
+                            <i class="fa-solid fa-earth-africa text-primary"></i> Affichage Instantané des Routes RN2 / RN7
                         </span>
-                        <span class="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
+                        <span class="text-[10px] text-primary font-semibold flex items-center gap-1">
                             <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span> Mode local ultra-rapide
                         </span>
                     </div>
                     <div id="map" class="w-full h-80 z-10 rounded-b-lg"></div>
                 </div>
 
-                <div class="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden flex flex-col">
-                    <div class="bg-slate-50/70 border-b border-slate-100 px-4 py-3 flex justify-between items-center">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Liste des trajets actifs</span>
-                        <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full"><%= trajets.size() %> Lignes</span>
+                <div class="section-card">
+                    <div class="/70 border-b border-slate-100 px-4 py-3 flex justify-between items-center">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-light">Liste des trajets actifs</span>
+                        <span class="bg-emerald-100 text-primary-dark text-[10px] font-bold px-2 py-0.5 rounded-full"><%= trajets.size() %> Lignes</span>
                     </div>
 
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
+                        <table >
                             <thead>
-                                <tr class="bg-slate-50/30 border-b border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                <tr >
                                     <th class="py-3 px-4">Ligne</th>
                                     <th class="py-3 px-4">Itinéraire</th>
                                     <th class="py-3 px-4">Distance</th>
                                     <th class="py-3 px-4 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-100 text-sm">
+                            <tbody >
                                 <% for(Trajets t : trajets) { %>
-                                    <tr class="hover:bg-slate-50/40 transition" id="row-trajet-<%= t.getId() %>">
-                                        <td class="py-3.5 px-4 font-bold text-slate-700">T-00<%= t.getId() %></td>
+                                    <tr class="hover:/40 transition" id="row-trajet-<%= t.getId() %>">
+                                        <td class="py-3.5 px-4 font-bold text-primary">T-00<%= t.getId() %></td>
                                         <td class="py-3.5 px-4">
-                                            <div class="font-semibold text-slate-700 flex items-center gap-1.5">
+                                            <div class="font-semibold text-primary flex items-center gap-1.5">
                                                 <span><%= t.getGareDepart().getVille() %></span>
-                                                <i class="fa-solid fa-arrow-right text-[10px] text-slate-400"></i>
+                                                <i class="fa-solid fa-arrow-right text-[10px] text-light"></i>
                                                 <span><%= t.getGareArrivee().getVille() %></span>
                                             </div>
                                         </td>
-                                        <td class="py-3.5 px-4 text-slate-600 font-medium"><%= t.getDistanceKm().intValue() %> km</td>
+                                        <td class="py-3.5 px-4 text-secondary font-medium"><%= t.getDistanceKm().intValue() %> km</td>
                                         <td class="py-3.5 px-4 text-right">
                                             <div class="flex items-center justify-end gap-1.5">
                                                 <button onclick="chargerDonneesEdition(<%= t.getId() %>, <%= t.getGareDepart().getId() %>, <%= t.getGareArrivee().getId() %>, <%= t.getDistanceKm() %>, '<%= t.getTraceAsWkt() %>')" 
-                                                        class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 bg-white hover:bg-slate-50 flex items-center justify-center text-xs active:scale-95 transition">
+                                                        class="w-8 h-8 rounded-lg border border-slate-200 text-muted  hover: flex items-center justify-center text-xs active:scale-95 transition">
                                                     <i class="fa-solid fa-pen"></i>
                                                 </button>
                                                 <button onclick="supprimerTrajet(<%= t.getId() %>)" class="w-8 h-8 rounded-lg border border-rose-100 text-rose-500 bg-rose-50/30 hover:bg-rose-50 flex items-center justify-center text-xs active:scale-95 transition">
@@ -192,7 +194,8 @@
 
             </div>
         </div>
-    </main>
+    </div></div>
+<script src="/assets/js/animations.js"></script>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -432,7 +435,7 @@
             idTrajetEnCours = null;
             nettoyerCalqueStatique();
             document.getElementById("form-title").innerHTML = `
-                <i class="fa-solid fa-circle-plus text-emerald-500"></i> 
+                <i class="fa-solid fa-circle-plus text-primary"></i> 
                 <span>Ajouter un nouveau trajet</span>
             `;
             document.getElementById("form-trajet").reset();
@@ -443,9 +446,9 @@
             const feedbackDiv = document.getElementById("form-feedback");
             if (!feedbackDiv) { alert(message); return; }
             feedbackDiv.innerText = message;
-            feedbackDiv.classList.remove("hidden", "bg-rose-50", "border-rose-200", "text-rose-600", "bg-emerald-50", "border-emerald-200", "text-emerald-600");
+            feedbackDiv.classList.remove("hidden", "bg-rose-50", "border-rose-200", "text-rose-600", "bg-emerald-50", "border-emerald-200", "text-primary");
             if (type === 'error') feedbackDiv.classList.add("bg-rose-50", "border-rose-200", "text-rose-600");
-            else if (type === 'success') feedbackDiv.classList.add("bg-emerald-50", "border-emerald-200", "text-emerald-600");
+            else if (type === 'success') feedbackDiv.classList.add("bg-emerald-50", "border-emerald-200", "text-primary");
         }
 
         function masquerMessage() {
