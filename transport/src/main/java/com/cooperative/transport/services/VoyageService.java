@@ -6,6 +6,7 @@ import com.cooperative.transport.repositories.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +40,10 @@ public class VoyageService {
 
     public List<Voyages> findAllVoyages() {
         return voyageRepository.findAllCatalogueVoyage();
+    }
+
+    public Page<Voyages> findPaginated(Pageable pageable) {
+        return voyageRepository.findAll(pageable);
     }
 
     public List<Trajets> findAllTrajets() {
@@ -83,7 +88,7 @@ public class VoyageService {
 
         Optional<Trajets> trajetOptional = trajetRepository.findById(voyageDTO.getIdTrajet());
 
-        if(trajetOptional.isEmpty()) {
+        if (trajetOptional.isEmpty()) {
             throw new Exception("Trajet T-00" + voyageDTO.getIdTrajet() + " introuvable");
         }
 
@@ -91,7 +96,7 @@ public class VoyageService {
         nouveauVoyage.setTrajet(trajet);
 
         Optional<Vehicules> vehiculeOptional = vehiculeRepository.findById(voyageDTO.getIdVehicule());
-        if(vehiculeOptional.isEmpty()) {
+        if (vehiculeOptional.isEmpty()) {
             throw new Exception("Véhicule V-00" + voyageDTO.getIdVehicule() + " introuvable");
         }
 
@@ -99,7 +104,7 @@ public class VoyageService {
         nouveauVoyage.setVehicule(vehicule);
 
         Optional<Utilisateurs> chauffeurOptional = utilisateurRepository.findById(voyageDTO.getIdChauffeur());
-        if(chauffeurOptional.isEmpty()) {
+        if (chauffeurOptional.isEmpty()) {
             throw new Exception("Chauffeur introuvable");
         }
 
@@ -107,7 +112,7 @@ public class VoyageService {
         nouveauVoyage.setChauffeur(chauffeur);
 
         Optional<StatutVoyage> statutVoyageOptional = statutVoyageRepository.findByLibelle("Plannifié");
-        if(statutVoyageOptional.isEmpty()) {
+        if (statutVoyageOptional.isEmpty()) {
             throw new Exception("Le statut 'Plannifié' n'existe pas");
         }
 
@@ -132,7 +137,7 @@ public class VoyageService {
         nouveauVoyageStatut.setVoyage(voyageEnregistre);
 
         statutVoyageOptional = statutVoyageRepository.findByLibelle("Plannifié");
-        if(statutVoyageOptional.isEmpty()) {
+        if (statutVoyageOptional.isEmpty()) {
             throw new Exception("Le statut 'Plannifié' n'existe pas");
         }
 
@@ -142,7 +147,6 @@ public class VoyageService {
         nouveauVoyageStatut.setDateModification(LocalDateTime.now());
         voyageStatutRepository.save(nouveauVoyageStatut);
     }
-
 
     public List<VoyageListDTO> getVoyagesByChauffeur(Integer chauffeurId) {
         List<Voyages> voyages = voyageRepository.findByChauffeurId(chauffeurId);
@@ -250,7 +254,8 @@ public class VoyageService {
         return dto;
     }
 
-    public List<VoyageDisponibleDTO> getVoyagesDisponibles(LocalDate date1, LocalDate date2, Integer nbPlaces, String villeDepart, String villeArrivee) {
+    public List<VoyageDisponibleDTO> getVoyagesDisponibles(LocalDate date1, LocalDate date2, Integer nbPlaces,
+            String villeDepart, String villeArrivee) {
         return voyageRepository.findByDateBetweenAndVilleAndNbPlaces(date1, date2, villeDepart, villeArrivee, nbPlaces);
     }
 

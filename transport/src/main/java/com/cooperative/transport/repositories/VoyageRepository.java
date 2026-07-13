@@ -31,89 +31,90 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
     List<Voyages> findAllCatalogueVoyage();
 
     @Query(value = "SELECT v.* FROM voyages v WHERE v.date_heure_depart >= NOW()" +
-        " AND v.id_trajet = :idTrajet AND v.id_statut_actuel = (" +
-        " SELECT s.id FROM statut_voyage s WHERE s.libelle = 'Plannifié')"
-        , nativeQuery = true)
+            " AND v.id_trajet = :idTrajet AND v.id_statut_actuel = (" +
+            " SELECT s.id FROM statut_voyage s WHERE s.libelle = 'Plannifié')", nativeQuery = true)
     List<Voyages> findAllVoyagePrevusByTrajet(@Param("idTrajet") Integer idTrajet);
 
     List<Voyages> findByChauffeur(Utilisateurs chauffeur);
+
     List<Voyages> findByChauffeurId(Integer chauffeurId);
 
     @Query("SELECT v FROM Voyages v WHERE v.chauffeur.id = :chauffeurId AND v.dateHeureDepart >= :date")
     List<Voyages> findByChauffeurIdAndDateHeureDepartAfter(@Param("chauffeurId") Integer chauffeurId,
-                                                         @Param("date") LocalDateTime date);
+            @Param("date") LocalDateTime date);
 
     @Query("SELECT v FROM Voyages v WHERE v.trajet = :trajet AND v.dateHeureDepart = :dateHeureDepart AND v.vehicule.categorie.libelle = :categorie")
-    public Optional<Voyages> findByTrajetAndDateHeureDepartAndCategorie(Trajets trajet, LocalDateTime dateHeureDepart, String categorie);
+    public Optional<Voyages> findByTrajetAndDateHeureDepartAndCategorie(Trajets trajet, LocalDateTime dateHeureDepart,
+            String categorie);
 
     @Query(value = """
-        SELECT
-            v.id                                                                                    AS id,
-            v.date_heure_depart::DATE                                                               AS dateDepart,
-            TO_CHAR(v.date_heure_depart, 'HH24:MI')                                                 AS heureDepart,
-            TO_CHAR(v.date_heure_depart + v.duree_estimee_minutes * INTERVAL '1 minute', 'HH24:MI') AS heureArrivee,
-            g_dep.nom                                                                               AS gareDepart,
-            g_arr.nom                                                                               AS gareArrivee,
-            v.duree_estimee_minutes                                                                 AS duree,
-            t.distance_km                                                                           AS distance,
-            vh.immatriculation                                                                      AS immatriculationVehicule,
-            vh.modele                                                                               AS modeleVehicule,
-            cat.libelle                                                                             AS categorieVehicule,
-            v.tarif,
-            COUNT(DISTINCT p.id)                                                                    AS nbPlacesTotales,
-            COUNT(DISTINCT p.id) - COUNT(DISTINCT rf.id)                                            AS nbPlacesDisponibles
+            SELECT
+                v.id                                                                                    AS id,
+                v.date_heure_depart::DATE                                                               AS dateDepart,
+                TO_CHAR(v.date_heure_depart, 'HH24:MI')                                                 AS heureDepart,
+                TO_CHAR(v.date_heure_depart + v.duree_estimee_minutes * INTERVAL '1 minute', 'HH24:MI') AS heureArrivee,
+                g_dep.nom                                                                               AS gareDepart,
+                g_arr.nom                                                                               AS gareArrivee,
+                v.duree_estimee_minutes                                                                 AS duree,
+                t.distance_km                                                                           AS distance,
+                vh.immatriculation                                                                      AS immatriculationVehicule,
+                vh.modele                                                                               AS modeleVehicule,
+                cat.libelle                                                                             AS categorieVehicule,
+                v.tarif,
+                COUNT(DISTINCT p.id)                                                                    AS nbPlacesTotales,
+                COUNT(DISTINCT p.id) - COUNT(DISTINCT rf.id)                                            AS nbPlacesDisponibles
 
-        FROM voyages v
+            FROM voyages v
 
-        JOIN trajets t
-            ON t.id = v.id_trajet
+            JOIN trajets t
+                ON t.id = v.id_trajet
 
-        JOIN gares g_dep
-            ON g_dep.id = t.id_gare_depart
+            JOIN gares g_dep
+                ON g_dep.id = t.id_gare_depart
 
-        JOIN gares g_arr
-            ON g_arr.id = t.id_gare_arrivee
+            JOIN gares g_arr
+                ON g_arr.id = t.id_gare_arrivee
 
-        JOIN vehicules vh
-            ON vh.id = v.id_vehicule
+            JOIN vehicules vh
+                ON vh.id = v.id_vehicule
 
-        JOIN categorie_vehicule cat
-            ON cat.id = vh.id_categorie
+            JOIN categorie_vehicule cat
+                ON cat.id = vh.id_categorie
 
-        LEFT JOIN places p
-            ON p.id_vehicule = vh.id
+            LEFT JOIN places p
+                ON p.id_vehicule = vh.id
 
-        LEFT JOIN reservations_mere rm
-            ON rm.id_voyage = v.id
+            LEFT JOIN reservations_mere rm
+                ON rm.id_voyage = v.id
 
-        LEFT JOIN reservations_fille rf
-            ON rf.id_reservation_mere = rm.id
-           AND rf.id_place = p.id
+            LEFT JOIN reservations_fille rf
+                ON rf.id_reservation_mere = rm.id
+               AND rf.id_place = p.id
 
-        WHERE v.date_heure_depart::DATE
-              BETWEEN :date1
-              AND :date2
+            WHERE v.date_heure_depart::DATE
+                  BETWEEN :date1
+                  AND :date2
 
-          AND g_dep.ville = :villeDepart
+              AND g_dep.ville = :villeDepart
 
-          AND g_arr.ville = :villeArrivee
+              AND g_arr.ville = :villeArrivee
 
-        GROUP BY
-            v.id,
-            v.date_heure_depart,
-            g_dep.nom,
-            g_arr.nom,
-            v.duree_estimee_minutes,
-            t.distance_km,
-            vh.immatriculation,
-            vh.modele,
-            cat.libelle,
-            v.tarif
+            GROUP BY
+                v.id,
+                v.date_heure_depart,
+                g_dep.nom,
+                g_arr.nom,
+                v.duree_estimee_minutes,
+                t.distance_km,
+                vh.immatriculation,
+                vh.modele,
+                cat.libelle,
+                v.tarif
 
-        HAVING COUNT(DISTINCT p.id) - COUNT(DISTINCT rf.id) >= :nbPlaces
+            HAVING COUNT(DISTINCT p.id) - COUNT(DISTINCT rf.id) >= :nbPlaces
 
-        ORDER BY v.date_heure_depart ASC
-        """, nativeQuery = true)
+            ORDER BY v.date_heure_depart ASC
+            """, nativeQuery = true)
 
     List<VoyageDisponibleDTO> findByDateBetweenAndVilleAndNbPlaces(
 
@@ -125,15 +126,14 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
 
             @Param("villeArrivee") String villeArrivee,
 
-            @Param("nbPlaces") Integer nbPlaces
-    );
+            @Param("nbPlaces") Integer nbPlaces);
 
     boolean existsByTrajetId(Integer trajetId);
-    
+
     @Query(value = "SELECT COALESCE(SUM(carburant), 0) FROM voyages " +
        "WHERE id_statut_actuel = 3 " +
        "AND EXTRACT(MONTH FROM date_heure_depart + (duree_estimee_minutes || ' minutes')::INTERVAL) = :mois "+
-       "AND EXTRACT(YEAR FROM date_heure_depart + (duree_estimee_minutes || ' minutes')::INTERVAL) =:annee", 
+       "AND EXTRACT(YEAR FROM date_heure_depart + (duree_estimee_minutes || ' minutes')::INTERVAL) =:annee",
        nativeQuery = true)
     BigDecimal getCarburantparMois(@Param("mois") int mois, @Param("annee") int annee);
 
