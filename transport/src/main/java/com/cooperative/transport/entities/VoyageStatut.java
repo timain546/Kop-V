@@ -13,7 +13,7 @@ import jakarta.persistence.FetchType;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "voyage_statut")
@@ -34,5 +34,5 @@ public class VoyageStatut {
     private StatutVoyage statut;
 
     @Column(name = "date_modification")
-    private LocalDate dateModification;
+    private LocalDateTime dateModification;
 }

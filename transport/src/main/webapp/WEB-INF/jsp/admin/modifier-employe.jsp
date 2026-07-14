@@ -94,5 +94,5 @@
     </div>
 </body>
 
- <script src="../assets/js/ajouter-employe.js"></script>
+ <script src="${pageContext.request.contextPath}/assets/js/ajouter-employe.js"></script>
 </html>

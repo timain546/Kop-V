@@ -17,7 +17,7 @@ import com.cooperative.transport.entities.Role;
 import com.cooperative.transport.entities.Salaires;
 import com.cooperative.transport.entities.StatutEmploye;
 import com.cooperative.transport.entities.Utilisateurs;
-import com.cooperative.transport.services.ContratService;
+import com.cooperative.transport.services.ContratEmployeService;
 import com.cooperative.transport.services.EmployeStatutService;
 import com.cooperative.transport.services.EmployesService;
 import com.cooperative.transport.services.RoleService;
@@ -39,8 +39,8 @@ public class EmployesController {
     @Autowired
     private StatutEmployeService statutEmployeService;
     @Autowired
-    private ContratService contratService;
-    
+    private ContratEmployeService contratService;
+
 
     @GetMapping("/employes/test-simple")
     @ResponseBody
@@ -50,32 +50,40 @@ public class EmployesController {
     }
 
     @GetMapping("/employes/list")
-    public String getListeEmployes(Model model) {
-        List<Object[]> employes = employesService.findEmp();
-        List<String> statut = new ArrayList<>();
-        
-        for (Object[] row : employes) {
-            Utilisateurs employe = (Utilisateurs) row[0];
-            Integer statutId = employeStatutService.findIdbyIdemp(employe.getId());
-            
-            // Sécurisation contre le Null ID
-            if (statutId == null) {
-                System.out.println("Aucun ID de statut pour l'employé " + employe.getNom());
-                statut.add("Inconnu / Aucun");
-            } else {
-                StatutEmploye statutList = statutEmployeService.findStatutById(statutId);
-                if (statutList != null) {
-                    System.out.println("Statut pour l'employé " + employe.getNom() + ": " + statutList.getLibelle());
-                    statut.add(statutList.getLibelle());
-                } else {
-                    statut.add("Statut introuvable");
-                }
-            }
+public String getListeEmployes(
+        @RequestParam(required = false) String nom,
+        @RequestParam(required = false) String prenom,
+        @RequestParam(required = false) String email,
+        @RequestParam(required = false) Double salaireMin,
+        @RequestParam(required = false) Double salaireMax,
+        Model model) {
+
+    List<Object[]> employes = employesService.findwithcritere(nom, prenom, email, salaireMin, salaireMax);
+
+    List<String> statut = new ArrayList<>();
+
+    for (Object[] row : employes) {
+        Utilisateurs employe = (Utilisateurs) row[0];
+        Integer statutId = employeStatutService.findIdbyIdemp(employe.getId());
+
+        if (statutId == null) {
+            statut.add("Inconnu / Aucun");
+        } else {
+            StatutEmploye statutList = statutEmployeService.findStatutById(statutId);
+            statut.add(statutList != null ? statutList.getLibelle() : "Statut introuvable");
         }
-        model.addAttribute("statut", statut);
-        model.addAttribute("listeEmployes", employes);
-        return "admin/list-employes";
     }
+
+    model.addAttribute("nomRecherche", nom);
+    model.addAttribute("prenomRecherche", prenom);
+    model.addAttribute("emailRecherche", email);
+    model.addAttribute("salaireMinRecherche", salaireMin);
+    model.addAttribute("salaireMaxRecherche", salaireMax);
+    model.addAttribute("statut", statut);
+    model.addAttribute("listeEmployes", employes);
+
+    return "admin/list-employes";
+}
 
     @PostMapping("/employes/modifier")
     public String modifierEmploye(@RequestParam("id") Integer id, @RequestParam("role") String role, Model model) {
@@ -137,7 +145,7 @@ public class EmployesController {
         employe.setRole(role);
         employesService.updateEmploye(employe);
 
-        return "redirect:/employes/list";
+        return "redirect:/admin/employes/list";
     }
 
     @PostMapping("/employes/supprimerEmploye")
@@ -150,7 +158,7 @@ public class EmployesController {
       employeStatut.setEmploye(employesService.findEmpById(id));
       employeStatut.setStatutEmploye(statutEmployeService.findStatutById(2));
       employeStatutService.updateEmployeStatut(employeStatut);
-      return "redirect:/employes/list";
+      return "redirect:/admin/employes/list";
     }
     @GetMapping("/employes/form")
     public String afficherFormulaire(Model model) {
@@ -190,7 +198,7 @@ public class EmployesController {
         employeStatut.setStatutEmploye(statutEmployeService.findStatutById(1));
         employeStatut.setDateModification(dateEmbauche);
         employeStatutService.updateEmployeStatut(employeStatut);
-        return "redirect:/employes/list";
+        return "redirect:/admin/employes/list";
     }
     @PostMapping("/employes/reembaucher")
     public String reembaucherEmploye(@RequestParam("id") Integer id) {
@@ -206,7 +214,7 @@ public class EmployesController {
         employeStatut.setDateModification(new java.sql.Date(System.currentTimeMillis()));
         employeStatutService.updateEmployeStatut(employeStatut);
 
-        return "redirect:/employes/list";
+        return "redirect:/admin/employes/list";
     }
 
 }

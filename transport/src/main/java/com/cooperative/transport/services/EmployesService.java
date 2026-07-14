@@ -22,4 +22,7 @@ public class EmployesService {
     public void updateEmploye(Utilisateurs employe) {
         utilisateurRepository.save(employe);
     }
+    public List<Object[]> findwithcritere(String nom, String prenom, String email, Double salaireMin, Double salaireMax) {
+        return utilisateurRepository.findwithcritere(nom, prenom, email, salaireMin, salaireMax);
+    }
 }

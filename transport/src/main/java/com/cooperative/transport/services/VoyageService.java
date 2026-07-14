@@ -64,7 +64,7 @@ public class VoyageService {
         voyagestatut.setId(null);
         voyagestatut.setVoyage(voyage);
         voyagestatut.setStatut(statutAnnule);
-        voyagestatut.setDateModification(LocalDate.now());
+        voyagestatut.setDateModification(LocalDateTime.now());
 
         voyageStatutRepository.save(voyagestatut);
     }
@@ -143,7 +143,7 @@ public class VoyageService {
         statutVoyage = statutVoyageOptional.get();
 
         nouveauVoyageStatut.setStatut(statutVoyage);
-        nouveauVoyageStatut.setDateModification(LocalDate.now());
+        nouveauVoyageStatut.setDateModification(LocalDateTime.now());
         voyageStatutRepository.save(nouveauVoyageStatut);
     }
 
@@ -163,11 +163,10 @@ public class VoyageService {
     }
 
     public List<VoyageListDTO> getVoyagesByChauffeurAndStatut(Integer chauffeurId, String statut) {
-        List<Voyages> voyages = voyageRepository.findByChauffeurId(chauffeurId);
+        List<Voyages> voyages = voyageRepository.findAllVoyagesByChauffeurIdAndStatut(chauffeurId, statut);
         return voyages.stream()
-                .map(this::mapToVoyageListDTO)
-                .filter(dto -> statut.equalsIgnoreCase(dto.getStatutLibelle()))
-                .collect(Collectors.toList());
+                        .map(this::mapToVoyageListDTO)
+                        .collect(Collectors.toList());
     }
 
     public List<VoyageListDTO> getActiveVoyagesByChauffeur(Integer chauffeurId) {
@@ -192,7 +191,7 @@ public class VoyageService {
             VoyageStatut voyageStatut = new VoyageStatut();
             voyageStatut.setVoyage(voyageOpt.get());
             voyageStatut.setStatut(statutTermineOpt.get());
-            voyageStatut.setDateModification(LocalDate.now());
+            voyageStatut.setDateModification(LocalDateTime.now());
             voyageStatutRepository.save(voyageStatut);
         }
 
@@ -210,7 +209,7 @@ public class VoyageService {
             VoyageStatut voyageStatut = new VoyageStatut();
             voyageStatut.setVoyage(voyageOpt.get());
             voyageStatut.setStatut(statutPanneOpt.get());
-            voyageStatut.setDateModification(LocalDate.now());
+            voyageStatut.setDateModification(LocalDateTime.now());
             voyageStatutRepository.save(voyageStatut);
         }
 
@@ -246,9 +245,9 @@ public class VoyageService {
             }
         }
 
-        Optional<VoyageStatut> latestStatut = voyageStatutRepository.findLatestByVoyageId(voyage.getId());
-        if (latestStatut.isPresent() && latestStatut.get().getStatut() != null) {
-            dto.setStatutLibelle(latestStatut.get().getStatut().getLibelle());
+        StatutVoyage latestStatut = voyage.getStatutActuel();
+        if (latestStatut != null) {
+            dto.setStatutLibelle(latestStatut.getLibelle());
         }
 
         return dto;
@@ -257,5 +256,9 @@ public class VoyageService {
     public List<VoyageDisponibleDTO> getVoyagesDisponibles(LocalDate date1, LocalDate date2, Integer nbPlaces,
             String villeDepart, String villeArrivee) {
         return voyageRepository.findByDateBetweenAndVilleAndNbPlaces(date1, date2, villeDepart, villeArrivee, nbPlaces);
+    }
+
+    public List<StatutVoyage> findAllStatutVoyage() {
+        return statutVoyageRepository.findAll();
     }
 }

@@ -20,4 +20,7 @@ public interface PaiementRepository extends JpaRepository<Paiements, Integer> {
     public Optional<BigDecimal> getPaiementTotal(ReservationsMere reservation);
 
     public List<Paiements> findByReservation(ReservationsMere reservation);
+
+    @Query("SELECT COALESCE(SUM(p.montant), 0) FROM Paiements p WHERE year(p.datePaiement) = :year AND month(p.datePaiement) = :month")
+    BigDecimal getTotalPaiementsParMois(int month,int year);
 }

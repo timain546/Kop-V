@@ -81,14 +81,21 @@ public class ReservationController {
 
     @GetMapping("/guichet/reservation/new")
     public String newIndex(HttpSession session, Model model) {
+        InfoNewReservationDTO info = getInfoNewReservation(session);
+        if (info == null) {
+            info = new InfoNewReservationDTO();
+        }
+
         List<Gares> gares = gareRepository.findAll();
         model.addAttribute("gares", gares);
+
+        model.addAttribute("info", info);
 
         return "guichet/new-reservation";
     }
 
     @PostMapping("/guichet/reservation/new")
-    public String newIndex(HttpSession session, @ModelAttribute InfoNewReservationDTO info) {
+    public String postNewIndex(HttpSession session, @ModelAttribute InfoNewReservationDTO info) {
         session.setAttribute("infoNewReservation", info);
 
         return "redirect:/guichet/reservation/new/choix-voyage";
@@ -119,6 +126,7 @@ public class ReservationController {
             return "redirect:/guichet/reservation/new";
         }
 
+        voyage.getVehicule().getCategorie().getLibelle();
         info.setVoyage(voyage);
 
         return "redirect:/guichet/reservation/new/choix-place";
@@ -315,7 +323,7 @@ public class ReservationController {
     @PostMapping("/guichet/reservation/import-excel")
     public String postImportExcel(@RequestParam("file") MultipartFile file, Model model) {
         try {
-            List<ReservationsMere> reservations = reservationService.importReservationsFromExcel(file);
+            List<ReservationDTO> reservations = reservationService.importReservationsFromExcel(file);
             model.addAttribute("reservations", reservations);
         } catch (Exception e) {
             model.addAttribute("erreur", e.getMessage());

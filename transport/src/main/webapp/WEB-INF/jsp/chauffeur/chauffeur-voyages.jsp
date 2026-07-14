@@ -1,6 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<%@ page import="java.util.List" %>
+<%@ page import="com.cooperative.transport.entities.StatutVoyage" %>
+
+<%
+    List<StatutVoyage> statuts = (List<StatutVoyage>) request.getAttribute("listeStatuts");
+%>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -26,8 +34,8 @@
                 <a class="nav-link active" href="/chauffeur/voyages">
                     <i class="fas fa-route"></i> Mes voyages
                 </a>
-                <a class="nav-link" href="/chauffeur/signaler-panne">
-                    <i class="fas fa-exclamation-triangle"></i> Signaler panne
+                <a class="nav-link" href="/logout">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
                 </a>
             </div>
         </div>
@@ -41,11 +49,6 @@
                 <h1>Liste de vos voyages</h1>
                 <p class="header-subtitle">Consultez, filtrez et gérez tous vos voyages.</p>
             </div>
-            <div class="header-actions">
-                <a href="/chauffeur/signaler-panne" class="btn btn-danger">
-                    <i class="fas fa-exclamation-triangle"></i> Signaler une panne
-                </a>
-            </div>
         </div>
 
         <!-- Filters row -->
@@ -54,18 +57,32 @@
                 <a href="/chauffeur/voyages" class="filter-tab-v ${empty statut ? 'active' : ''}">
                     <i class="fas fa-list"></i> Tous
                 </a>
-                <a href="/chauffeur/voyages?statut=en_cours" class="filter-tab-v ${statut == 'en_cours' ? 'active' : ''}">
-                    <i class="fas fa-spinner"></i> En cours
-                </a>
-                <a href="/chauffeur/voyages?statut=a_venir" class="filter-tab-v ${statut == 'a_venir' ? 'active' : ''}">
-                    <i class="fas fa-clock"></i> À venir
-                </a>
-                <a href="/chauffeur/voyages?statut=terminé" class="filter-tab-v ${statut == 'terminé' ? 'active' : ''}">
-                    <i class="fas fa-check-circle"></i> Arrivés
-                </a>
-                <a href="/chauffeur/voyages?statut=en_panne" class="filter-tab-v ${statut == 'en_panne' ? 'active' : ''}">
-                    <i class="fas fa-exclamation-circle"></i> En panne
-                </a>
+                <%
+                    if(statuts != null) {
+                        for(StatutVoyage s : statuts) {
+                            String libelleStatut = s.getLibelle();
+                            request.setAttribute("currentLibelle", libelleStatut);
+                %>
+                    <a href="/chauffeur/voyages?statut=<%= libelleStatut %>" class="filter-tab-v ${statut == currentLibelle ? 'active' : ''}">
+                        
+                        <% if(libelleStatut.equalsIgnoreCase("En cours")) { %>
+                            <i class="fas fa-spinner"></i>
+                        <% } else if(libelleStatut.equalsIgnoreCase("Plannifié")) { %>
+                            <i class="fas fa-clock"></i>
+                        <% } else if(libelleStatut.equalsIgnoreCase("Terminé")) { %>
+                            <i class="fas fa-check-circle"></i>
+                        <% } else if(libelleStatut.equalsIgnoreCase("En panne")) { %>
+                            <i class="fas fa-exclamation-circle"></i>
+                        <% } else if(libelleStatut.equalsIgnoreCase("Annulé")) { %>
+                            <i class="fas fa-times-circle"></i>
+                        <% } %> 
+                        <%= libelleStatut %>
+                    </a>
+                <% 
+                        }
+                    } 
+                %>
+
             </div>
             <form class="search-form" action="/chauffeur/voyages" method="get">
                 <c:if test="${not empty statut}">
@@ -124,7 +141,7 @@
                                         <strong>Voyage #${voyage.id}</strong>
                                     </c:otherwise>
                                 </c:choose>
-                                <span class="voyage-id-tag">T-${voyage.id}</span>
+                                <span class="voyage-id-tag">V-00${voyage.id}</span>
                             </div>
                             <div class="route-details">
                                 <span>
@@ -168,28 +185,35 @@
                             <fmt:formatNumber value="${voyage.tarif}" type="number" maxFractionDigits="0" /> Ar
                         </div>
 
-                        <!-- Status + Actions -->
                         <div class="row-status-actions">
                             <c:choose>
-                                <c:when test="${voyage.statutLibelle == 'en cours'}">
+                                <c:when test="${voyage.statutLibelle == 'En cours'}">
                                     <span class="status-badge status-en-cours"><i class="fas fa-circle"></i> En cours</span>
                                     <div class="row-actions">
                                         <button class="btn btn-success btn-sm" onclick="signalerArrivee(${voyage.id})">
                                             <i class="fas fa-flag-checkered"></i> Arrivée
                                         </button>
-                                        <a href="/chauffeur/signaler-panne?voyageId=${voyage.id}" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-tools"></i> Panne
-                                        </a>
+                                        <button class="btn btn-danger btn-sm" onclick="signalerPanne(${voyage.id})">
+                                            <i class="fas fa-exclamation-triangle"></i> Panne
+                                        </button>
                                     </div>
                                 </c:when>
-                                <c:when test="${voyage.statutLibelle == 'terminé'}">
-                                    <span class="status-badge status-termine"><i class="fas fa-check-circle"></i> Arrivé</span>
+                                <c:when test="${voyage.statutLibelle == 'Terminé'}">
+                                    <span class="status-badge status-termine"><i class="fas fa-check-circle"></i> Terminé</span>
                                 </c:when>
-                                <c:when test="${voyage.statutLibelle == 'en panne'}">
+                                <c:when test="${voyage.statutLibelle == 'En panne'}">
                                     <span class="status-badge status-panne"><i class="fas fa-exclamation-circle"></i> En panne</span>
+                                    <div class="row-actions">
+                                        <button class="btn btn-orange btn-sm" onclick="terminerReparation(${voyage.id})">
+                                            <i class="fas fa-tools"></i> Résolu
+                                        </button>
+                                    </div>
+                                </c:when>
+                                <c:when test="${voyage.statutLibelle == 'Plannifié'}">
+                                    <span class="status-badge status-plannifie"><i class="fas fa-clock"></i> Plannifié</span>
                                 </c:when>
                                 <c:otherwise>
-                                    <span class="status-badge status-a-venir"><i class="fas fa-clock"></i> À venir</span>
+                                    <span class="status-badge status-annule"><i class="fas fa-times-circle"></i> Annulé</span>
                                 </c:otherwise>
                             </c:choose>
                         </div>
@@ -209,26 +233,46 @@
         </div>
     </div>
 
+    <!-- Scripts JavaScript mis à jour -->
     <script>
         function signalerArrivee(voyageId) {
             if (confirm("Confirmer l'arrivée à destination ?")) {
-                fetch('/api/chauffeur/voyages/' + voyageId + '/arrivee', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Chauffeur-Id': '${chauffeurId}'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Success toast
-                    showToast('Arrivée signalée avec succès !', 'success');
-                    setTimeout(() => location.reload(), 1200);
-                })
-                .catch(error => {
-                    showToast('Erreur lors du signalement', 'error');
-                });
+                executerAction(voyageId, 'arrivee', 'Arrivée signalée avec succès !');
             }
+        }
+
+        function signalerPanne(voyageId) {
+            if (confirm("Signaler que ce véhicule est en panne sur ce trajet ?")) {
+                executerAction(voyageId, 'panne', 'Panne signalée avec succès.');
+            }
+        }
+
+        function terminerReparation(voyageId) {
+            if (confirm("Confirmer la fin des réparations et la reprise/clôture ?")) {
+                executerAction(voyageId, 'resolu', 'Statut mis à jour avec succès !');
+            }
+        }
+
+        // Fonction générique pour factoriser les requêtes Fetch
+        function executerAction(voyageId, endpoint, messageSucces) {
+            fetch('/api/chauffeur/voyages/' + voyageId + '/' + endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Chauffeur-Id': '${chauffeurId}'
+                }
+            })
+            .then(response => {
+                if(response.ok) {
+                    showToast(messageSucces, 'success');
+                    setTimeout(() => location.reload(), 1200);
+                } else {
+                    showToast('Erreur lors de l\'action', 'error');
+                }
+            })
+            .catch(error => {
+                showToast('Erreur de connexion réseau', 'error');
+            });
         }
 
         function showToast(message, type) {

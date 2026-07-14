@@ -77,7 +77,7 @@
             <a href="list" class="btn-retour" style="padding: 10px; margin-top: 0;">Retour a la liste</a>
         </form>
     </div>
-    <script src="../assets/js/ajouter-employe.js"></script>
+    <script src="${pagecontext.request.ContextPath}/assets/js/ajouter-employe.js"></script>
 
 </body>
 </html>

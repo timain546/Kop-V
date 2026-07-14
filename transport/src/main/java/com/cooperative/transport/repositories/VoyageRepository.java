@@ -3,7 +3,6 @@ package com.cooperative.transport.repositories;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +14,7 @@ import com.cooperative.transport.dto.VoyageDisponibleDTO;
 import com.cooperative.transport.entities.Trajets;
 import com.cooperative.transport.entities.Utilisateurs;
 import com.cooperative.transport.entities.Voyages;
+import java.math.BigDecimal;
 
 @Repository
 public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
@@ -43,8 +43,7 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
             @Param("date") LocalDateTime date);
 
     @Query("SELECT v FROM Voyages v WHERE v.trajet = :trajet AND v.dateHeureDepart = :dateHeureDepart AND v.vehicule.categorie.libelle = :categorie")
-    public Optional<Voyages> findByTrajetAndDateHeureDepartAndCategorie(Trajets trajet, LocalDateTime dateHeureDepart,
-            String categorie);
+    public List<Voyages> findByTrajetAndDateHeureDepartAndCategorie(Trajets trajet, LocalDateTime dateHeureDepart, String categorie);
 
     @Query(value = """
             SELECT
@@ -98,6 +97,8 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
 
               AND g_arr.ville = :villeArrivee
 
+              AND v.id_statut_actuel = (SELECT s.id FROM statut_voyage s WHERE s.libelle = 'Plannifié')
+
             GROUP BY
                 v.id,
                 v.date_heure_depart,
@@ -129,4 +130,22 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
 
     boolean existsByTrajetId(Integer trajetId);
 
+    @Query(value = "SELECT COALESCE(SUM(carburant), 0) FROM voyages " +
+       "WHERE id_statut_actuel = 3 " +
+       "AND EXTRACT(MONTH FROM date_heure_depart + (duree_estimee_minutes || ' minutes')::INTERVAL) = :mois "+
+       "AND EXTRACT(YEAR FROM date_heure_depart + (duree_estimee_minutes || ' minutes')::INTERVAL) =:annee",
+       nativeQuery = true)
+    BigDecimal getCarburantparMois(@Param("mois") int mois, @Param("annee") int annee);
+
+    @EntityGraph(attributePaths = {
+        "trajet",
+        "trajet.gareDepart",
+        "trajet.gareArrivee",
+        "vehicule",
+        "vehicule.categorie",
+        "chauffeur",
+        "statutActuel"
+    })
+    @Query("SELECT v FROM Voyages v WHERE v.chauffeur.id = :chauffeurId AND v.statutActuel.libelle = :statut")
+    List<Voyages> findAllVoyagesByChauffeurIdAndStatut(Integer chauffeurId, String statut);
 }

@@ -6,6 +6,18 @@
 <%
     List<Object[]> employes = (List<Object[]>) request.getAttribute("listeEmployes");
     List<String> statut = (List<String>) request.getAttribute("statut");
+
+     String nomRecherche = (String) request.getAttribute("nomRecherche");
+    String prenomRecherche = (String) request.getAttribute("prenomRecherche");
+    String emailRecherche = (String) request.getAttribute("emailRecherche");
+    Double salaireMinRecherche = (Double) request.getAttribute("salaireMinRecherche");
+    Double salaireMaxRecherche = (Double) request.getAttribute("salaireMaxRecherche");
+
+    if (nomRecherche == null) nomRecherche = "";
+    if (prenomRecherche == null) prenomRecherche = "";
+    if (emailRecherche == null) emailRecherche = "";
+    if (salaireMinRecherche == null) salaireMinRecherche = null;
+    if (salaireMaxRecherche == null) salaireMaxRecherche = null;
 %>
 
 <!DOCTYPE html>
@@ -14,7 +26,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Employes</title>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/list-employes.css"><body>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/list-employes.css">
+<body>
     <div class="container">
         <div class="header">
             <h1>Liste des employes</h1>
@@ -25,6 +38,39 @@
                 <a href="form" class="btn-ajouter">Ajouter un employe</a>
             </div>
         </div>
+
+          
+<div class="search-container">
+    <form action="list" method="get" style="display: contents; width: 100%;">
+     <div class="search-title">
+            <h3>Rechercher par :</h3>
+    </div>
+        <div class="search-group">
+            <label for="searchNom">Nom</label>
+            <input type="text" id="searchNom" name="nom"  value="<%= nomRecherche %>">
+        </div>
+        <div class="search-group">
+            <label for="searchPrenom">Prénom</label>
+            <input type="text" id="searchPrenom" name="prenom" value="<%= prenomRecherche %>">
+        </div>
+        <div class="search-group">
+            <label for="searchEmail">Email</label>
+            <input type="text" id="searchEmail" name="email"value="<%= emailRecherche %>">
+        </div>
+        <div class="search-group">
+            <label for="searchSalaireMin">Salaire Minimum</label>
+            <input type="number" id="searchSalaireMin" name="salaireMin" ="Min" value="<%= salaireMinRecherche != null ? salaireMinRecherche : "" %>">
+        </div>
+        <div class="search-group">
+            <label for="searchSalaireMax">Salaire Maximum</label>
+            <input type="number" id="searchSalaireMax" name="salaireMax" ="Max" value="<%= salaireMaxRecherche != null ? salaireMaxRecherche : "" %>">
+        </div>
+        <div class="search-actions">
+            <button type="submit" class="btn-search">Rechercher</button>
+            <a href="list" class="btn-reset">Réinitialiser</a>
+        </div>
+    </form>
+</div>
 
         <div class="table-wrapper">
             <table>

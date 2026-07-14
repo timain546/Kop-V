@@ -2,12 +2,14 @@ package com.cooperative.transport.controllers;
 
 import com.cooperative.transport.dto.PanneDTO;
 import com.cooperative.transport.dto.VoyageListDTO;
+import com.cooperative.transport.entities.StatutVoyage;
 import com.cooperative.transport.entities.MotifPanne;
 import com.cooperative.transport.entities.Utilisateurs;
 import com.cooperative.transport.repositories.MotifPanneRepository;
-import com.cooperative.transport.repositories.UtilisateurRepository;
 import com.cooperative.transport.services.PanneService;
 import com.cooperative.transport.services.VoyageService;
+
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/chauffeur")
@@ -25,42 +27,38 @@ public class ChauffeurController {
 
     private final VoyageService voyageService;
     private final PanneService panneService;
-    private final UtilisateurRepository utilisateurRepository;
     private final MotifPanneRepository motifPanneRepository;
 
-    // ID du chauffeur de démonstration (Rakoto Jean, id=2 d'après les données d'insertion)
-    private static final Integer DEMO_CHAUFFEUR_ID = 2;
-
     @GetMapping("/dashboard")
-    public String dashboard(Model model) {
-        List<VoyageListDTO> allVoyages = voyageService.getVoyagesByChauffeur(DEMO_CHAUFFEUR_ID);
-        List<VoyageListDTO> upcomingVoyages = voyageService.getUpcomingVoyagesByChauffeur(DEMO_CHAUFFEUR_ID);
-        List<PanneDTO> recentPannes = panneService.getPannesByChauffeur(DEMO_CHAUFFEUR_ID);
-        Optional<Utilisateurs> chauffeurOpt = utilisateurRepository.findById(DEMO_CHAUFFEUR_ID);
+    public String dashboard(HttpSession session, Model model) {
+        Utilisateurs chauffeur = (Utilisateurs) session.getAttribute("utilisateur");
+
+        List<VoyageListDTO> allVoyages = voyageService.getVoyagesByChauffeur(chauffeur.getId());
+        List<VoyageListDTO> upcomingVoyages = voyageService.getUpcomingVoyagesByChauffeur(chauffeur.getId());
+        List<PanneDTO> recentPannes = panneService.getPannesByChauffeur(chauffeur.getId());
 
         model.addAttribute("allVoyages", allVoyages);
         model.addAttribute("upcomingVoyages", upcomingVoyages);
         model.addAttribute("recentPannes", recentPannes);
-        model.addAttribute("chauffeurId", DEMO_CHAUFFEUR_ID);
-        chauffeurOpt.ifPresent(chauffeur -> model.addAttribute("chauffeur", chauffeur));
+        model.addAttribute("chauffeurId", chauffeur.getId());
+        model.addAttribute("chauffeur", chauffeur);
 
         return "chauffeur/chauffeur-dashboard";
     }
 
     @GetMapping("/voyages")
-    public String voyages(Model model,
+    public String voyages(HttpSession session, Model model,
                           @RequestParam(required = false) String statut,
                           @RequestParam(required = false) String search) {
-        List<VoyageListDTO> voyages;
+        List<VoyageListDTO> voyages = new ArrayList<>();
+        List<StatutVoyage> statuts = new ArrayList<>();
+
+        Utilisateurs chauffeur = (Utilisateurs) session.getAttribute("utilisateur");
 
         if (statut != null && !statut.isEmpty()) {
-            if ("a_venir".equals(statut)) {
-                voyages = voyageService.getUpcomingVoyagesByChauffeur(DEMO_CHAUFFEUR_ID);
-            } else {
-                voyages = voyageService.getVoyagesByChauffeurAndStatut(DEMO_CHAUFFEUR_ID, statut.replace("_", " "));
-            }
+            voyages = voyageService.getVoyagesByChauffeurAndStatut(chauffeur.getId(), statut);
         } else {
-            voyages = voyageService.getVoyagesByChauffeur(DEMO_CHAUFFEUR_ID);
+            voyages = voyageService.getVoyagesByChauffeur(chauffeur.getId());
         }
 
         // Apply search filter if provided
@@ -80,27 +78,30 @@ public class ChauffeurController {
                     .collect(java.util.stream.Collectors.toList());
         }
 
-        Optional<Utilisateurs> chauffeurOpt = utilisateurRepository.findById(DEMO_CHAUFFEUR_ID);
+        statuts = voyageService.findAllStatutVoyage();
+
         model.addAttribute("voyages", voyages);
+        model.addAttribute("listeStatuts", statuts);
         model.addAttribute("statut", statut);
         model.addAttribute("search", search);
-        model.addAttribute("chauffeurId", DEMO_CHAUFFEUR_ID);
-        chauffeurOpt.ifPresent(chauffeur -> model.addAttribute("chauffeur", chauffeur));
+        model.addAttribute("chauffeurId", chauffeur.getId());
+        model.addAttribute("chauffeur", chauffeur);
 
         return "chauffeur/chauffeur-voyages";
     }
 
     @GetMapping("/signaler-panne")
-    public String signalerPanneForm(Model model, @RequestParam(required = false) Integer voyageId) {
-        List<VoyageListDTO> voyages = voyageService.getActiveVoyagesByChauffeur(DEMO_CHAUFFEUR_ID);
-        Optional<Utilisateurs> chauffeurOpt = utilisateurRepository.findById(DEMO_CHAUFFEUR_ID);
+    public String signalerPanneForm(HttpSession session, Model model, @RequestParam(required = false) Integer voyageId) {
+        Utilisateurs chauffeur = (Utilisateurs) session.getAttribute("utilisateur");
+
+        List<VoyageListDTO> voyages = voyageService.getActiveVoyagesByChauffeur(chauffeur.getId());
         List<MotifPanne> motifsPanne = motifPanneRepository.findAll();
 
         model.addAttribute("voyages", voyages);
-        model.addAttribute("chauffeurId", DEMO_CHAUFFEUR_ID);
+        model.addAttribute("chauffeurId", chauffeur.getId());
         model.addAttribute("selectedVoyageId", voyageId);
         model.addAttribute("motifsPanne", motifsPanne);
-        chauffeurOpt.ifPresent(chauffeur -> model.addAttribute("chauffeur", chauffeur));
+        model.addAttribute("chauffeur", chauffeur);
 
         return "chauffeur/chauffeur-signaler-panne";
     }

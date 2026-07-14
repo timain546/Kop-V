@@ -1,5 +1,7 @@
 package com.cooperative.transport.dto;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +10,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class VoyageListDTO {
@@ -30,5 +34,10 @@ public class VoyageListDTO {
     public java.util.Date getDateHeureDepartAsDate() {
         if (dateHeureDepart == null) return null;
         return java.util.Date.from(dateHeureDepart.atZone(java.time.ZoneId.systemDefault()).toInstant());
+    }
+
+    public java.util.Date getDateHeureArriveeAsDate() {
+        if (dateHeureDepart == null) return null;
+        return java.util.Date.from(dateHeureDepart.plusMinutes(dureeEstimeeMinutes).atZone(java.time.ZoneId.systemDefault()).toInstant());
     }
 }

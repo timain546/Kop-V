@@ -334,7 +334,13 @@
         document.addEventListener("DOMContentLoaded", function() {
             // Init carte centrée sur Mada
             map = L.map('map').setView([-18.91, 47.52], 7);
-            
+            function nettoyerCalqueStatique() {
+            if (currentPolylineLayer) {
+                map.removeLayer(currentPolylineLayer);
+                currentPolylineLayer = null;
+            }
+            routeCoordinates = [];
+        }
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors'
             }).addTo(map);
@@ -358,7 +364,13 @@
                 document.getElementById("input-distance").value = "";
                 return;
             }
-
+            function nettoyerCalqueStatique() {
+            if (currentPolylineLayer) {
+                map.removeLayer(currentPolylineLayer);
+                currentPolylineLayer = null;
+            }
+            routeCoordinates = [];
+        }
             const cleRoute = idDepart + "-" + idArrivee;
             const routeTrouvee = ROUTES_PREDEFINIES[cleRoute];
 
