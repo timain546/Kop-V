@@ -79,18 +79,17 @@
     <div class="main-content">
         <div class="container">
             <div class="header">
-                <h1><i class="fas fa-users" style="color: #15803d; margin-right: 10px;"></i>Employés</h1>
+                <h1><i class="fas fa-users" style="color: #15803d; margin-right: 10px;"></i>Liste de Employés</h1>
                 <div class="header-actions">
                     <span class="total-employes">
-                        <span><%= employes != null ? employes.size() : 0 %></span>
+                        <span>Total:<%= employes != null ? employes.size() : 0 %></span>
                     </span>
                     <a href="form" class="btn-ajouter"><i class="fas fa-plus"></i></a>
                 </div>
             </div>
 
             <div class="search-container">
-                <form action="list" method="get" style="display: contents; width: 100%;">
-                    <div class="search-title">
+                <form action="list" method="get" class="search-form"><div class="search-title">
                         <i class="fas fa-search" style="color: #94a3b8;"></i>
                     </div>
                     <div class="search-group">
