@@ -260,22 +260,18 @@ select option {
     }
 }
 
-com-bitwarden-browser-action,
-[data-bitwarden-watcher] {
-    display: none !important;
-}
 
+/* Message d'erreur */
 
-/* Masque l'icône de Dashlane */
-
-div[style*="dashlane"],
-iframe[id^="dashlane"] {
-    display: none !important;
-}
-
-
-/* Masque l'icône de LastPass */
-
-div[id^="lp_"] {
-    display: none !important;
+.error-message {
+    background-color: #fee2e2;
+    border: 1px solid #ef4444;
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: #b91c1c;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+    margin-top: -8px;
 }

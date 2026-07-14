@@ -7,6 +7,7 @@
     Object[] employes = (Object[]) request.getAttribute("employe");
     System.out.println("Employé trouvé: " + (employes != null ? employes.length : "null"));
     List<Role> roles = (List<Role>) request.getAttribute("roles");
+    String errorMessage = (String) request.getAttribute("errorMessage");
 %>
 <!DOCTYPE html>
 <html lang="fr">
@@ -27,7 +28,11 @@
                 <h1>Modification de l'employe #<%= emp.getId() %></h1>
                 <p class="form-subtitle">Modifiez les informations ci-dessous</p>
             </div>
-
+           <% if (errorMessage != null) { %>
+            <div class="error-message">
+                <%= errorMessage %>
+            </div>
+            <% } %>
             <form action="miseajour" method="post" style="display: flex; flex-direction: column; gap: 10px;">
                 <div class="form-group" style="margin-bottom: 0;">
                     <label for="nom" style="margin-bottom: 4px;">Nom</label>
