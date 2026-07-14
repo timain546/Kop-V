@@ -9,13 +9,10 @@
         import org.springframework.web.bind.annotation.GetMapping;
         import org.springframework.web.bind.annotation.RequestMapping;
         import org.springframework.web.bind.annotation.RequestParam;
-        import java.time.LocalDate;
         import java.util.List;
         import java.util.ArrayList;
 
-        import java.time.YearMonth;
         import java.math.BigDecimal;
-        import java.time.LocalDate;
 
 
         @Controller
@@ -35,7 +32,7 @@
             List<BigDecimal> totalRecetteParMois = new ArrayList<>();
             List<BigDecimal> totalDepensesParMois = new ArrayList<>();
             List<BigDecimal> totalBeneficeParMois = new ArrayList<>();
-            
+
             for(int i=1;i<=12;i++){
                 BigDecimal PaiementMensuel = statistiqueService.getTotalPaiementsParMois(i,annee);
                 totalPaiementsParMois.add(PaiementMensuel);
@@ -67,6 +64,6 @@
             model.addAttribute("totalBeneficeParMois", totalBeneficeParMois);
             model.addAttribute("annee", annee);
             return "admin/statistique";
-        
+
         }
         }

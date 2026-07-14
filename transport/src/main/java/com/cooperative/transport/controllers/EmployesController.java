@@ -23,7 +23,6 @@ import com.cooperative.transport.services.EmployesService;
 import com.cooperative.transport.services.RoleService;
 import com.cooperative.transport.services.SalaireService;
 import com.cooperative.transport.services.StatutEmployeService;
-import com.cooperative.transport.services.UtilisateurService;
 
 @Controller
 @RequestMapping("/admin")

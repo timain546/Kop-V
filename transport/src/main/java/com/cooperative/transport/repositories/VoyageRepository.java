@@ -3,7 +3,6 @@ package com.cooperative.transport.repositories;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -98,7 +97,8 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
 
               AND g_arr.ville = :villeArrivee
 
-<<<<<<< HEAD
+              AND v.id_statut_actuel = (SELECT s.id FROM statut_voyage s WHERE s.libelle = 'Plannifié')
+
             GROUP BY
                 v.id,
                 v.date_heure_depart,
@@ -110,21 +110,6 @@ public interface VoyageRepository extends JpaRepository<Voyages, Integer> {
                 vh.modele,
                 cat.libelle,
                 v.tarif
-=======
-          AND v.id_statut_actuel = (SELECT s.id FROM statut_voyage s WHERE s.libelle = 'Plannifié')
-
-        GROUP BY
-            v.id,
-            v.date_heure_depart,
-            g_dep.nom,
-            g_arr.nom,
-            v.duree_estimee_minutes,
-            t.distance_km,
-            vh.immatriculation,
-            vh.modele,
-            cat.libelle,
-            v.tarif
->>>>>>> guichet
 
             HAVING COUNT(DISTINCT p.id) - COUNT(DISTINCT rf.id) >= :nbPlaces
 

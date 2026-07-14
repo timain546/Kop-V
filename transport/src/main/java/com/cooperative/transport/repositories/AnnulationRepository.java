@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.cooperative.transport.entities.Annulations;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 
 public interface AnnulationRepository extends JpaRepository<Annulations, Integer> {
