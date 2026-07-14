@@ -28,6 +28,9 @@
                 <a class="nav-link" href="/chauffeur/signaler-panne">
                     <i class="fas fa-exclamation-triangle"></i> Signaler panne
                 </a>
+                <a class="nav-link" href="/logout">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </a>
             </div>
         </div>
     </nav>
