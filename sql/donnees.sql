@@ -129,7 +129,7 @@ INSERT INTO salaires (id_employe, salaire, date_modification) VALUES
 (6, 2350.00, '2026-01-01'),
 (7, 3400.00, '2026-01-01');
 
-INSERT INTO contrats_employes (id_employe, date_embauche, date_renvoi) VALUES
+INSERT INTO contrats_employes (id_employe, date_embauche, date_renvoie) VALUES
 (1, '2026-01-01', NULL),
 (2, '2026-02-01', NULL),
 (3, '2026-03-01', NULL),

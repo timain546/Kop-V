@@ -259,3 +259,23 @@ select option {
         margin-top: 6px;
     }
 }
+
+com-bitwarden-browser-action,
+[data-bitwarden-watcher] {
+    display: none !important;
+}
+
+
+/* Masque l'icône de Dashlane */
+
+div[style*="dashlane"],
+iframe[id^="dashlane"] {
+    display: none !important;
+}
+
+
+/* Masque l'icône de LastPass */
+
+div[id^="lp_"] {
+    display: none !important;
+}
