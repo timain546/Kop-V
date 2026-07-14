@@ -35,4 +35,9 @@ public class VoyageListDTO {
         if (dateHeureDepart == null) return null;
         return java.util.Date.from(dateHeureDepart.atZone(java.time.ZoneId.systemDefault()).toInstant());
     }
+
+    public java.util.Date getDateHeureArriveeAsDate() {
+        if (dateHeureDepart == null) return null;
+        return java.util.Date.from(dateHeureDepart.plusMinutes(dureeEstimeeMinutes).atZone(java.time.ZoneId.systemDefault()).toInstant());
+    }
 }
