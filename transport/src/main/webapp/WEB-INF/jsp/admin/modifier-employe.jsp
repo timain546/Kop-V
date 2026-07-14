@@ -46,7 +46,7 @@
 
                 <div class="form-group" style="margin-bottom: 0; position: relative;">
                     <label for="mdp">Mot de passe</label>
-                    <input type="password" name="mdp" id="mdp" placeholder="Entrez le mot de passe" autocomplete="off" style="padding: 10px 40px 10px 14px; width: 100%;">
+                    <input type="password" name="mdp" id="mdp" placeholder="Entrez le mot de passe" value="<%=emp.getMotDePasse()%>"autocomplete="off" style="padding: 10px 40px 10px 14px; width: 100%;">
                     <button type="button" id="togglePassword" onclick="togglemdp()" style="position: absolute; right: 12px; top: 50%; transform: translateY(6px); background: none; border: none; cursor: pointer; font-size: 18px; padding: 0; color: #94a3b8;">👁️</button>
                 </div>
 
