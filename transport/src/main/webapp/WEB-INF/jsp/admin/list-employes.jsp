@@ -39,9 +39,9 @@
     
     <div class="sidebar">
         <div class="sidebar-brand">
-            <span class="brand-icon"><i class="fa-solid fa-van-shuttle me-2 opacity-75"></i></span>
+            <span class="brand-icon"><i class="fa-solid fa-van-shuttle"></i></span>
             <h2>KopV</h2>
-            <span>Gestion de la liste des employes</span>
+            <span>Gestion RH</span>
         </div>
         <ul class="sidebar-menu">
             <li>
@@ -79,38 +79,33 @@
     <div class="main-content">
         <div class="container">
             <div class="header">
-                <h1>Liste des employes</h1>
+                <h1><i class="fas fa-users" style="color: #15803d; margin-right: 10px;"></i>Employés</h1>
                 <div class="header-actions">
                     <span class="total-employes">
-                        Total : <span><%= employes != null ? employes.size() : 0 %></span> employe(s)
+                        <span><%= employes != null ? employes.size() : 0 %></span>
                     </span>
-                    <a href="form" class="btn-ajouter">Ajouter un employe</a>
+                    <a href="form" class="btn-ajouter"><i class="fas fa-plus"></i></a>
                 </div>
             </div>
 
             <div class="search-container">
                 <form action="list" method="get" style="display: contents; width: 100%;">
                     <div class="search-title">
-                        <h3>Rechercher par :</h3>
+                        <i class="fas fa-search" style="color: #94a3b8;"></i>
                     </div>
                     <div class="search-group">
-                        <label for="searchNom">Nom</label>
-                        <input type="text" id="searchNom" name="nom"  value="<%= nomRecherche %>">
+                        <input type="text" id="searchNom" name="nom" placeholder="Nom" value="<%= nomRecherche %>">
                     </div>
                     <div class="search-group">
-                        <label for="searchPrenom">Prénom</label>
-                        <input type="text" id="searchPrenom" name="prenom" value="<%= prenomRecherche %>">
+                        <input type="text" id="searchPrenom" name="prenom" placeholder="Prénom" value="<%= prenomRecherche %>">
                     </div>
                     <div class="search-group">
-                        <label for="searchEmail">Email</label>
-                        <input type="text" id="searchEmail" name="email"value="<%= emailRecherche %>">
+                        <input type="text" id="searchEmail" name="email" placeholder="Email" value="<%= emailRecherche %>">
                     </div>
                     <div class="search-group">
-                        <label for="searchSalaireMin">Salaire Min</label>
                         <input type="number" id="searchSalaireMin" name="salaireMin" placeholder="Min" value="<%= salaireMinRecherche != null ? salaireMinRecherche : "" %>">
                     </div>
                     <div class="search-group">
-                        <label for="searchSalaireMax">Salaire Max</label>
                         <input type="number" id="searchSalaireMax" name="salaireMax" placeholder="Max" value="<%= salaireMaxRecherche != null ? salaireMaxRecherche : "" %>">
                     </div>
                     <div class="search-actions">
@@ -125,9 +120,9 @@
                     <thead>
                         <tr>
                             <th>Nom</th>
-                            <th>Prenom</th>
+                            <th>Prénom</th>
                             <th>Email</th>
-                            <th>Role</th>
+                            <th>Rôle</th>
                             <th>Salaire</th>
                             <th>Statut</th>
                             <th>Actions</th>
@@ -152,20 +147,21 @@
                                 }
                         %>
                             <tr>
-                                <td class="nom-employe"><%= employe.getNom() %></td>
+                                <td><%= employe.getNom() %></td>
                                 <td><%= employe.getPrenom() %></td>
-                                <td class="email-cell"><%= employe.getEmail() %></td>
+                                <td><%= employe.getEmail() %></td>
                                 <td><span class="role-cell"><%= role.getLibelle() %></span></td>
                                 <td>
                                     <% if (salaire != null) { %>
-                                        <span class="salaire-montant"><%= salaire.getSalaire() %> Ar</span>
+                                        <span><%= salaire.getSalaire() %></span>
                                     <% } else { %>
-                                        <span class="salaire-indisponible">Non defini</span>
+                                        <span class="salaire-indisponible">-</span>
                                     <% } %>
                                 </td>
                                 <td>
                                     <span class="statut-badge <%= statutClass %>">
-                                        <%= statutEmploye != null ? statutEmploye : "Non defini" %>
+                                        <i class="fas fa-circle" style="font-size: 6px; margin-right: 4px;"></i>
+                                        <%= statutEmploye != null ? statutEmploye : "-" %>
                                     </span>
                                 </td>
                                 <td>
@@ -202,8 +198,8 @@
                         } else { %>
                             <tr>
                                 <td colspan="7" class="aucun-employe">
-                                    <div class="aucun-employe-icon"><i class="fas fa-users-slash"></i></div>
-                                    Aucun employe trouve dans la base de donnees
+                                    <i class="fas fa-users-slash" style="font-size: 24px; display: block; margin-bottom: 10px; color: #bbf7d0;"></i>
+                                    Aucun employé
                                 </td>
                             </tr>
                         <% } %>

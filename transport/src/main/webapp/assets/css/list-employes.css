@@ -614,3 +614,26 @@ tbody tr:nth-child(10) {
         font-size: 11px;
     }
 }
+
+
+/* Style pour le point du statut */
+
+.statut-badge .fa-circle {
+    color: inherit;
+}
+
+.statut-engage .fa-circle {
+    color: #22c55e;
+}
+
+.statut-renvoye .fa-circle {
+    color: #ef4444;
+}
+
+.statut-reembauche .fa-circle {
+    color: #eab308;
+}
+
+.statut-default .fa-circle {
+    color: #94a3b8;
+}
