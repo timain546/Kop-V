@@ -40,7 +40,8 @@ public class EmployesController {
     private StatutEmployeService statutEmployeService;
     @Autowired
     private ContratEmployeService contratService;
-
+    public String EMAIL_REGEX = 
+        "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
     @GetMapping("/employes/test-simple")
     @ResponseBody
@@ -102,10 +103,28 @@ public String getListeEmployes(
             @RequestParam("role") Integer roleId,
             @RequestParam("salaire") Double montant,
             @RequestParam("date") java.sql.Date date,
-            @RequestParam("mdp") String motDePasse
+            @RequestParam("mdp") String motDePasse,
+            Model model
     ) {
+        if(montant<=0){
+            List<Object[]> employes = employesService.findByid(id);
+            List<Role> roles = roleservice.findAll();
+            model.addAttribute("employe", employes.get(0));
+            model.addAttribute("roles", roles);
+            model.addAttribute("errorMessage", "Le salaire invalide");
+            return "admin/modifier-employe";
 
-        Utilisateurs employe = employesService.findEmpById(id);
+        }
+        if(!email.matches(EMAIL_REGEX)) {
+            List<Object[]> employes = employesService.findByid(id);
+            List<Role> roles = roleservice.findAll();
+            model.addAttribute("employe", employes.get(0));
+            model.addAttribute("roles", roles);
+            model.addAttribute("errorMessage", "L'adresse email n'est pas valide.");
+            return "admin/modifier-employe";
+        }
+        else{
+            Utilisateurs employe = employesService.findEmpById(id);
         employe.setNom(nom);
         employe.setPrenom(prenom);
         employe.setEmail(email);
@@ -146,6 +165,8 @@ public String getListeEmployes(
         employesService.updateEmploye(employe);
 
         return "redirect:/admin/employes/list";
+        }
+        
     }
 
     @PostMapping("/employes/supprimerEmploye")
@@ -172,8 +193,37 @@ public String getListeEmployes(
                                  @RequestParam("email") String email,
                                  @RequestParam("mdp") String motDePasse,
                                  @RequestParam("role") Integer roleId,
+                                 @RequestParam("role") String roleLibelle,
                                  @RequestParam("salaire") Double montant,
-                                 @RequestParam("dateEmbauche") java.sql.Date dateEmbauche) {
+                                 @RequestParam("dateEmbauche") java.sql.Date dateEmbauche,
+                                 Model model) {
+        if(montant<=0){
+            Role role=roleservice.findRoleById(roleId);
+            model.addAttribute("role", role);
+            model.addAttribute("roles", roleservice.findAll());
+            model.addAttribute("nom", nom);
+            model.addAttribute("prenom", prenom);
+            model.addAttribute("email", email);
+            model.addAttribute("mdp", motDePasse);
+            model.addAttribute("salaire", montant.toString());
+            model.addAttribute("dateEmbauche", dateEmbauche.toString());
+            model.addAttribute("errorMessage", "Le salaire invalide.");
+            return "admin/ajouter-employe";
+        }
+        if(!email.matches(EMAIL_REGEX)) {
+            Role role=roleservice.findRoleById(roleId);
+            model.addAttribute("role", role);
+            model.addAttribute("roles", roleservice.findAll());
+            model.addAttribute("nom", nom);
+            model.addAttribute("prenom", prenom);
+            model.addAttribute("email", email);
+            model.addAttribute("mdp", motDePasse);
+            model.addAttribute("salaire", montant.toString());
+            model.addAttribute("dateEmbauche", dateEmbauche.toString());
+            model.addAttribute("errorMessage", "L'adresse email n'est pas valide.");
+            return "admin/ajouter-employe";
+        }
+        else{
         Utilisateurs employe = new Utilisateurs();
         employe.setNom(nom);
         employe.setPrenom(prenom);
@@ -199,6 +249,8 @@ public String getListeEmployes(
         employeStatut.setDateModification(dateEmbauche);
         employeStatutService.updateEmployeStatut(employeStatut);
         return "redirect:/admin/employes/list";
+        }
+       
     }
     @PostMapping("/employes/reembaucher")
     public String reembaucherEmploye(@RequestParam("id") Integer id) {
