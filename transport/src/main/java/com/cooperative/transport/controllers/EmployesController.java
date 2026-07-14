@@ -23,6 +23,9 @@ import com.cooperative.transport.services.EmployesService;
 import com.cooperative.transport.services.RoleService;
 import com.cooperative.transport.services.SalaireService;
 import com.cooperative.transport.services.StatutEmployeService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Controller
 @RequestMapping("/admin")
@@ -50,17 +53,27 @@ public class EmployesController {
         return "✅ Le controller est chargé !";
     }
 
-    @GetMapping("/employes/list")
+  @GetMapping("/employes/list")
 public String getListeEmployes(
         @RequestParam(required = false) String nom,
         @RequestParam(required = false) String prenom,
         @RequestParam(required = false) String email,
         @RequestParam(required = false) Double salaireMin,
         @RequestParam(required = false) Double salaireMax,
+        @RequestParam(defaultValue = "1") int page,     
+        @RequestParam(defaultValue = "10") int size,    
         Model model) {
 
-    List<Object[]> employes = employesService.findwithcritere(nom, prenom, email, salaireMin, salaireMax);
+  
+    int pageIndexInterne = (page < 1) ? 0 : page - 1; 
 
+    // Création du Pageable avec l'index interne de Spring (qui commence à 0)
+    Pageable pageable = PageRequest.of(pageIndexInterne, size);
+
+    // Récupération de la page de données
+    Page<Object[]> employesPage = employesService.findwithcritere(nom, prenom, email, salaireMin, salaireMax, pageable);
+    
+    List<Object[]> employes = employesPage.getContent();
     List<String> statut = new ArrayList<>();
 
     for (Object[] row : employes) {
@@ -75,6 +88,7 @@ public String getListeEmployes(
         }
     }
 
+    // Données de recherche
     model.addAttribute("nomRecherche", nom);
     model.addAttribute("prenomRecherche", prenom);
     model.addAttribute("emailRecherche", email);
@@ -83,9 +97,14 @@ public String getListeEmployes(
     model.addAttribute("statut", statut);
     model.addAttribute("listeEmployes", employes);
 
+    
+    model.addAttribute("currentPage", pageIndexInterne + 1);             // Page humaine (1, 2, 3...)
+    model.addAttribute("totalPages", employesPage.getTotalPages());      // Total des pages
+    model.addAttribute("pageSize", size);                                // Éléments par page
+    model.addAttribute("totalElements", employesPage.getTotalElements());// Total global
+
     return "admin/list-employes";
 }
-
     @PostMapping("/employes/modifier")
     public String modifierEmploye(@RequestParam("id") Integer id, @RequestParam("role") String role, Model model) {
         List<Object[]> employes = employesService.findByid(id);

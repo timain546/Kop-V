@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.cooperative.transport.entities.Utilisateurs;
 @Repository
@@ -35,11 +37,11 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateurs, Integ
        "AND (CAST(:salaireMin AS double) IS NULL OR s.salaire >= :salaireMin) " +
        "AND (CAST(:salaireMax AS double) IS NULL OR s.salaire <= :salaireMax) " +
        "ORDER BY e.nom ASC")
-    List<Object[]> findwithcritere(
+    Page<Object[]> findwithcritere(
         @Param("nom") String nom,
         @Param("prenom") String prenom,
         @Param("email") String email,
         @Param("salaireMin") Double salaireMin,
-        @Param("salaireMax") Double salaireMax);
+        @Param("salaireMax") Double salaireMax,Pageable pageable);
 
 }

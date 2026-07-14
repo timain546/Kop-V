@@ -50,7 +50,7 @@
     <div class="sidebar">
         <div class="sidebar-brand">
             <span class="brand-icon"><i class="fa-solid fa-van-shuttle me-2 opacity-75"></i></span>
-            <h2>Transport Coop</h2>
+            <h2>KopV</h2>
             <span>statistique</span>
         </div>
         <ul class="sidebar-menu">

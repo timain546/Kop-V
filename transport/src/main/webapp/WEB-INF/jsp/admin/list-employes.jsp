@@ -7,7 +7,7 @@
     List<Object[]> employes = (List<Object[]>) request.getAttribute("listeEmployes");
     List<String> statut = (List<String>) request.getAttribute("statut");
 
-     String nomRecherche = (String) request.getAttribute("nomRecherche");
+    String nomRecherche = (String) request.getAttribute("nomRecherche");
     String prenomRecherche = (String) request.getAttribute("prenomRecherche");
     String emailRecherche = (String) request.getAttribute("emailRecherche");
     Double salaireMinRecherche = (Double) request.getAttribute("salaireMinRecherche");
@@ -16,8 +16,17 @@
     if (nomRecherche == null) nomRecherche = "";
     if (prenomRecherche == null) prenomRecherche = "";
     if (emailRecherche == null) emailRecherche = "";
-    if (salaireMinRecherche == null) salaireMinRecherche = null;
-    if (salaireMaxRecherche == null) salaireMaxRecherche = null;
+    
+    // Récupération des attributs de pagination (Indexation commençant à 1)
+    Integer pageActuelle = (Integer) request.getAttribute("currentPage");
+    Integer totalPages = (Integer) request.getAttribute("totalPages");
+    Integer taillePage = (Integer) request.getAttribute("pageSize");
+    Long totalElements = (Long) request.getAttribute("totalElements");
+
+    if (pageActuelle == null) pageActuelle = 1;
+    if (totalPages == null) totalPages = 1;
+    if (taillePage == null) taillePage = 10;
+    if (totalElements == null) totalElements = 0L;
 %>
 
 <!DOCTYPE html>
@@ -41,7 +50,7 @@
         <div class="sidebar-brand">
             <span class="brand-icon"><i class="fa-solid fa-van-shuttle"></i></span>
             <h2>KopV</h2>
-            <span>Gestion RH</span>
+            <span>Gestion des employés</span>
         </div>
         <ul class="sidebar-menu">
             <li>
@@ -79,41 +88,67 @@
     <div class="main-content">
         <div class="container">
             <div class="header">
-                <h1><i class="fas fa-users" style="color: #15803d; margin-right: 10px;"></i>Liste de Employés</h1>
+                <h1><i class="fas fa-users" style="color: #15803d; margin-right: 10px;"></i>Liste des Employés</h1>
                 <div class="header-actions">
                     <span class="total-employes">
-                        <span>Total:<%= employes != null ? employes.size() : 0 %></span>
+                        <span>Total: <%= totalElements %></span>
                     </span>
                     <a href="form" class="btn-ajouter"><i class="fas fa-plus"></i></a>
                 </div>
             </div>
 
-            <div class="search-container">
-                <form action="list" method="get" class="search-form"><div class="search-title">
-                        <i class="fas fa-search" style="color: #94a3b8;"></i>
+            <div class="search-container" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                <form action="list" method="get">
+                    <input type="hidden" name="page" value="1">
+                    
+                    <!-- LIGNE 1 : Les champs de filtres -->
+                    <div class="search-form" style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 15px;">
+                        <div class="search-title" style="display: flex; align-items: center;">
+                            <i class="fas fa-search" style="color: #94a3b8; font-size: 18px;"></i>
+                        </div>
+                        <div class="search-group" style="flex: 1; min-width: 120px;">
+                            <input type="text" id="searchNom" name="nom" placeholder="Nom" value="<%= nomRecherche %>" style="width: 100%;">
+                        </div>
+                        <div class="search-group" style="flex: 1; min-width: 120px;">
+                            <input type="text" id="searchPrenom" name="prenom" placeholder="Prénom" value="<%= prenomRecherche %>" style="width: 100%;">
+                        </div>
+                        <div class="search-group" style="flex: 1; min-width: 150px;">
+                            <input type="text" id="searchEmail" name="email" placeholder="Email" value="<%= emailRecherche %>" style="width: 100%;">
+                        </div>
+                        <div class="search-group" style="width: 100px;">
+                            <input type="number" id="searchSalaireMin" name="salaireMin" placeholder="Min" value="<%= salaireMinRecherche != null ? salaireMinRecherche : "" %>" style="width: 100%;">
+                        </div>
+                        <div class="search-group" style="width: 100px;">
+                            <input type="number" id="searchSalaireMax" name="salaireMax" placeholder="Max" value="<%= salaireMaxRecherche != null ? salaireMaxRecherche : "" %>" style="width: 100%;">
+                        </div>
+                        
+                        <div class="search-actions" style="display: flex; gap: 8px;">
+                            <button type="submit" class="btn-search"><i class="fas fa-search"></i></button>
+                            <a href="list" class="btn-reset"><i class="fas fa-undo"></i></a>
+                        </div>
                     </div>
-                    <div class="search-group">
-                        <input type="text" id="searchNom" name="nom" placeholder="Nom" value="<%= nomRecherche %>">
-                    </div>
-                    <div class="search-group">
-                        <input type="text" id="searchPrenom" name="prenom" placeholder="Prénom" value="<%= prenomRecherche %>">
-                    </div>
-                    <div class="search-group">
-                        <input type="text" id="searchEmail" name="email" placeholder="Email" value="<%= emailRecherche %>">
-                    </div>
-                    <div class="search-group">
-                        <input type="number" id="searchSalaireMin" name="salaireMin" placeholder="Min" value="<%= salaireMinRecherche != null ? salaireMinRecherche : "" %>">
-                    </div>
-                    <div class="search-group">
-                        <input type="number" id="searchSalaireMax" name="salaireMax" placeholder="Max" value="<%= salaireMaxRecherche != null ? salaireMaxRecherche : "" %>">
-                    </div>
-                    <div class="search-actions">
-                        <button type="submit" class="btn-search"><i class="fas fa-search"></i></button>
-                        <a href="list" class="btn-reset"><i class="fas fa-undo"></i></a>
+
+                   
+                    <div class="page-size-row" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 14px; color: #64748b; font-weight: 500;">
+                                <i class="fas fa-list-ol" style="color: #64748b; margin-right: 5px;"></i> Afficher :
+                            </span>
+                            <input type="number" name="size" value="<%= taillePage %>" min="1" max="100" style="width: 70px; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; text-align: center; font-weight: 600; color: #334155;">
+                            <span style="font-size: 14px; color: #64748b;">éléments par page</span>
+                            <button type="submit" class="btn-search btn-appliquer-override" style="background-color: #16a34a; color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; width: auto; min-width: max-content; height: 32px;">
+                             <i class="fas fa-sync-alt"></i> Appliquer
+                            </button>
+                        </div>
+                        
+                        <div style="font-size: 13px; color: #64748b;">
+                            Filtres actifs : <strong><%= (!nomRecherche.isEmpty() || !prenomRecherche.isEmpty() || !emailRecherche.isEmpty() || salaireMinRecherche != null || salaireMaxRecherche != null) ? "Oui" : "Aucun" %></strong>
+                        </div>
                     </div>
                 </form>
             </div>
 
+           
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -172,7 +207,7 @@
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                         </form>
-                                       <% if (statutEmploye != null && statutEmploye.equalsIgnoreCase("Engagé") || statutEmploye.equalsIgnoreCase("Reambauché")) { %>
+                                       <% if (statutEmploye != null && (statutEmploye.equalsIgnoreCase("Engagé") || statutEmploye.equalsIgnoreCase("Reambauché"))) { %>
                                              <form action="supprimerEmploye" method="post" style="display:inline;">
                                                 <input type="hidden" name="id" value="<%= employe.getId() %>">
                                                 <button type="submit" class="btn-action btn-supprimer" 
@@ -205,6 +240,41 @@
                     </tbody>
                 </table>
             </div>
+
+           
+            <% if (totalPages > 1) { %>
+                <div class="pagination-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                    <div class="pagination-info">
+                        Page <strong><%= pageActuelle %></strong> sur <strong><%= totalPages %></strong> (Total: <%= totalElements %>)
+                    </div>
+                    <div class="pagination-buttons">
+                       
+                        <% if (pageActuelle > 1) { %>
+                            <a href="list?page=<%= pageActuelle - 1 %>&size=<%= taillePage %>&nom=<%= nomRecherche %>&prenom=<%= prenomRecherche %>&email=<%= emailRecherche %>&salaireMin=<%= salaireMinRecherche != null ? salaireMinRecherche : "" %>&salaireMax=<%= salaireMaxRecherche != null ? salaireMaxRecherche : "" %>" class="btn-pag">
+                                <i class="fas fa-chevron-left"></i> Précédent
+                            </a>
+                        <% } else { %>
+                            <span class="btn-pag disabled"><i class="fas fa-chevron-left"></i> Précédent</span>
+                        <% } %>
+
+                        <% for (int p = 1; p <= totalPages; p++) { 
+                            if (p == pageActuelle) { %>
+                                <span class="btn-pag active"><%= p %></span>
+                            <% } else { %>
+                                <a href="list?page=<%= p %>&size=<%= taillePage %>&nom=<%= nomRecherche %>&prenom=<%= prenomRecherche %>&email=<%= emailRecherche %>&salaireMin=<%= salaireMinRecherche != null ? salaireMinRecherche : "" %>&salaireMax=<%= salaireMaxRecherche != null ? salaireMaxRecherche : "" %>" class="btn-pag"><%= p %></a>
+                            <% } 
+                        } %>
+
+                        <% if (pageActuelle < totalPages) { %>
+                            <a href="list?page=<%= pageActuelle + 1 %>&size=<%= taillePage %>&nom=<%= nomRecherche %>&prenom=<%= prenomRecherche %>&email=<%= emailRecherche %>&salaireMin=<%= salaireMinRecherche != null ? salaireMinRecherche : "" %>&salaireMax=<%= salaireMaxRecherche != null ? salaireMaxRecherche : "" %>" class="btn-pag">
+                                Suivant <i class="fas fa-chevron-right"></i>
+                            </a>
+                        <% } else { %>
+                            <span class="btn-pag disabled">Suivant <i class="fas fa-chevron-right"></i></span>
+                        <% } %>
+                    </div>
+                </div>
+            <% } %>
         </div>
     </div>
 

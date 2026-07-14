@@ -35,7 +35,6 @@ h1 {
     font-family: Arial, Helvetica, sans-serif;
     color: #15803d;
     font-size: 20px;
-    /* Légèrement réduit */
     font-weight: 700;
     letter-spacing: -0.5px;
 }
@@ -89,7 +88,7 @@ h1 {
 }
 
 
-/* ===== BARRE DE RECHERCHE HORIZONTALE ===== */
+/* ===== BARRE DE RECHERCHE ALIGNÉE HORIZONTALEMENT ===== */
 
 .search-container {
     background: #f8fafc;
@@ -101,17 +100,11 @@ h1 {
     align-items: center;
 }
 
-
-/* Le formulaire prend toute la largeur et force l'alignement horizontal */
-
 .search-form {
     display: flex;
     flex-direction: row;
-    /* Force l'alignement en ligne */
     align-items: center;
-    /* Aligne verticalement au centre tous les éléments */
     gap: 8px;
-    /* Espace régulier entre chaque élément */
     width: 100%;
 }
 
@@ -122,17 +115,11 @@ h1 {
     font-size: 14px;
     margin-right: 4px;
     flex-shrink: 0;
-    /* Empêche l'icône loupe de rétrécir */
 }
-
-
-/* Les champs de saisie */
 
 .search-group {
     flex: 1;
-    /* Distribue l'espace équitablement entre les champs */
     min-width: 80px;
-    /* Taille minimale pour ne pas être trop écrasé */
 }
 
 .search-group input {
@@ -145,10 +132,10 @@ h1 {
     width: 100%;
     font-family: Arial, Helvetica, sans-serif;
     height: 32px;
-    /* Hauteur standard identique pour tous */
 }
 
-.search-group input:focus {
+.search-group input:focus,
+.search-group-page select:focus {
     outline: none;
     border-color: #16a34a;
     box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
@@ -159,22 +146,16 @@ h1 {
     font-size: 11px;
 }
 
-
-/* Conteneur des boutons de recherche */
-
 .search-actions {
     display: flex;
     gap: 6px;
     align-items: center;
     flex-shrink: 0;
-    /* Empêche les boutons de rétrécir */
 }
 
 .btn-search {
     width: 32px;
-    /* Devient carré pour être plus compact */
     height: 32px;
-    /* Même hauteur que les inputs */
     background-color: #16a34a;
     color: white;
     border: none;
@@ -194,9 +175,7 @@ h1 {
 
 .btn-reset {
     width: 32px;
-    /* Devient carré comme le bouton recherche */
     height: 32px;
-    /* Même hauteur */
     background-color: #f1f5f9;
     color: #475569;
     border: 1px solid #cbd5e1;
@@ -216,7 +195,65 @@ h1 {
 }
 
 
-/* ===== TABLEAU PLUS COMPACT ET PROPRE ===== */
+/* ===== BLOC "LIGNES PAR PAGE" ALIGNÉ ===== */
+
+.search-divider {
+    width: 1px;
+    height: 24px;
+    background-color: #cbd5e1;
+    margin: 0 6px;
+    flex-shrink: 0;
+}
+
+.page-size-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.search-group-page {
+    width: 95px;
+}
+
+.search-group-page select {
+    width: 100%;
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 11px;
+    background-color: white;
+    color: #475569;
+    font-family: Arial, Helvetica, sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-afficher {
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 0 12px;
+    background-color: #15803d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-afficher:hover {
+    background-color: #166534;
+    box-shadow: 0 2px 8px rgba(22, 101, 52, 0.2);
+}
+
+
+/* ===== TABLEAU ET CELLULES ===== */
 
 .table-wrapper {
     overflow-x: auto;
@@ -231,7 +268,6 @@ table {
     width: 100%;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
-    /* Taille globale de police légèrement réduite */
 }
 
 thead {
@@ -244,7 +280,6 @@ th {
     background-color: #16a34a;
     color: white;
     padding: 8px 12px;
-    /* Espacement réduit */
     text-align: left;
     font-weight: 600;
     font-size: 10px;
@@ -264,13 +299,11 @@ th:last-child {
 td {
     font-family: Arial, Helvetica, sans-serif;
     padding: 8px 12px;
-    /* Espacement vertical et horizontal réduit */
     border-bottom: 1px solid #f0fdf4;
     vertical-align: middle;
     color: #334155;
     transition: background-color 0.2s ease;
     font-size: 11px;
-    /* Uniformisé */
 }
 
 tbody tr:hover {
@@ -283,11 +316,6 @@ tbody tr:hover {
     font-size: 12px;
 }
 
-.email-cell {
-    color: #64748b;
-    font-size: 11px;
-}
-
 .role-cell {
     font-weight: 600;
     color: #166534;
@@ -297,6 +325,9 @@ tbody tr:hover {
     display: inline-block;
     font-size: 9px;
 }
+
+
+/* ===== BADGES DE STATUT ===== */
 
 .statut-badge {
     font-family: Arial, Helvetica, sans-serif;
@@ -319,13 +350,19 @@ tbody tr:hover {
     display: inline-block;
 }
 
+.statut-badge .fa-circle {
+    color: inherit;
+}
+
 .statut-engage {
     background-color: #dcfce7;
     color: #166534;
     border: 1px solid #86efac;
 }
 
+.statut-engage .fa-circle,
 .statut-engage::before {
+    color: #22c55e;
     background-color: #22c55e;
 }
 
@@ -335,7 +372,9 @@ tbody tr:hover {
     border: 1px solid #fecaca;
 }
 
+.statut-renvoye .fa-circle,
 .statut-renvoye::before {
+    color: #ef4444;
     background-color: #ef4444;
 }
 
@@ -345,7 +384,9 @@ tbody tr:hover {
     border: 1px solid #fde68a;
 }
 
+.statut-reembauche .fa-circle,
 .statut-reembauche::before {
+    color: #eab308;
     background-color: #eab308;
 }
 
@@ -355,12 +396,16 @@ tbody tr:hover {
     border: 1px solid #e2e8f0;
 }
 
+.statut-default .fa-circle,
 .statut-default::before {
+    color: #94a3b8;
     background-color: #94a3b8;
 }
 
+
+/* ===== SALAIRES & ACTIONS ===== */
+
 .salaire-montant {
-    font-family: Arial, Helvetica, sans-serif;
     font-weight: 700;
     color: #15803d;
     font-size: 12px;
@@ -377,18 +422,13 @@ tbody tr:hover {
     border: 1px dashed #cbd5e1;
 }
 
-
-/* ===== ALIGNEMENT HORIZONTAL PARFAIT DES BOUTONS D'ACTION ===== */
-
 .actions {
     display: flex;
     gap: 4px;
     flex-wrap: nowrap;
-    /* Empêche les boutons de passer à la ligne */
 }
 
 .btn-action {
-    font-family: Arial, Helvetica, sans-serif;
     width: 28px;
     height: 28px;
     border: none;
@@ -434,6 +474,72 @@ tbody tr:hover {
 }
 
 
+/* ===== PAGINATION VISUELLE ===== */
+
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #f0fdf4;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.pagination-info {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.pagination-info strong {
+    color: #15803d;
+}
+
+.pagination-buttons {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.btn-pag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    padding: 0 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-pag:hover:not(.disabled):not(.active) {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border-color: #bbf7d0;
+}
+
+.btn-pag.active {
+    background-color: #16a34a;
+    color: white;
+    border-color: #16a34a;
+    cursor: default;
+}
+
+.btn-pag.disabled {
+    color: #cbd5e1;
+    background-color: #f8fafc;
+    border-color: #e2e8f0;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+
 /* ===== RESPONSIVE ===== */
 
 @media (max-width: 1024px) {
@@ -466,13 +572,27 @@ tbody tr:hover {
     .search-container {
         padding: 12px;
     }
-    .search-container form {
+    .search-form {
         flex-direction: column;
         align-items: stretch;
     }
     .search-group {
         min-width: 100%;
         max-width: 100%;
+    }
+    .search-divider {
+        display: none;
+        /* Cache le séparateur sur mobile */
+    }
+    .page-size-container {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .search-group-page {
+        flex-grow: 1;
+    }
+    .btn-afficher {
+        flex-grow: 1;
     }
     .search-actions {
         justify-content: stretch;
