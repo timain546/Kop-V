@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -116,10 +117,18 @@ public class ReservationService {
         }
         StatutPaiement statutPaiement = getOrCreateStatutPaiement(libelleStatut);
 
-        Client client = new Client();
-        client.setNom(nomClient);
-        client.setTelephone(telephoneClient);
-        clientRepository.save(client);
+        telephoneClient = formatterTelephone(telephoneClient);
+        if (telephoneClient == null) {
+            throw new InvalidParameterException("Le numéro de téléphone est invalide");
+        }
+
+        Client client = clientRepository.findByTelephone(telephoneClient).orElse(null);
+        if (client == null) {
+            client = new Client();
+            client.setNom(nomClient);
+            client.setTelephone(telephoneClient);
+            clientRepository.save(client);
+        }
 
         StatutReservation statutReservation = getOrCreateStatutReservation("Confirmée");
 
@@ -155,6 +164,9 @@ public class ReservationService {
 
         if (paiement.getModePaiement().getLibelle().equals("Espèces") && (paiement.getReferenceTransaction() != null && !paiement.getReferenceTransaction().equals(""))) {
             throw new InvalidParameterException("La référence de transaction doit être vide pour un paiement en espèce");
+        }
+        if ((!paiement.getModePaiement().getLibelle().equals("Espèces")) && (paiement.getReferenceTransaction() == null || paiement.getReferenceTransaction().equals(""))) {
+            throw new InvalidParameterException("La référence de transaction ne pas être vide pour un paiement par carte ou Mobile Money");
         }
 
         paiementRepository.save(paiement);
@@ -288,6 +300,10 @@ public class ReservationService {
             // Lecture des données
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
+                if (row.getCell(columnIndexes.get("Date")) == null) {
+                    break;
+                }
+
                 LocalDateTime date = row.getCell(columnIndexes.get("Date")).getLocalDateTimeCellValue();
                 String nomClient = row.getCell(columnIndexes.get("Nom du client")).getStringCellValue();
                 String telephoneClient = row.getCell(columnIndexes.get("Téléphone du client")).getStringCellValue();
@@ -303,10 +319,15 @@ public class ReservationService {
 
                 String[] placesStr = placesCSV.split(",");
 
-                Client client = clientRepository.findByTelephone(telephoneClient).orElseGet(() -> {
+                String telephone = formatterTelephone(telephoneClient);
+                if (telephone == null) {
+                    throw new InvalidParameterException("Le numéro de téléphone est invalide : " + telephoneClient);
+                }
+
+                Client client = clientRepository.findByTelephone(telephone).orElseGet(() -> {
                     Client c = new Client();
                     c.setNom(nomClient);
-                    c.setTelephone(telephoneClient);
+                    c.setTelephone(telephone);
                     clientRepository.save(c);
                     return c;
                 });
@@ -400,5 +421,22 @@ public class ReservationService {
         }
 
         return reservationMereRepository.findReservationsByIds(idReservations);
+    }
+
+    private String formatterTelephone(String telephone) {
+        // Regex qui valide uniquement les préfixes 032, 033, 034, 037, 038, 039
+        final Pattern pattern = Pattern.compile("^03[234789]\\s*\\d{2}\\s*\\d{3}\\s*\\d{2}$");
+
+        if (telephone == null) {
+            return null;
+        }
+
+        String cleaned = telephone.replaceAll("\\s+", "");
+        if (!pattern.matcher(cleaned).matches()) {
+            return null;
+        }
+
+        // Format : 03X XX XXX XX
+        return cleaned.replaceAll("^(03\\d)(\\d{2})(\\d{3})(\\d{2})$", "$1 $2 $3 $4");
     }
 }

@@ -196,6 +196,12 @@ public class ReservationController {
             model.addAttribute("modesPaiements", modesPaiements);
             model.addAttribute("erreur", e.getMessage());
 
+            model.addAttribute("previousNomClient", nomClient);
+            model.addAttribute("previousTelephoneClient", telephoneClient);
+            model.addAttribute("previousMontant", montant);
+            model.addAttribute("previousModePaiement", modePaiement);
+            model.addAttribute("previousReference", reference);
+
             return "guichet/new-paiement";
         }
 

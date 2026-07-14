@@ -66,7 +66,18 @@ public interface ReservationMereRepository extends JpaRepository<ReservationsMer
         GROUP BY rm.id, rm.date_reservation, c.nom, c.telephone,
                  v.date_heure_depart, gd.ville, ga.ville, sp.libelle
         ORDER BY rm.date_reservation DESC
-        """, nativeQuery = true)
+    """, countQuery = """
+        SELECT COUNT(rm.id)
+        FROM reservations_mere rm
+            JOIN voyages v             ON v.id = rm.id_voyage
+            JOIN trajets t             ON t.id = v.id_trajet
+            JOIN gares gd              ON gd.id = t.id_gare_depart
+            JOIN gares ga              ON ga.id = t.id_gare_arrivee
+        WHERE (:dateDebut IS NULL OR :dateDebut = '' OR rm.date_reservation >= CAST(:dateDebut AS date))
+          AND (:dateFin IS NULL OR :dateFin = '' OR rm.date_reservation < CAST(:dateFin AS date) + interval '1 day')
+          AND (:villeDepart IS NULL OR :villeDepart = '' OR gd.ville = :villeDepart)
+          AND (:villeArrivee IS NULL OR :villeArrivee = '' OR ga.ville = :villeArrivee)
+    """, nativeQuery = true)
     Page<ReservationDTO> findReservationsByDateAndVilleDepartAndVilleArrivee(
             @Param("dateDebut") String dateDebut,
             @Param("dateFin") String dateFin,
