@@ -173,3 +173,15 @@ INSERT INTO reparation (id_panne, id_statut_reparation, date_modification, cout)
 (1, 1, '2026-07-10', NULL),
 (2, 1, '2026-08-10', NULL),
 (3, 3, '2026-08-11', 100.00);
+
+INSERT INTO mode_paiement(libelle)
+VALUES
+('Espèces'),
+('Carte'),
+('Mobile Money');
+
+INSERT INTO statut_paiement(libelle)
+VALUES
+('Non payé'),
+('Partiellement payé'),
+('Payé');
