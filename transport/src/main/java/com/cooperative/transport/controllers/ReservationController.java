@@ -79,6 +79,30 @@ public class ReservationController {
     @Autowired
     private PlaceRepository placeRepository;
 
+    @GetMapping("/guichet/reservation")
+public String getReservations(
+        @RequestParam(required = false) String dateDebut,
+        @RequestParam(required = false) String dateFin,
+        @RequestParam(required = false, defaultValue = "") String villeDepart,
+        @RequestParam(required = false, defaultValue = "") String villeArrivee,
+        @PageableDefault(page = 0, size = 10) Pageable pageable,
+        Model model) {
+
+    Page<ReservationDTO> reservations = reservationService.getReservations(
+            dateDebut, dateFin, villeDepart, villeArrivee, pageable);
+
+    model.addAttribute("reservations", reservations.getContent());
+    model.addAttribute("page", reservations);
+    model.addAttribute("villes", gareRepository.findAll().stream()
+            .map(Gares::getVille).distinct().toList());
+
+    ReservationFiltreDTO filtre = new ReservationFiltreDTO(dateDebut, dateFin, villeDepart, villeArrivee);
+    model.addAttribute("filtre", filtre);
+    model.addAttribute("stats", computeStats(reservations.getContent()));
+
+    return "guichet/reservation";
+}
+
     @GetMapping("/guichet/reservation/new")
     public String newIndex(HttpSession session, Model model) {
         InfoNewReservationDTO info = getInfoNewReservation(session);

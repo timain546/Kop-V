@@ -58,15 +58,20 @@
 
           <!-- ================= FILTRES (date + ville, inchangés) ================= -->
           <form class="filters-card" action="${pageContext.request.contextPath}/guichet/reservation" method="get">
-            <div class="filter-field">
-              <label class="filter-label-top">Date du voyage</label>
-              <div class="date-range">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg>
-                <input type="date" name="dateDebut" value="${filtre.dateDebut}" />
-                <span class="date-range-sep">→</span>
-                <input type="date" name="dateFin" value="${filtre.dateFin}" />
-              </div>
-            </div>
+           <div class="filter-field">
+    <label class="filter-label-top">Date de réservation</label>
+    <div class="date-range">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+            <path d="M16 2v4"></path>
+            <path d="M8 2v4"></path>
+            <path d="M3 10h18"></path>
+        </svg>
+        <input type="date" name="dateDebut" value="${filtre.dateDebut}" />
+        <span class="date-range-sep">→</span>
+        <input type="date" name="dateFin" value="${filtre.dateFin}" />
+    </div>
+</div>
 
             <div class="filter-field">
               <label class="filter-label-top">Ville de départ</label>

@@ -173,5 +173,42 @@
         </main>
       </div>
     </div>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const swapBtn = document.querySelector('.swap-btn');
+    const selectDepart = document.querySelector('select[name="gareDepart"]');
+    const selectArrivee = document.querySelector('select[name="gareArrivee"]');
+    
+    if (swapBtn && selectDepart && selectArrivee) {
+        
+        swapBtn.addEventListener('click', function() {
+            
+            // Animation visuelle
+            this.style.transform = 'rotate(180deg)';
+            setTimeout(() => {
+                this.style.transform = 'rotate(0deg)';
+            }, 300);
+            
+            // Inversion des valeurs
+            const temp = selectDepart.value;
+            selectDepart.value = selectArrivee.value;
+            selectArrivee.value = temp;
+            
+            // Optionnel : petit effet visuel sur les selects
+            selectDepart.style.transition = 'background-color 0.3s';
+            selectArrivee.style.transition = 'background-color 0.3s';
+            
+            selectDepart.style.backgroundColor = '#e0f2e9';
+            selectArrivee.style.backgroundColor = '#e0f2e9';
+            
+            setTimeout(() => {
+                selectDepart.style.backgroundColor = '';
+                selectArrivee.style.backgroundColor = '';
+            }, 800);
+        });
+    }
+});
+</script>
   </body>
 </html>

@@ -25,15 +25,15 @@ public interface ReservationMereRepository extends JpaRepository<ReservationsMer
 
     @Query(value = """
         SELECT
-            rm.id                          AS idReservation,
-            rm.date_reservation            AS dateReservation,
-            c.nom                          AS client,
-            c.telephone                    AS telephone,
-            v.date_heure_depart            AS dateVoyage,
-            gd.ville                       AS gareDepart,
-            ga.ville                       AS gareArrivee,
+            rm.id AS idReservation,
+            rm.date_reservation AS dateReservation,
+            c.nom AS client,
+            c.telephone AS telephone,
+            v.date_heure_depart AS dateVoyage,
+            gd.ville AS gareDepart,
+            ga.ville AS gareArrivee,
             string_agg(p.numero, ', ' ORDER BY p.numero) AS numeroPlace,
-            sp.libelle                     AS statutPaiement,
+            sp.libelle AS statutPaiement,
             COALESCE((
                 SELECT sr.libelle
                 FROM reservation_statut rs
@@ -41,30 +41,30 @@ public interface ReservationMereRepository extends JpaRepository<ReservationsMer
                 WHERE rs.id_reservation = rm.id
                 ORDER BY rs.date_modification DESC
                 LIMIT 1
-            ), '')                         AS statutReservation,
+            ), '') AS statutReservation,
             COALESCE((
                 SELECT a.prix_remboursement
                 FROM annulations a
                 WHERE a.id_reservation = rm.id
                 ORDER BY a.date_annulation DESC
                 LIMIT 1
-            ), 0)                           AS prixRemboursement,
-            sum(v.tarif)                   AS tarif
+            ), 0) AS prixRemboursement,
+            sum(v.tarif) AS tarif
         FROM reservations_mere rm
-            JOIN client c              ON c.id = rm.id_client
-            JOIN voyages v             ON v.id = rm.id_voyage
-            JOIN trajets t             ON t.id = v.id_trajet
-            JOIN gares gd              ON gd.id = t.id_gare_depart
-            JOIN gares ga              ON ga.id = t.id_gare_arrivee
-            JOIN statut_paiement sp    ON sp.id = rm.id_statut_paiement
+            JOIN client c ON c.id = rm.id_client
+            JOIN voyages v ON v.id = rm.id_voyage
+            JOIN trajets t ON t.id = v.id_trajet
+            JOIN gares gd ON gd.id = t.id_gare_depart
+            JOIN gares ga ON ga.id = t.id_gare_arrivee
+            JOIN statut_paiement sp ON sp.id = rm.id_statut_paiement
             JOIN reservations_fille rf ON rf.id_reservation_mere = rm.id
-            JOIN places p              ON p.id = rf.id_place
-        WHERE (:dateDebut IS NULL OR :dateDebut = '' OR v.date_heure_depart >= CAST(:dateDebut AS date))
-          AND (:dateFin IS NULL OR :dateFin = '' OR v.date_heure_depart < CAST(:dateFin AS date) + interval '1 day')
-          AND (:villeDepart IS NULL OR :villeDepart = '' OR gd.ville = :villeDepart)
-          AND (:villeArrivee IS NULL OR :villeArrivee = '' OR ga.ville = :villeArrivee)
+            JOIN places p ON p.id = rf.id_place
+        WHERE (:dateDebut IS NULL OR :dateDebut = '' OR rm.date_reservation >= CAST(:dateDebut AS date))
+        AND (:dateFin IS NULL OR :dateFin = '' OR rm.date_reservation < CAST(:dateFin AS date) + interval '1 day')
+        AND (:villeDepart IS NULL OR :villeDepart = '' OR gd.ville = :villeDepart)
+        AND (:villeArrivee IS NULL OR :villeArrivee = '' OR ga.ville = :villeArrivee)
         GROUP BY rm.id, rm.date_reservation, c.nom, c.telephone,
-                 v.date_heure_depart, gd.ville, ga.ville, sp.libelle
+                v.date_heure_depart, gd.ville, ga.ville, sp.libelle
         ORDER BY rm.date_reservation DESC
     """, countQuery = """
         SELECT COUNT(rm.id)
