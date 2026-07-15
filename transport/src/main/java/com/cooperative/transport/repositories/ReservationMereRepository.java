@@ -59,8 +59,8 @@ public interface ReservationMereRepository extends JpaRepository<ReservationsMer
             JOIN statut_paiement sp    ON sp.id = rm.id_statut_paiement
             JOIN reservations_fille rf ON rf.id_reservation_mere = rm.id
             JOIN places p              ON p.id = rf.id_place
-        WHERE (:dateDebut IS NULL OR :dateDebut = '' OR v.date_heure_depart >= CAST(:dateDebut AS date))
-          AND (:dateFin IS NULL OR :dateFin = '' OR v.date_heure_depart < CAST(:dateFin AS date) + interval '1 day')
+        WHERE (:dateDebut IS NULL OR :dateDebut = '' OR rm.date_reservation >= CAST(:dateDebut AS date))
+          AND (:dateFin IS NULL OR :dateFin = '' OR rm.date_reservation < CAST(:dateFin AS date) + interval '1 day')
           AND (:villeDepart IS NULL OR :villeDepart = '' OR gd.ville = :villeDepart)
           AND (:villeArrivee IS NULL OR :villeArrivee = '' OR ga.ville = :villeArrivee)
         GROUP BY rm.id, rm.date_reservation, c.nom, c.telephone,
