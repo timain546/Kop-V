@@ -9,331 +9,447 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Liste des réservations — KOP-V</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/styles.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/common.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/reservation.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KOP-V - Gestion des réservations</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/reservation.css">
   </head>
   <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <div class="container topbar-inner">
-          <a href="${pageContext.request.contextPath}/" class="brand-link">
-            <div class="brand-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M8 6v6"></path><path d="M15 6v6"></path><path d="M2 12h19.6"></path>
-                <path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"></path>
-                <circle cx="7" cy="18" r="2"></circle><path d="M9 18h5"></path><circle cx="16" cy="18" r="2"></circle>
-              </svg>
-            </div>
-            <div class="brand-title"><span class="kop">KOP</span><span class="dash">—</span><span class="v">V</span></div>
+    <!-- ================= NAVBAR ================= -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <a class="nav-brand" href="${pageContext.request.contextPath}/guichet/reservation">
+        <i class="fas fa-bus"></i>
+        KOP-V
+        </a>
+        <div class="nav-links">
+          <a class="nav-link active"
+            href="${pageContext.request.contextPath}/guichet/reservation">
+          <i class="fas fa-ticket-alt"></i>
+          Réservations
           </a>
-
-          <!-- Nav : Réservations (route réelle, inchangée) -->
-          <nav class="admin-nav" aria-label="Navigation principale">
-            <a href="${pageContext.request.contextPath}/guichet/reservation" class="admin-nav-pill active">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path><path d="m9 16 2 2 4-4"></path></svg>
-              <span>Réservations</span>
-            </a>
-          </nav>
-
-          <div class="topbar-right">
-            <div class="help-text">Aide ? <strong>+261 34 00 000 00</strong></div>
-            <div class="agent-menu">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 0 0-16 0"></path><circle cx="12" cy="7" r="4"></circle></svg>
-              <span>Agent</span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"></path></svg>
+          <a class="nav-link"
+            href="${pageContext.request.contextPath}/guichet/reservation/new">
+          <i class="fas fa-plus-circle"></i>
+          Nouvelle réservation
+          </a>
+          <a class="nav-link"
+            href="${pageContext.request.contextPath}/guichet/reservation/import-excel">
+          <i class="fas fa-file-excel"></i>
+          Import Excel
+          </a>
+        </div>
+        <div class="nav-user">
+          <div class="agent-box">
+            <div class="agent-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div>
+              <span class="agent-label">
+              Agent guichet
+              </span>
+              <span class="agent-name">
+              ${utilisateur.nom} ${utilisateur.prenom}
+              </span>
             </div>
           </div>
+          <a class="logout-btn" href="${pageContext.request.contextPath}/logout">
+            <i class="fas fa-sign-out-alt"></i>
+            Déconnexion
+          </a>
         </div>
-      </header>
-
-      <div class="main-grid reservations-grid">
-        <main class="main-col">
-
-          <!-- ================= CARTE HÉRO ================= -->
-
-
-          <!-- ================= FILTRES (date + ville, inchangés) ================= -->
-          <form class="filters-card" action="${pageContext.request.contextPath}/guichet/reservation" method="get">
-           <div class="filter-field">
-    <label class="filter-label-top">Date de réservation</label>
-    <div class="date-range">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="4" width="18" height="18" rx="2"></rect>
-            <path d="M16 2v4"></path>
-            <path d="M8 2v4"></path>
-            <path d="M3 10h18"></path>
-        </svg>
-        <input type="date" name="dateDebut" value="${filtre.dateDebut}" />
-        <span class="date-range-sep">→</span>
-        <input type="date" name="dateFin" value="${filtre.dateFin}" />
-    </div>
-</div>
-
-            <div class="filter-field">
-              <label class="filter-label-top">Ville de départ</label>
-              <select name="villeDepart" class="select-filter">
-                <option value="">Toutes</option>
+      </div>
+    </nav>
+    <!-- ================= PAGE ================= -->
+    <div class="page-container">
+      <div class="main-content">
+        <!-- ================= HEADER ================= -->
+        <div class="page-header">
+          <div class="header-left">
+            <span class="header-label">
+            GESTION DES RÉSERVATIONS
+            </span>
+            <h1>
+              Bonjour,
+              <c:choose>
+                <c:when test="${not empty agent}">
+                  ${utilisateur.nom} ${utilisateur.prenom}
+                </c:when>
+                <c:otherwise>
+                  Agent guichet
+                </c:otherwise>
+              </c:choose>
+            </h1>
+            <p class="header-subtitle">
+              Consultez, filtrez et gérez toutes les réservations KOP-V.
+            </p>
+          </div>
+          <a href="${pageContext.request.contextPath}/guichet/reservation/new"
+            class="btn btn-primary">
+          <i class="fas fa-plus"></i>
+          Nouvelle réservation
+          </a>
+        </div>
+        <!-- ================= SECTION RESERVATIONS ================= -->
+        <div class="section-card">
+          <!-- ================= FILTRES ================= -->
+          <form class="filters-panel"
+            action="${pageContext.request.contextPath}/guichet/reservation"
+            method="get">
+            <div class="filter-group">
+              <label>
+              Date début
+              </label>
+              <input type="date"
+                name="dateDebut"
+                value="${filtre.dateDebut}"/>
+            </div>
+            <div class="filter-group">
+              <label>
+              Date fin
+              </label>
+              <input type="date"
+                name="dateFin"
+                value="${filtre.dateFin}"/>
+            </div>
+            <div class="filter-group">
+              <label>
+              Ville départ
+              </label>
+              <select name="villeDepart">
+                <option value="">
+                  Toutes
+                </option>
                 <c:forEach var="ville" items="${villes}">
-                  <option value="${ville}" ${ville == filtre.villeDepart ? 'selected' : ''}>${ville}</option>
+                  <option value="${ville}"
+                  ${ville == filtre.villeDepart ? 'selected' : ''}>
+                  ${ville}
+                  </option>
                 </c:forEach>
               </select>
             </div>
-
-            <div class="filter-field">
-              <label class="filter-label-top">Ville d'arrivée</label>
-              <select name="villeArrivee" class="select-filter">
-                <option value="">Toutes</option>
+            <div class="filter-group">
+              <label>
+              Ville arrivée
+              </label>
+              <select name="villeArrivee">
+                <option value="">
+                  Toutes
+                </option>
                 <c:forEach var="ville" items="${villes}">
-                  <option value="${ville}" ${ville == filtre.villeArrivee ? 'selected' : ''}>${ville}</option>
+                  <option value="${ville}"
+                  ${ville == filtre.villeArrivee ? 'selected' : ''}>
+                  ${ville}
+                  </option>
                 </c:forEach>
               </select>
             </div>
-
-            <button type="submit" class="search-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-              Rechercher
+            <button type="submit"
+              class="btn btn-search">
+            <i class="fas fa-search"></i>
+            Rechercher
             </button>
           </form>
-
-          <div class="page-size-wrap">
-            <form class="page-size-form" action="${pageContext.request.contextPath}/guichet/reservation" method="get">
-              <input type="hidden" name="page" value="0" />
-              <input type="hidden" name="dateDebut" value="${filtre.dateDebut}" />
-              <input type="hidden" name="dateFin" value="${filtre.dateFin}" />
-              <input type="hidden" name="villeDepart" value="${filtre.villeDepart}" />
-              <input type="hidden" name="villeArrivee" value="${filtre.villeArrivee}" />
-
-              <label for="size" class="page-size-label">Afficher</label>
-              <select id="size" name="size" class="page-size-select">
-                <option value="5"  ${page.size == 5 ? 'selected' : ''}>5</option>
-                <option value="10" ${page.size == 10 ? 'selected' : ''}>10</option>
-                <option value="20" ${page.size == 20 ? 'selected' : ''}>20</option>
-                <option value="50" ${page.size == 50 ? 'selected' : ''}>50</option>
-                <option value="100" ${page.size == 100 ? 'selected' : ''}>100</option>
-              </select>
-              <span class="page-size-suffix">réservations par page</span>
-
-              <button type="submit" class="page-size-btn">Appliquer</button>
-            </form>
-          </div>
-
-          <!-- ================= LISTE (cartes ticket) ================= -->
-          <div class="res-list">
-            <c:forEach var="reservation" items="${reservations}">
-              <c:set var="statutPaiementLower" value="${fn:toLowerCase(reservation.statutPaiement)}" />
-              <c:set var="statutReservationLower" value="${fn:toLowerCase(reservation.statutReservation)}" />
-              <c:set var="isAnnulee" value="${fn:contains(statutReservationLower, 'annul')}" />
-              <article class="ticket-card ${isAnnulee ? 'ticket-card-cancelled' : ''}">
-                <div class="ticket-left">
-                  <div class="ticket-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"></path><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"></path><path d="m9 15 2 2 4-4"></path></svg>
-                  </div>
-                  <div>
-                    <p class="ticket-code">KOPV-${reservation.idReservation}</p>
-                    <p class="ticket-client">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+          <!-- ================= LISTE DES RESERVATIONS ================= -->
+          <div class="reservations-list" id="reservationsList">
+            <c:forEach var="reservation" items="${reservations}" varStatus="loop">
+              <c:set var="statutPaiementLower"
+                value="${fn:toLowerCase(reservation.statutPaiement)}"/>
+              <c:set var="statutReservationLower"
+                value="${fn:toLowerCase(reservation.statutReservation)}"/>
+              <c:set var="isAnnulee"
+                value="${fn:contains(statutReservationLower,'annul')}"/>
+              <div class="reservation-card ${isAnnulee ? 'reservation-cancelled' : ''}"
+                data-status="${statutReservationLower}"
+                style="animation-delay:${loop.index * 0.05}s;">
+                <!-- ICON -->
+                <div class="reservation-icon">
+                  <i class="fas fa-ticket-alt"></i>
+                </div>
+                <!-- INFORMATIONS PRINCIPALES -->
+                <div class="reservation-details">
+                  <div class="reservation-header">
+                    <div class="reservation-title">
+                      <strong>
+                      KOPV-${reservation.idReservation}
+                      </strong>
+                      <span class="client-name">
+                      <i class="fas fa-user"></i>
                       ${reservation.client}
-                    </p>
+                      </span>
+                    </div>
+                    <div class="reservation-route">
+                      <strong>
+                      ${reservation.gareDepart}
+                      </strong>
+                      <i class="fas fa-arrow-right"></i>
+                      <strong>
+                      ${reservation.gareArrivee}
+                      </strong>
+                    </div>
+                  </div>
+                  <div class="reservation-meta">
+                    <span>
+                    <i class="fas fa-calendar-alt"></i>
+                    ${reservation.dateReservation.format(
+                    DateTimeFormatter.ofPattern("EEE dd MMM yyyy",
+                    Locale.FRENCH))}
+                    </span>
+                    <span>
+                    <i class="fas fa-clock"></i>
+                    ${reservation.dateReservation.format(
+                    DateTimeFormatter.ofPattern("HH:mm"))}
+                    </span>
+                    <span>
+                    <i class="fas fa-chair"></i>
+                    ${fn:length(fn:split(reservation.numeroPlace,','))}
+                    place(s)
+                    </span>
                   </div>
                 </div>
-
-                <div class="ticket-route">
-                  <div class="route-point">
-                    <p class="route-time">${reservation.dateVoyage.format(DateTimeFormatter.ofPattern("HH:mm"))}</p>
-                    <p class="route-city">${reservation.gareDepart}</p>
-                  </div>
-                  <div class="route-line-wrap">
-                    <span class="route-date-badge">
-                      ${reservation.dateVoyage.format(DateTimeFormatter.ofPattern("EEE dd MMM yyyy", Locale.FRENCH))}
+                <!-- SIEGES + PRIX -->
+                <div class="reservation-info">
+                  <div class="seat-block">
+                    <span class="info-label">
+                    SIÈGES
                     </span>
-                    <div class="route-line"></div>
-                  </div>
-                  <div class="route-point route-point-end">
-                    <p class="route-city">${reservation.gareArrivee}</p>
-                  </div>
-                </div>
-
-                <div class="ticket-side">
-                  <div class="seats-block">
-                    <span class="seats-label">
-                      SIÈGES
-                    </span>
-                    <div class="seats-badges">
-                      <c:forEach var="place" items="${fn:split(reservation.numeroPlace, ',')}">
-                        <span class="seat-badge">${fn:trim(place)}</span>
+                    <div class="seat-list">
+                      <c:forEach var="place"
+                        items="${fn:split(reservation.numeroPlace,',')}">
+                        <span class="seat-badge">
+                        ${fn:trim(place)}
+                        </span>
                       </c:forEach>
                     </div>
                   </div>
-
-                  <div class="ticket-money">
-                    <p class="ticket-price"><fmt:formatNumber value="${reservation.tarif}" pattern="#,##0"/> Ar</p>
+                  <div class="price-block">
+                    <span class="price-value">
+                      <fmt:formatNumber value="${reservation.tarif}"
+                        pattern="#,##0"/>
+                      Ar
+                    </span>
                     <c:if test="${isAnnulee}">
-                      <p class="ticket-refund">
-                        Remboursé <fmt:formatNumber value="${reservation.prixRemboursement}" pattern="#,##0"/> Ar
-                      </p>
+                      <span class="refund-value">
+                        Remboursé :
+                        <fmt:formatNumber
+                          value="${reservation.prixRemboursement}"
+                          pattern="#,##0"/>
+                        Ar
+                      </span>
                     </c:if>
                   </div>
-
+                </div>
+                <!-- ACTIONS -->
+                <div class="reservation-actions">
                   <c:choose>
                     <c:when test="${isAnnulee}">
-                      <span class="ticket-status status-annulee">${reservation.statutReservation}</span>
+                      <span class="status-badge status-annule">
+                      <i class="fas fa-ban"></i>
+                      ${reservation.statutReservation}
+                      </span>
                     </c:when>
-                    <c:when test="${fn:contains(statutPaiementLower, 'rembour')}">
-                      <span class="ticket-status status-remboursee">${reservation.statutPaiement}</span>
+                    <c:when test="${fn:contains(statutPaiementLower,'rembour')}">
+                      <span class="status-badge status-rembourse">
+                      <i class="fas fa-undo"></i>
+                      ${reservation.statutPaiement}
+                      </span>
                     </c:when>
-                    <c:when test="${fn:contains(statutPaiementLower, 'pay')}">
-                      <span class="ticket-status status-paye">${reservation.statutPaiement}</span>
+                    <c:when test="${fn:contains(statutPaiementLower,'pay')}">
+                      <span class="status-badge status-paye">
+                      <i class="fas fa-check-circle"></i>
+                      ${reservation.statutPaiement}
+                      </span>
                     </c:when>
                     <c:otherwise>
-                      <span class="ticket-status status-attente">${reservation.statutPaiement}</span>
+                      <span class="status-badge status-attente">
+                      <i class="fas fa-clock"></i>
+                      ${reservation.statutPaiement}
+                      </span>
                     </c:otherwise>
                   </c:choose>
-
-                  <details class="ticket-actions">
-                    <summary class="ticket-actions-trigger" aria-label="Actions de la réservation KOPV-${reservation.idReservation}">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="1"></circle>
-                        <circle cx="19" cy="12" r="1"></circle>
-                        <circle cx="5" cy="12" r="1"></circle>
-                      </svg>
-                    </summary>
-                    <div class="ticket-actions-menu">
-                      <a href="${pageContext.request.contextPath}/guichet/reservation/${reservation.idReservation}/annulation" class="ticket-action ticket-action-danger">Annuler</a>
-                      <a href="${pageContext.request.contextPath}/guichet/reservation/${reservation.idReservation}/pdf" class="ticket-action">Exporter</a>
-                      <a href="${pageContext.request.contextPath}/guichet/reservation/${reservation.idReservation}/paiement" class="ticket-action">Payer le reste</a>
-                    </div>
-                  </details>
+                  <div class="action-buttons">
+                    <a href="${pageContext.request.contextPath}/guichet/reservation/${reservation.idReservation}/pdf"
+                      class="btn btn-sm btn-secondary">
+                    <i class="fas fa-file-pdf"></i>
+                    PDF
+                    </a>
+                    <c:if test="${not isAnnulee}">
+                      <a href="${pageContext.request.contextPath}/guichet/reservation/${reservation.idReservation}/paiement"
+                        class="btn btn-sm btn-success">
+                      <i class="fas fa-money-bill"></i>
+                      Payer
+                      </a>
+                      <a href="${pageContext.request.contextPath}/guichet/reservation/${reservation.idReservation}/annulation"
+                        class="btn btn-sm btn-danger">
+                      <i class="fas fa-times"></i>
+                      Annuler
+                      </a>
+                    </c:if>
+                  </div>
                 </div>
-              </article>
+              </div>
             </c:forEach>
-
-            <c:if test="${page.totalPages > 1}">
-              <nav class="pagination" aria-label="Pagination des réservations">
-                <!-- Précédent -->
-                <c:choose>
-                  <c:when test="${page.number > 0}">
-                    <a class="pagination-btn pagination-nav"
-                       href="?page=${page.number - 1}&size=${page.size}&dateDebut=${filtre.dateDebut}&dateFin=${filtre.dateFin}&villeDepart=${filtre.villeDepart}&villeArrivee=${filtre.villeArrivee}"
-                       aria-label="Page précédente">
-                      ← Précédent
-                    </a>
-                  </c:when>
-                  <c:otherwise>
-                    <span class="pagination-btn pagination-nav is-disabled" aria-disabled="true">← Précédent</span>
-                  </c:otherwise>
-                </c:choose>
-
-                <!-- Numéros -->
-                <div class="pagination-pages">
-                  <c:forEach begin="0" end="${page.totalPages - 1}" var="i">
-                    <c:choose>
-                      <c:when test="${i == page.number}">
-                        <span class="pagination-btn is-active" aria-current="page">${i + 1}</span>
-                      </c:when>
-                      <c:otherwise>
-                        <a class="pagination-btn"
-                           href="?page=${i}&size=${page.size}&dateDebut=${filtre.dateDebut}&dateFin=${filtre.dateFin}&villeDepart=${filtre.villeDepart}&villeArrivee=${filtre.villeArrivee}"
-                           aria-label="Aller à la page ${i + 1}">
-                          ${i + 1}
-                        </a>
-                      </c:otherwise>
-                    </c:choose>
-                  </c:forEach>
-                </div>
-
-                <!-- Suivant -->
-                <c:choose>
-                  <c:when test="${page.number < page.totalPages - 1}">
-                    <a class="pagination-btn pagination-nav"
-                       href="?page=${page.number + 1}&size=${page.size}&dateDebut=${filtre.dateDebut}&dateFin=${filtre.dateFin}&villeDepart=${filtre.villeDepart}&villeArrivee=${filtre.villeArrivee}"
-                       aria-label="Page suivante">
-                      Suivant →
-                    </a>
-                  </c:when>
-                  <c:otherwise>
-                    <span class="pagination-btn pagination-nav is-disabled" aria-disabled="true">Suivant →</span>
-                  </c:otherwise>
-                </c:choose>
-              </nav>
-            </c:if>
-
             <c:if test="${empty reservations}">
-              <p class="res-empty">Aucune réservation ne correspond à ces critères.</p>
+              <div class="empty-state">
+                <i class="fas fa-ticket-alt"></i>
+                <p>
+                  Aucune réservation trouvée.
+                </p>
+              </div>
             </c:if>
           </div>
-        </main>
-
-        <aside class="summary-col">
-          <section class="summary-card reservation-summary-card">
-            <div class="reservation-summary-hero">
-              <div class="reservation-summary-badge">Vue rapide</div>
-              <h2 class="reservation-summary-title">Réservations du guichet</h2>
-              <p class="reservation-summary-text">
-                Un aperçu clair des réservations, des statuts de paiement et un accès direct à la création d'une nouvelle fiche.
-              </p>
-
-              <div class="reservation-summary-metrics">
-                <div class="summary-metric summary-metric-primary">
-                  <span class="summary-metric-value">${fn:length(reservations)}</span>
-                  <span class="summary-metric-label">Réservations</span>
-                </div>
-                <div class="summary-metric">
-                  <span class="summary-metric-value">${fn:length(stats)}</span>
-                  <span class="summary-metric-label">Statuts suivis</span>
-                </div>
-                <div class="summary-metric">
-                  <span class="summary-metric-value">24h</span>
-                  <span class="summary-metric-label">Délai d'annulation</span>
-                </div>
+          <!-- ================= PAGINATION ================= -->
+          <c:if test="${page.totalPages > 1}">
+            <nav class="pagination">
+              <c:choose>
+                <c:when test="${page.number > 0}">
+                  <a class="pagination-btn"
+                    href="?page=${page.number - 1}
+                    &size=${page.size}
+                    &dateDebut=${filtre.dateDebut}
+                    &dateFin=${filtre.dateFin}
+                    &villeDepart=${filtre.villeDepart}
+                    &villeArrivee=${filtre.villeArrivee}">
+                  ← Précédent
+                  </a>
+                </c:when>
+                <c:otherwise>
+                  <span class="pagination-btn disabled">
+                  ← Précédent
+                  </span>
+                </c:otherwise>
+              </c:choose>
+              <div class="pagination-pages">
+                <c:forEach begin="0"
+                  end="${page.totalPages - 1}"
+                  var="i">
+                  <c:choose>
+                    <c:when test="${i == page.number}">
+                      <span class="pagination-btn active">
+                      ${i + 1}
+                      </span>
+                    </c:when>
+                    <c:otherwise>
+                      <a class="pagination-btn"
+                        href="?page=${i}
+                        &size=${page.size}
+                        &dateDebut=${filtre.dateDebut}
+                        &dateFin=${filtre.dateFin}
+                        &villeDepart=${filtre.villeDepart}
+                        &villeArrivee=${filtre.villeArrivee}">
+                      ${i + 1}
+                      </a>
+                    </c:otherwise>
+                  </c:choose>
+                </c:forEach>
               </div>
-            </div>
-
-            <div class="reservation-summary-body">
-              <div class="reservation-summary-panel">
-                <div class="reservation-summary-panel-head">
-                  <span>Répartition des paiements</span>
-                </div>
-
-                <div class="reservation-summary-status-list">
-                  <c:forEach var="entry" items="${stats}">
-                    <div class="reservation-summary-status-row">
-                      <span class="reservation-summary-status-name">${fn:toUpperCase(entry.key)}</span>
-                      <span class="reservation-summary-status-value">${entry.value}</span>
-                    </div>
-                  </c:forEach>
-                  <c:if test="${empty stats}">
-                    <p class="reservation-summary-empty">Aucun statut disponible pour le moment.</p>
-                  </c:if>
-                </div>
-              </div>
-
-              <div class="reservation-summary-note">
-                <div class="reservation-summary-note-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
-                </div>
-                <div>
-                  <p class="reservation-summary-note-title">Navigation rapide</p>
-                  <p class="reservation-summary-note-text">Créez une nouvelle réservation ou revenez au tableau de bord en un clic.</p>
-                </div>
-              </div>
-
-              <a href="${pageContext.request.contextPath}/guichet/reservation/new" class="new-res-btn reservation-summary-cta">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
-                Nouvelle réservation
-              </a>
-
-              <a href="${pageContext.request.contextPath}/guichet/reservation/import-excel" class="new-res-btn reservation-summary-cta">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
-                Importer depuis un Excel
-              </a>
-            </div>
-          </section>
-        </aside>
+              <c:choose>
+                <c:when test="${page.number < page.totalPages - 1}">
+                  <a class="pagination-btn"
+                    href="?page=${page.number + 1}
+                    &size=${page.size}
+                    &dateDebut=${filtre.dateDebut}
+                    &dateFin=${filtre.dateFin}
+                    &villeDepart=${filtre.villeDepart}
+                    &villeArrivee=${filtre.villeArrivee}">
+                  Suivant →
+                  </a>
+                </c:when>
+                <c:otherwise>
+                  <span class="pagination-btn disabled">
+                  Suivant →
+                  </span>
+                </c:otherwise>
+              </c:choose>
+            </nav>
+          </c:if>
+        </div>
+        <!-- FIN SECTION CARD -->
       </div>
+      <!-- FIN MAIN CONTENT -->
+      <!-- ================= SIDEBAR ================= -->
+      <aside class="sidebar">
+        <div class="profile-card">
+          <div class="profile-header-label">
+            GUICHET KOP-V
+          </div>
+          <h3 class="profile-name">
+            <c:choose>
+              <c:when test="${not empty utilisateur}">
+                ${utilisateur.nom}
+                ${utilisateur.prenom}
+              </c:when>
+              <c:otherwise>
+                Agent
+              </c:otherwise>
+            </c:choose>
+          </h3>
+          <div class="profile-avatar">
+            <c:choose>
+              <c:when test="${not empty utilisateur}">
+                ${fn:substring(utilisateur.nom,0,1)}${fn:substring(utilisateur.prenom,0,1)}
+              </c:when>
+              <c:otherwise>
+                KV
+              </c:otherwise>
+            </c:choose>
+          </div>
+          <div class="profile-role">
+            Agent de réservation
+          </div>
+          <div class="profile-badge">
+            <i class="fas fa-check-circle"></i>
+            Session active
+          </div>
+          <div class="profile-info-section">
+            <div class="profile-info-item">
+              <span class="info-icon">
+              <i class="fas fa-id-card"></i>
+              </span>
+              <div>
+                <span class="info-label">
+                MATRICULE
+                </span>
+                <span class="info-value">
+                AG-${utilisateur.id}
+                </span>
+              </div>
+            </div>
+            <div class="profile-info-item">
+              <span class="info-icon">
+              <i class="fas fa-envelope"></i>
+              </span>
+              <div>
+                <span class="info-label">
+                EMAIL
+                </span>
+                <span class="info-value">
+                  <c:choose>
+                    <c:when test="${not empty utilisateur.email}">
+                        ${utilisateur.email}
+                    </c:when>
+                    <c:otherwise>
+                      -
+                    </c:otherwise>
+                  </c:choose>
+                </span>
+              </div>
+            </div>
+          </div>
+          <a href="${pageContext.request.contextPath}/guichet/reservation/new"
+            class="btn btn-profile">
+          <i class="fas fa-plus"></i>
+          Nouvelle réservation
+          </a>
+          <a href="${pageContext.request.contextPath}/guichet/reservation/import-excel"
+            class="btn btn-profile">
+          <i class="fas fa-file-excel"></i>
+          Import Excel
+          </a>
+        </div>
+      </aside>
     </div>
+    <!-- FIN PAGE CONTAINER -->
   </body>
 </html>

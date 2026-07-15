@@ -9,4 +9,6 @@ import com.cooperative.transport.entities.ReservationsMere;
 
 public interface ReservationFilleRepository extends JpaRepository<ReservationsFille, Integer> {
     List<ReservationsFille> findByReservationMere(ReservationsMere reservationMere);
+
+    Integer countByReservationMere(ReservationsMere reservationMere);
 }

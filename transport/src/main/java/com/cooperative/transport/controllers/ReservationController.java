@@ -32,6 +32,7 @@ import com.cooperative.transport.entities.Places;
 import com.cooperative.transport.entities.ReservationsFille;
 import com.cooperative.transport.entities.PlaceStatut;
 import com.cooperative.transport.entities.ReservationsMere;
+import com.cooperative.transport.entities.Utilisateurs;
 import com.cooperative.transport.entities.Voyages;
 import com.cooperative.transport.repositories.GareRepository;
 import com.cooperative.transport.repositories.ModePaiementRepository;
@@ -91,6 +92,8 @@ public class ReservationController {
 
         model.addAttribute("info", info);
 
+        model.addAttribute("utilisateur", session.getAttribute("utilisateur"));
+
         return "guichet/new-reservation";
     }
 
@@ -115,6 +118,7 @@ public class ReservationController {
 
         model.addAttribute("info", info);
         model.addAttribute("voyages", voyages);
+        model.addAttribute("utilisateur", session.getAttribute("utilisateur"));
 
         return "guichet/choix-voyage";
     }
@@ -145,6 +149,7 @@ public class ReservationController {
         model.addAttribute("info", info);
         model.addAttribute("places", places);
         model.addAttribute("maxY", maxY);
+        model.addAttribute("utilisateur", session.getAttribute("utilisateur"));
 
         return "guichet/choix-place";
     }
@@ -173,6 +178,8 @@ public class ReservationController {
 
         model.addAttribute("info", info);
         model.addAttribute("modesPaiements", modesPaiements);
+        model.addAttribute("erreur", null);
+        model.addAttribute("utilisateur", session.getAttribute("utilisateur"));
 
         return "guichet/new-paiement";
     }
@@ -202,6 +209,8 @@ public class ReservationController {
             model.addAttribute("previousModePaiement", modePaiement);
             model.addAttribute("previousReference", reference);
 
+            model.addAttribute("utilisateur", session.getAttribute("utilisateur"));
+
             return "guichet/new-paiement";
         }
 
@@ -209,7 +218,7 @@ public class ReservationController {
     }
 
     @GetMapping("/guichet/reservation/{idReservation}/paiement")
-    public String paiement(Model model, @PathVariable Integer idReservation) {
+    public String paiement(HttpSession session, Model model, @PathVariable Integer idReservation) {
         ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
         List<ModePaiement> modesPaiements = modePaiementRepository.findAll();
         List<Paiements> paiements = paiementRepository.findByReservation(reservation);
@@ -221,12 +230,14 @@ public class ReservationController {
         model.addAttribute("paiements", paiements);
         model.addAttribute("montantPayeTotal", montantPayeTotal);
         model.addAttribute("prixTotal", prixTotal);
+        model.addAttribute("erreur", null);
+        model.addAttribute("utilisateur", session.getAttribute("utilisateur"));
 
         return "guichet/paiement";
     }
 
     @PostMapping("/guichet/reservation/{idReservation}/paiement")
-    public String postPaiement(@PathVariable Integer idReservation, Model model,
+    public String postPaiement(@PathVariable Integer idReservation, HttpSession session, Model model,
             @RequestParam BigDecimal montant, @RequestParam ModePaiement modePaiement,
             @RequestParam(required = false, defaultValue = "") String reference) {
         ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
@@ -246,6 +257,7 @@ public class ReservationController {
             model.addAttribute("montantPayeTotal", montantPayeTotal);
             model.addAttribute("prixTotal", prixTotal);
             model.addAttribute("erreur", e.getMessage());
+            model.addAttribute("utilisateur", session.getAttribute("utilisateur"));
 
             return "guichet/paiement";
         }
@@ -254,19 +266,22 @@ public class ReservationController {
     }
 
     @GetMapping("/guichet/reservation/{idReservation}/annulation")
-    public String annulation(Model model, @PathVariable Integer idReservation) {
+    public String annulation(HttpSession session, Model model, @PathVariable Integer idReservation) {
         ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
         BigDecimal montantPayeTotal = paiementRepository.getPaiementTotal(reservation).orElse(BigDecimal.ZERO);
 
         model.addAttribute("reservation", reservation);
+        model.addAttribute("nbPlaces", reservationFilleRepository.countByReservationMere(reservation));
         model.addAttribute("montantPayeTotal", montantPayeTotal);
+        model.addAttribute("erreur", null);
+        model.addAttribute("utilisateur", session.getAttribute("utilisateur"));
 
         return "guichet/annulation";
     }
 
     @PostMapping("/guichet/reservation/{idReservation}/annulation")
 
-    public String postAnnulation(Model model, @PathVariable Integer idReservation,
+    public String postAnnulation(HttpSession session, Model model, @PathVariable Integer idReservation,
             @RequestParam(required = false, defaultValue = "10") BigDecimal pourcentageFrais,
             @RequestParam(required = false, defaultValue = "") String motif) {
         ReservationsMere reservation = reservationMereRepository.findById(idReservation).get();
@@ -279,6 +294,7 @@ public class ReservationController {
             model.addAttribute("reservation", reservation);
             model.addAttribute("montantPayeTotal", montantPayeTotal);
             model.addAttribute("erreur", e.getMessage());
+            model.addAttribute("utilisateur", session.getAttribute("utilisateur"));
 
             return "guichet/annulation";
         }
@@ -288,7 +304,7 @@ public class ReservationController {
 
 
     @GetMapping("/guichet/reservation")
-    public String getReservations(
+    public String getReservations(HttpSession session,
             @RequestParam(required = false) String dateDebut,
             @RequestParam(required = false) String dateFin,
             @RequestParam(required = false, defaultValue = "") String villeDepart,
@@ -309,6 +325,8 @@ public class ReservationController {
 
         model.addAttribute("stats", computeStats(reservations.getContent()));
 
+        model.addAttribute("utilisateur", session.getAttribute("utilisateur"));
+
         return "guichet/reservation";
     }
 
@@ -322,18 +340,20 @@ public class ReservationController {
     }
 
     @GetMapping("/guichet/reservation/import-excel")
-    public String importExcel() {
+    public String importExcel(HttpSession session, Model model) {
+        model.addAttribute("utilisateur", session.getAttribute("utilisateur"));
         return "guichet/import-excel";
     }
 
     @PostMapping("/guichet/reservation/import-excel")
-    public String postImportExcel(@RequestParam("file") MultipartFile file, Model model) {
+    public String postImportExcel(HttpSession session, @RequestParam("file") MultipartFile file, Model model) {
         try {
             List<ReservationDTO> reservations = reservationService.importReservationsFromExcel(file);
             model.addAttribute("reservations", reservations);
         } catch (Exception e) {
             model.addAttribute("erreur", e.getMessage());
         }
+        model.addAttribute("utilisateur", session.getAttribute("utilisateur"));
         return "guichet/import-excel";
     }
 
