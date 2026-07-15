@@ -5,163 +5,287 @@
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.Locale" %>
 <fmt:setLocale value="fr"/>
-
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Importation Excel — KOP-V</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/styles.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/common.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/paiement.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/reservation.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Excel — KOP-V</title>
+    <link rel="stylesheet"
+      href="${pageContext.request.contextPath}/assets/css/guichet/import-excel.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet">
   </head>
   <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <div class="container topbar-inner">
-          <a href="/" class="brand-link">
-            <div class="brand-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M8 6v6"></path><path d="M15 6v6"></path><path d="M2 12h19.6"></path>
-                <path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"></path>
-                <circle cx="7" cy="18" r="2"></circle><path d="M9 18h5"></path><circle cx="16" cy="18" r="2"></circle>
-              </svg>
-            </div>
-            <div class="brand-title"><span class="kop">KOP</span><span class="dash">—</span><span class="v">V</span></div>
+    <!-- ================= NAVBAR ================= -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <a class="nav-brand" href="${pageContext.request.contextPath}/guichet/reservation">
+        <i class="fas fa-bus"></i>
+        KOP-V
+        </a>
+        <div class="nav-links">
+          <a class="nav-link"
+            href="${pageContext.request.contextPath}/guichet/reservation">
+          <i class="fas fa-ticket-alt"></i>
+          Réservations
           </a>
-
-          <div class="help-text">Aide ? <strong>+261 34 00 000 00</strong></div>
+          <a class="nav-link"
+            href="${pageContext.request.contextPath}/guichet/reservation/new">
+          <i class="fas fa-plus-circle"></i>
+          Nouvelle réservation
+          </a>
+          <a class="nav-link active"
+            href="${pageContext.request.contextPath}/guichet/reservation/import-excel">
+          <i class="fas fa-file-excel"></i>
+          Import Excel
+          </a>
         </div>
-      </header>
-
-      <div class="main-grid passenger-grid">
-        <main class="main-col">
-          <form action="#" method="post" class="passenger-section" enctype="multipart/form-data">
-            <div class="passenger-head">
-              <div>
-                <h1 class="passenger-title">Importation d’un fichier Excel</h1>
-                <p class="passenger-subtitle">Importez les réservations provenant d’un fichier Excel.</p>
-                <a href="${pageContext.request.contextPath}/assets/reservation-template.xlsx" download class="next-btn">Télécharger le template</a>
-              </div>
+        <div class="nav-user">
+          <div class="agent-box">
+            <div class="agent-avatar">
+              <i class="fas fa-user"></i>
             </div>
-
-            <c:if test="${erreur != null}">
-                <div class="passenger-cards">
-                    <article class="passenger-card error-card">
-                        <div class="error-message">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm icon-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                            </svg>
-                            <span>${erreur}</span>
-                        </div>
-                    </article>
-                </div>
-            </c:if>
-
-            <div class="passenger-cards">
-              <article class="passenger-card">
-                <div class="passenger-form-grid">
-                  <label class="field field-span-2">
-                    <span class="field-label">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm icon-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-banknote-icon lucide-banknote"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
-                      Fichier
-                    </span>
-                    <input name="file" class="field-input" type="file" />
-                  </label>
-                </div>
-              </article>
+            <div>
+              <span class="agent-label">
+              Agent guichet
+              </span>
+              <span class="agent-name">
+              ${utilisateur.nom} ${utilisateur.prenom}
+              </span>
             </div>
-
-            <div class="passenger-actions">
-              <a href="${pageContext.request.contextPath}/guichet/reservation" class="back-btn">← Retour aux réservations</a>
-              <button type="submit" class="next-btn">Importer</button>
+          </div>
+          <a class="logout-btn" href="${pageContext.request.contextPath}/logout">
+            <i class="fas fa-sign-out-alt"></i>
+            Déconnexion
+          </a>
+        </div>
+      </div>
+    </nav>
+    <!-- ================= PAGE ================= -->
+    <div class="page-container">
+      <div class="main-content">
+        <!-- ================= HEADER ================= -->
+        <div class="page-header">
+          <div>
+            <span class="header-label">
+            IMPORTATION DES RÉSERVATIONS
+            </span>
+            <h1 class="page-title">
+              Importer un fichier Excel
+            </h1>
+            <p class="page-subtitle">
+              Ajoutez plusieurs réservations rapidement depuis un fichier Excel.
+            </p>
+          </div>
+          <a href="${pageContext.request.contextPath}/assets/reservation-template.xlsx"
+            class="btn btn-primary"
+            download>
+          <i class="fas fa-download"></i>
+          Télécharger le modèle
+          </a>
+        </div>
+        <!-- ================= ERREUR ================= -->
+        <c:if test="${not empty erreur}">
+          <div class="alert alert-danger">
+            <i class="fas fa-circle-exclamation"></i>
+            ${erreur}
+          </div>
+        </c:if>
+        <!-- ================= IMPORT CARD ================= -->
+        <form method="post"
+          enctype="multipart/form-data"
+          class="section-card">
+          <div class="section-header">
+            <div>
+              <h2>
+                <i class="fas fa-file-excel"></i>
+                Importer Excel
+              </h2>
+              <p class="section-subtitle">
+                Sélectionnez un fichier .xlsx contenant les réservations.
+              </p>
             </div>
-          </form>
-
-          <div class="res-list">
+          </div>
+          <div class="form-grid">
+            <div class="form-field full-width">
+              <label class="form-label">
+              <i class="fas fa-file"></i>
+              Fichier Excel
+              </label>
+              <input type="file"
+                name="file"
+                accept=".xlsx,.xls"
+                class="form-input"
+                required>
+            </div>
+          </div>
+          <div class="form-actions">
+            <a href="${pageContext.request.contextPath}/guichet/reservation"
+              class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Retour
+            </a>
+            <button type="submit"
+              class="btn btn-primary">
+            <i class="fas fa-upload"></i>
+            Importer
+            </button>
+          </div>
+        </form>
+        <!-- ================= RESERVATIONS IMPORTEES ================= -->
+        <div class="section-card imported-section">
+          <div class="section-header">
+            <div>
+              <h2>
+                <i class="fas fa-list"></i>
+                Réservations importées
+              </h2>
+              <p class="section-subtitle">
+                Les réservations ajoutées depuis le fichier Excel apparaîtront ici.
+              </p>
+            </div>
+            <span class="filter-tab active">
+            ${fn:length(reservations)} réservation(s)
+            </span>
+          </div>
+          <div class="reservations-list">
             <c:forEach var="reservation" items="${reservations}">
-              <c:set var="statutPaiementLower" value="${fn:toLowerCase(reservation.statutPaiement)}" />
-              <c:set var="statutReservationLower" value="${fn:toLowerCase(reservation.statutReservation)}" />
-              <c:set var="isAnnulee" value="${fn:contains(statutReservationLower, 'annul')}" />
-              <article class="ticket-card ${isAnnulee ? 'ticket-card-cancelled' : ''}">
-                <div class="ticket-left">
-                  <div class="ticket-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"></path><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"></path><path d="m9 15 2 2 4-4"></path></svg>
-                  </div>
-                  <div>
-                    <p class="ticket-code">KOPV-${reservation.idReservation}</p>
-                    <p class="ticket-client">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+              <c:set var="statutPaiementLower"
+                value="${fn:toLowerCase(reservation.statutPaiement)}"/>
+              <c:set var="statutReservationLower"
+                value="${fn:toLowerCase(reservation.statutReservation)}"/>
+              <c:set var="isAnnulee"
+                value="${fn:contains(statutReservationLower,'annul')}"/>
+              <article class="reservation-card ${isAnnulee ? 'reservation-cancelled' : ''}">
+                <!-- ICON -->
+                <div class="reservation-icon">
+                  <i class="fas fa-ticket"></i>
+                </div>
+                <!-- DETAILS -->
+                <div class="reservation-details">
+                  <div class="reservation-header">
+                    <div class="reservation-title">
+                      <strong>
+                      KOPV-${reservation.idReservation}
+                      </strong>
+                      <span class="client-name">
+                      <i class="fas fa-user"></i>
                       ${reservation.client}
-                    </p>
+                      </span>
+                    </div>
+                    <div class="reservation-route">
+                      <strong>
+                      ${reservation.gareDepart}
+                      </strong>
+                      <i class="fas fa-arrow-right"></i>
+                      <strong>
+                      ${reservation.gareArrivee}
+                      </strong>
+                    </div>
+                  </div>
+                  <div class="reservation-meta">
+                    <span>
+                    <i class="fas fa-calendar"></i>
+                    ${reservation.dateVoyage.format(
+                    DateTimeFormatter.ofPattern(
+                    "EEE dd MMM yyyy",
+                    Locale.FRENCH
+                    ))}
+                    </span>
+                    <span>
+                    <i class="fas fa-clock"></i>
+                    ${reservation.dateVoyage.format(
+                    DateTimeFormatter.ofPattern("HH:mm")
+                    )}
+                    </span>
+                    <span>
+                    <i class="fas fa-chair"></i>
+                    ${fn:length(fn:split(
+                    reservation.numeroPlace,
+                    ','
+                    ))}
+                    place(s)
+                    </span>
                   </div>
                 </div>
-
-                <div class="ticket-route">
-                  <div class="route-point">
-                    <p class="route-time">${reservation.dateVoyage.format(DateTimeFormatter.ofPattern("HH:mm"))}</p>
-                    <p class="route-city">${reservation.gareDepart}</p>
-                  </div>
-                  <div class="route-line-wrap">
-                    <span class="route-date-badge">
-                      ${reservation.dateVoyage.format(DateTimeFormatter.ofPattern("EEE dd MMM yyyy", Locale.FRENCH))}
+                <!-- INFO -->
+                <div class="reservation-info">
+                  <div class="seat-block">
+                    <span class="info-label">
+                    SIÈGES
                     </span>
-                    <div class="route-line"></div>
-                  </div>
-                  <div class="route-point route-point-end">
-                    <p class="route-city">${reservation.gareArrivee}</p>
-                  </div>
-                </div>
-
-                <div class="ticket-side">
-                  <div class="seats-block">
-                    <span class="seats-label">
-                      SIÈGES
-                    </span>
-                    <div class="seats-badges">
-                      <c:forEach var="place" items="${fn:split(reservation.numeroPlace, ',')}">
-                        <span class="seat-badge">${fn:trim(place)}</span>
+                    <div class="seat-list">
+                      <c:forEach var="place"
+                        items="${fn:split(reservation.numeroPlace,',')}">
+                        <span class="seat-badge">
+                        ${fn:trim(place)}
+                        </span>
                       </c:forEach>
                     </div>
                   </div>
-
-                  <div class="ticket-money">
-                    <p class="ticket-price"><fmt:formatNumber value="${reservation.tarif}" pattern="#,##0"/> Ar</p>
+                  <div class="price-block">
+                    <span class="price-value">
+                      <fmt:formatNumber
+                        value="${reservation.tarif}"
+                        pattern="#,##0"/>
+                      Ar
+                    </span>
                     <c:if test="${isAnnulee}">
-                      <p class="ticket-refund">
-                        Remboursé <fmt:formatNumber value="${reservation.prixRemboursement}" pattern="#,##0"/> Ar
-                      </p>
+                      <span class="refund-value">
+                        Remboursé :
+                        <fmt:formatNumber
+                          value="${reservation.prixRemboursement}"
+                          pattern="#,##0"/>
+                        Ar
+                      </span>
                     </c:if>
                   </div>
-
+                </div>
+                <!-- STATUS -->
+                <div class="reservation-actions">
                   <c:choose>
                     <c:when test="${isAnnulee}">
-                      <span class="ticket-status status-annulee">${reservation.statutReservation}</span>
+                      <span class="status-badge status-annule">
+                      <i class="fas fa-ban"></i>
+                      ${reservation.statutReservation}
+                      </span>
                     </c:when>
-                    <c:when test="${fn:contains(statutPaiementLower, 'rembour')}">
-                      <span class="ticket-status status-remboursee">${reservation.statutPaiement}</span>
+                    <c:when test="${fn:contains(statutPaiementLower,'rembour')}">
+                      <span class="status-badge status-rembourse">
+                      <i class="fas fa-rotate-left"></i>
+                      ${reservation.statutPaiement}
+                      </span>
                     </c:when>
-                    <c:when test="${fn:contains(statutPaiementLower, 'pay')}">
-                      <span class="ticket-status status-paye">${reservation.statutPaiement}</span>
+                    <c:when test="${fn:contains(statutPaiementLower,'pay')}">
+                      <span class="status-badge status-paye">
+                      <i class="fas fa-check"></i>
+                      ${reservation.statutPaiement}
+                      </span>
                     </c:when>
                     <c:otherwise>
-                      <span class="ticket-status status-attente">${reservation.statutPaiement}</span>
+                      <span class="status-badge status-attente">
+                      <i class="fas fa-clock"></i>
+                      ${reservation.statutPaiement}
+                      </span>
                     </c:otherwise>
                   </c:choose>
                 </div>
               </article>
             </c:forEach>
-
             <c:if test="${empty reservations}">
-              <p class="res-empty">Les réservations importées apparaîtront ici.</p>
+              <div class="empty-state">
+                <i class="fas fa-file-excel"></i>
+                <p>
+                  Les réservations importées apparaîtront ici.
+                </p>
+              </div>
             </c:if>
           </div>
-        </main>
+        </div>
       </div>
+      <!-- FIN MAIN CONTENT -->
     </div>
+    <!-- FIN PAGE CONTAINER -->
   </body>
 </html>

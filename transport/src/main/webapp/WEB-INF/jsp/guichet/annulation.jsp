@@ -1,103 +1,394 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ page import="java.time.format.DateTimeFormatter" %>
-<%@ page import="java.util.Locale" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <fmt:setLocale value="fr"/>
-
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Annulation — KOP-V</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/styles.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/common.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/guichet/paiement.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KOP-V - Annulation de réservation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+      href="${pageContext.request.contextPath}/assets/css/guichet/annulation.css">
   </head>
   <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <div class="container topbar-inner">
-          <a href="/" class="brand-link">
-            <div class="brand-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M8 6v6"></path><path d="M15 6v6"></path><path d="M2 12h19.6"></path>
-                <path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"></path>
-                <circle cx="7" cy="18" r="2"></circle><path d="M9 18h5"></path><circle cx="16" cy="18" r="2"></circle>
-              </svg>
-            </div>
-            <div class="brand-title"><span class="kop">KOP</span><span class="dash">—</span><span class="v">V</span></div>
+    <!-- ================= NAVBAR ================= -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <a class="nav-brand" href="${pageContext.request.contextPath}/guichet/reservation">
+        <i class="fas fa-bus"></i>
+        KOP-V
+        </a>
+        <div class="nav-links">
+          <a class="nav-link active"
+            href="${pageContext.request.contextPath}/guichet/reservation">
+          <i class="fas fa-ticket-alt"></i>
+          Réservations
           </a>
-
-          <div class="help-text">Aide ? <strong>+261 34 00 000 00</strong></div>
+          <a class="nav-link"
+            href="${pageContext.request.contextPath}/guichet/reservation/new">
+          <i class="fas fa-plus-circle"></i>
+          Nouvelle réservation
+          </a>
+          <a class="nav-link"
+            href="${pageContext.request.contextPath}/guichet/reservation/import-excel">
+          <i class="fas fa-file-excel"></i>
+          Import Excel
+          </a>
         </div>
-      </header>
-
-      <div class="main-grid passenger-grid">
-        <main class="main-col">
-          <form action="#" method="post" class="passenger-section">
-            <div class="passenger-head">
-              <div>
-                <h1 class="passenger-title">Annulation de la réservation #${reservation.id}</h1>
-                <p class="passenger-subtitle">
-                  Une réservation peut être annulée 24 heures avant le départ.
-                  Montant déjà payé : <fmt:formatNumber value="${montantPayeTotal}" pattern="#,##0"/> Ar.
-                </p>
+        <div class="nav-user">
+          <div class="agent-box">
+            <div class="agent-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div>
+              <span class="agent-label">
+              Agent guichet
+              </span>
+              <span class="agent-name">
+              ${utilisateur.nom} ${utilisateur.prenom}
+              </span>
+            </div>
+          </div>
+          <a class="logout-btn" href="${pageContext.request.contextPath}/logout">
+            <i class="fas fa-sign-out-alt"></i>
+            Déconnexion
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div class="page-container">
+      <div class="main-content">
+        <div class="page-header">
+          <div class="header-left">
+            <span class="header-label">
+            GESTION DES RÉSERVATIONS
+            </span>
+            <h1>
+              Annulation de la réservation #${reservation.id}
+            </h1>
+            <p class="header-subtitle">
+              Une réservation peut être annulée uniquement
+              avant les 24 heures précédant le départ.
+            </p>
+          </div>
+          <a href="${pageContext.request.contextPath}/guichet/reservation"
+            class="btn btn-export">
+          <i class="fas fa-arrow-left"></i>
+          Retour
+          </a>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">
+              RÉSERVATION
+              </span>
+              <div class="stat-icon icon-blue">
+                <i class="fas fa-ticket-alt"></i>
               </div>
             </div>
-
-            <c:if test="${erreur != null}">
-                <div class="passenger-cards">
-                    <article class="passenger-card error-card">
-                        <div class="error-message">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm icon-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                            </svg>
-                            <span>${erreur}</span>
-                        </div>
-                    </article>
-                </div>
-            </c:if>
-
-            <div class="passenger-cards">
-              <article class="passenger-card">
-                <div class="passenger-form-grid">
-                  <label class="field field-span-2">
-                    <span class="field-label">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="19" y1="5" x2="5" y2="19"></line>
-                        <circle cx="7" cy="7" r="2"></circle>
-                        <circle cx="17" cy="17" r="2"></circle>
-                      </svg>
-                      Pourcentage retenu
-                    </span>
-                    <input name="pourcentageFrais" class="field-input" type="number" min="0" max="100" step="0.01" value="10" placeholder="Ex. 10" />
-                  </label>
-
-                  <label class="field field-span-2">
-                    <span class="field-label">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon-sm icon-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M16 10h2"></path><path d="M16 14h2"></path><path d="M6.17 15a3 3 0 0 1 5.66 0"></path><circle cx="9" cy="11" r="2"></circle><rect x="2" y="5" width="20" height="14" rx="2"></rect>
-                      </svg>
-                      Motif
-                    </span>
-                    <input name="motif" class="field-input" type="text" placeholder="Pourquoi le client veut annuler la réservation ?" />
-                  </label>
-                </div>
-              </article>
+            <div class="stat-value">
+              #${reservation.id}
             </div>
-
-            <div class="passenger-actions">
-              <a href="${pageContext.request.contextPath}/guichet/reservation" class="back-btn">← Retour aux réservations</a>
-              <button type="submit" class="next-btn">Annuler</button>
+            <div class="stat-sub">
+              Référence client
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">
+              MONTANT PAYÉ
+              </span>
+              <div class="stat-icon icon-green">
+                <i class="fas fa-money-bill-wave"></i>
+              </div>
+            </div>
+            <div class="stat-value">
+              <fmt:formatNumber
+                value="${montantPayeTotal}"
+                pattern="#,##0"/>
+              Ar
+            </div>
+            <div class="stat-sub">
+              Total déjà encaissé
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">
+              ACTION
+              </span>
+              <div class="stat-icon icon-yellow">
+                <i class="fas fa-ban"></i>
+              </div>
+            </div>
+            <div class="stat-value">
+              Annulation
+            </div>
+            <div class="stat-sub">
+              Avec remboursement
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-label">
+              STATUT
+              </span>
+              <div class="stat-icon icon-purple">
+                <i class="fas fa-clock"></i>
+              </div>
+            </div>
+            <div class="stat-value">
+              En attente
+            </div>
+            <div class="stat-sub">
+              Validation guichet
+            </div>
+          </div>
+        </div>
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <h2>
+                <i class="fas fa-times-circle"></i>
+                Formulaire d'annulation
+              </h2>
+              <p class="section-subtitle">
+                Complétez les informations ci-dessous afin de procéder
+                à l'annulation de la réservation.
+              </p>
+            </div>
+          </div>
+          <c:if test="${erreur != null}">
+            <div class="alert-danger">
+              <i class="fas fa-exclamation-circle"></i>
+              ${erreur}
+            </div>
+          </c:if>
+          <form action="#" method="post">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>
+                Pourcentage retenu
+                </label>
+                <input
+                  id="pourcentageFrais"
+                  type="number"
+                  name="pourcentageFrais"
+                  value="10"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  placeholder="Ex : 10"/>
+              </div>
+              <div class="form-group">
+                <label>
+                Motif de l'annulation
+                </label>
+                <input
+                  type="text"
+                  name="motif"
+                  placeholder="Pourquoi le client souhaite annuler ?"/>
+              </div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-header">
+                <i class="fas fa-info-circle"></i>
+                Résumé du remboursement
+              </div>
+              <div class="summary-content">
+                <div class="summary-item">
+                  <span>
+                  Montant payé
+                  </span>
+                  <strong>
+                    <fmt:formatNumber
+                      value="${montantPayeTotal}"
+                      pattern="#,##0"/>
+                    Ar
+                  </strong>
+                </div>
+                <div class="summary-item">
+                  <span>
+                  Frais d'annulation
+                  </span>
+                  <strong id="fraisAnnulation">
+                  10 %
+                  </strong>
+                </div>
+                <div class="summary-item total">
+                  <span>
+                  Montant remboursé estimé
+                  </span>
+                  <strong id="montantRembourse">
+                    <fmt:formatNumber
+                      value="${montantPayeTotal * 0.9}"
+                      pattern="#,##0"/>
+                    Ar
+                  </strong>
+                </div>
+              </div>
+            </div>
+            <div class="form-warning">
+              <i class="fas fa-exclamation-triangle"></i>
+              Cette action est définitive.
+              Vérifiez les informations avant de confirmer.
+            </div>
+            <div class="form-actions">
+              <a href="${pageContext.request.contextPath}/guichet/reservation"
+                class="btn btn-export">
+              <i class="fas fa-arrow-left"></i>
+              Retour aux réservations
+              </a>
+              <button type="submit"
+                class="btn btn-danger">
+              <i class="fas fa-times"></i>
+              Annuler la réservation
+              </button>
             </div>
           </form>
-        </main>
+        </div>
       </div>
+      <aside class="sidebar">
+        <div class="profile-card">
+          <div class="profile-header-label">
+            INFORMATIONS RÉSERVATION
+          </div>
+          <div class="profile-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <h3 class="profile-name">
+            Client réservation
+          </h3>
+          <div class="profile-role">
+            Réservation #${reservation.id}
+          </div>
+          <div class="profile-badge">
+            <i class="fas fa-check-circle"></i>
+            KOP-V
+          </div>
+          <div class="profile-info-section">
+            <div class="profile-info-item">
+              <span class="info-icon">
+              <i class="fas fa-calendar-alt"></i>
+              </span>
+              <div>
+                <span class="info-label">
+                DATE DÉPART
+                </span>
+                <span class="info-value">
+                ${reservation.voyage.dateHeureDepart}
+                </span>
+              </div>
+            </div>
+            <div class="profile-info-item">
+              <span class="info-icon">
+              <i class="fas fa-map-marker-alt"></i>
+              </span>
+              <div>
+                <span class="info-label">
+                TRAJET
+                </span>
+                <span class="info-value">
+                ${reservation.voyage.trajet.gareDepart.ville}
+                -
+                ${reservation.voyage.trajet.gareArrivee.ville}
+                </span>
+              </div>
+            </div>
+            <div class="profile-info-item">
+              <span class="info-icon">
+              <i class="fas fa-users"></i>
+              </span>
+              <div>
+                <span class="info-label">
+                PASSAGERS
+                </span>
+                <span class="info-value">
+                ${nbPlaces}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="profile-stats">
+            <div class="profile-stat">
+              <span class="profile-stat-label">
+              PRIX TOTAL
+              </span>
+              <span class="profile-stat-value">
+                <fmt:formatNumber
+                  value="${montantPayeTotal}"
+                  pattern="#,##0"/>
+              </span>
+            </div>
+            <div class="profile-stat">
+              <span class="profile-stat-label">
+              REMBOURS.
+              </span>
+              <span class="profile-stat-value" id="pourcentageRemboursement">
+              90 %
+              </span>
+            </div>
+          </div>
+        </div>
+      </aside>
     </div>
+
+    <script>
+
+    const montantPaye = ${montantPayeTotal};
+
+    const inputTaux = document.getElementById("pourcentageFrais");
+    const remboursementTaux = document.getElementById("pourcentageRemboursement");
+    const fraisElement = document.getElementById("fraisAnnulation");
+    const remboursementElement = document.getElementById("montantRembourse");
+
+
+    function formatAr(value) {
+        return new Intl.NumberFormat('fr-FR').format(Math.round(value));
+    }
+
+
+    function calculerRemboursement() {
+
+        let taux = parseFloat(inputTaux.value);
+
+        if (isNaN(taux)) {
+            taux = 0;
+        }
+
+        if (taux < 0) {
+            taux = 0;
+        }
+
+        if (taux > 100) {
+            taux = 100;
+        }
+
+
+        const frais = montantPaye * taux / 100;
+
+        const remboursement = montantPaye - frais;
+
+
+        fraisElement.textContent = taux + " %";
+        remboursementTaux.textContent = (100 - taux) + " %";
+
+        remboursementElement.textContent = formatAr(remboursement) + " Ar";
+    }
+
+
+    inputTaux.addEventListener(
+        "input",
+        calculerRemboursement
+    );
+
+
+    calculerRemboursement();
+
+    </script>
   </body>
 </html>

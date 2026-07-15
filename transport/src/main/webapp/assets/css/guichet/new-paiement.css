@@ -1,0 +1,432 @@
+/* ================= VARIABLES ================= */
+:root {
+    --primary: #16a34a;
+    --primary-dark: #15803d;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --warning: #d97706;
+
+    --blue-light: #f0fdf4;
+    --green-light: #f0fdf4;
+    --red-light: #fef2f2;
+    --purple-light: #faf5ff;
+
+    --text-main: #1e293b;
+    --text-secondary: #64748b;
+    --text-light: #94a3b8;
+
+    --background: #f8fafc;
+    --white: #ffffff;
+    --border: #e2e8f0;
+
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, .08);
+    --shadow: 0 8px 25px rgba(15, 23, 42, .08);
+
+    --radius: 14px;
+    --radius-sm: 8px;
+}
+/* ===================================================== GLOBAL ===================================================== */
+ * {
+     box-sizing: border-box;
+}
+ body {
+     margin: 0;
+     font-family: "Segoe UI", Arial, sans-serif;
+     background: #f5f7f6;
+     color: #1f2937;
+}
+ a {
+     text-decoration: none;
+     color: inherit;
+}
+ button, input, select {
+     font-family: inherit;
+}
+/* ================= NAVBAR ================= */
+.navbar {
+    width: 100%;
+    background: #ffffff;
+    color: var(--text-main);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 12px rgba(15,23,42,.08);
+}
+.nav-container {
+     max-width: 1400px;
+     margin: auto;
+     padding: 0 32px;
+     height: 72px;
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+}
+/* BRAND */
+ .nav-brand {
+     display: flex;
+     align-items: center;
+     gap: 12px;
+     font-size: 22px;
+     font-weight: 800;
+     color: var(--text-main);
+}
+ .nav-brand i {
+     font-size: 26px;
+     color: var(--primary);
+}
+ .nav-brand:hover {
+     color: #dbeafe;
+}
+/* NAV LINKS */
+ .nav-links {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+}
+ .nav-link {
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     padding: 10px 18px;
+     border-radius: 999px;
+     color: var(--text-secondary);
+     font-size: 14px;
+     font-weight: 600;
+     transition: .2s ease;
+}
+ .nav-link:hover {
+     background:#f0fdf4;
+     color:#15803d;
+}
+ .nav-link.active {
+     background:#f0fdf4;
+     color:#15803d;
+}
+ .nav-link i {
+     font-size: 15px;
+}
+/* USER ZONE */
+ .nav-user {
+     display: flex;
+     align-items: center;
+     gap: 25px;
+}
+ .agent-box {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+}
+ .agent-avatar {
+     width: 38px;
+     height: 38px;
+     border-radius: 50%;
+     background: var(--primary);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+}
+ .agent-label {
+     display: block;
+     font-size: 11px;
+     color: var(--text-light);
+}
+ .agent-name {
+     display: block;
+     font-weight: 600;
+     font-size: 14px;
+}
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #fee2e2;
+    color: #dc2626;
+    font-size: 14px;
+    font-weight: 600;
+    transition: .2s;
+}
+.logout-btn:hover {
+    background: #fecaca;
+    color: #b91c1c;
+}
+/* ===================================================== PAGE ===================================================== */
+ .page-container {
+     max-width: 1400px;
+     margin: 35px auto;
+     display: grid;
+     grid-template-columns: 1fr 360px;
+     gap: 30px;
+     padding: 0 30px;
+}
+ .main-content {
+     min-width: 0;
+}
+/* ===================================================== STEPS ===================================================== */
+ .steps-card {
+     background: white;
+     border-radius: 18px;
+     padding: 20px 30px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     margin-bottom: 25px;
+     box-shadow: 0 3px 12px rgba(0,0,0,.05);
+}
+ .step-item {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+     color: #94a3b8;
+     font-size: 14px;
+     font-weight: 600;
+}
+ .step-item.done, .step-item.active {
+     color: #16a34a;
+}
+ .step-icon {
+     width: 34px;
+     height: 34px;
+     border-radius: 50%;
+     background: #e5e7eb;
+     display:flex;
+     align-items:center;
+     justify-content:center;
+}
+ .step-item.done .step-icon, .step-item.active .step-icon {
+     background:#16a34a;
+     color:white;
+}
+ .step-line {
+     width: 70px;
+     height: 2px;
+     background:#e5e7eb;
+     margin:0 20px;
+}
+ .step-line.active {
+     background:#16a34a;
+}
+/* ===================================================== HEADER ===================================================== */
+ .page-header {
+     margin-bottom: 25px;
+}
+ .header-label {
+     font-size:12px;
+     font-weight:700;
+     color:#16a34a;
+     letter-spacing:1px;
+}
+ .page-header h1 {
+     margin:8px 0;
+     font-size:32px;
+}
+ .page-header h1 i {
+     color:#16a34a;
+     margin-right:10px;
+}
+ .header-subtitle {
+     color:#64748b;
+}
+/* ===================================================== FORM CARD ===================================================== */
+ .section-card {
+     background:white;
+     border-radius:18px;
+     padding:30px;
+     box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+ .section-header h2 {
+     margin:0;
+     font-size:22px;
+}
+ .section-header h2 i {
+     color:#16a34a;
+     margin-right:10px;
+}
+ .section-subtitle {
+     color:#64748b;
+}
+ .alert-error {
+     margin:20px 0;
+     background:#fee2e2;
+     color:#b91c1c;
+     padding:15px;
+     border-radius:12px;
+     display:flex;
+     gap:10px;
+}
+/* ===================================================== FORMULAIRE ===================================================== */
+ .passenger-form-grid {
+     margin-top:25px;
+     display:grid;
+     grid-template-columns:repeat(2,1fr);
+     gap:22px;
+}
+ .field {
+     display:flex;
+     flex-direction:column;
+     gap:8px;
+}
+ .field.full {
+     grid-column:1 / -1;
+}
+ .field label {
+     font-size:14px;
+     font-weight:600;
+     color:#475569;
+}
+ .field label i {
+     color:#16a34a;
+     margin-right:8px;
+}
+ .field input, .field select {
+     height:45px;
+     border-radius:10px;
+     border:1px solid #d1d5db;
+     padding:0 14px;
+     font-size:15px;
+     background:white;
+}
+ .field input:focus, .field select:focus {
+     outline:none;
+     border-color:#16a34a;
+     box-shadow:0 0 0 3px #dcfce7;
+}
+/* ===================================================== ACTIONS ===================================================== */
+ .form-actions {
+     display:flex;
+     justify-content:space-between;
+     margin-top:30px;
+}
+ .btn {
+     border:none;
+     border-radius:10px;
+     padding:12px 22px;
+     display:flex;
+     align-items:center;
+     gap:10px;
+     cursor:pointer;
+     font-weight:600;
+}
+ .btn-secondary {
+     background:#f1f5f9;
+     color:#475569;
+}
+ .btn-success {
+     background:#16a34a;
+     color:white;
+}
+ .btn-success:hover {
+     background:#15803d;
+}
+/* ===================================================== SIDEBAR ===================================================== */
+ .sidebar {
+     position:relative;
+}
+ .profile-card {
+     background:white;
+     border-radius:20px;
+     padding:25px;
+     box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+ .profile-header-label {
+     color:#16a34a;
+     font-size:12px;
+     font-weight:700;
+}
+ .profile-name {
+     margin:10px 0;
+}
+ .profile-avatar {
+     width:70px;
+     height:70px;
+     border-radius:50%;
+     background:#dcfce7;
+     color:#16a34a;
+     display:flex;
+     justify-content:center;
+     align-items:center;
+     font-size:30px;
+     margin:20px auto;
+}
+ .profile-info-item {
+     display:flex;
+     gap:15px;
+     margin:22px 0;
+}
+ .info-icon {
+     color:#16a34a;
+     font-size:20px;
+}
+ .info-label {
+     display:block;
+     font-size:11px;
+     color:#64748b;
+}
+ .info-value {
+     font-weight:600;
+}
+/* ===================================================== EXTRA SUMMARY ===================================================== */
+ .summary-extra {
+     border-top:1px solid #e5e7eb;
+     margin-top:20px;
+     padding-top:20px;
+}
+ .summary-line {
+     display:flex;
+     justify-content:space-between;
+     margin-bottom:12px;
+     font-size:14px;
+}
+ .seat-summary {
+     margin-top:20px;
+}
+ .selected-list {
+     display:flex;
+     flex-wrap:wrap;
+     gap:8px;
+}
+ .selected-seat {
+     background:#dcfce7;
+     color:#15803d;
+     padding:5px 10px;
+     border-radius:20px;
+     font-weight:600;
+}
+ .total-box {
+     margin-top:25px;
+     padding-top:20px;
+     border-top:1px solid #e5e7eb;
+     display:flex;
+     justify-content:space-between;
+     font-size:18px;
+}
+ .total-box strong {
+     color:#16a34a;
+}
+ .advantages {
+     margin-top:25px;
+     padding-top:20px;
+     border-top:1px solid #e5e7eb;
+}
+ .advantage {
+     margin:10px 0;
+     color:#475569;
+}
+ .advantage i {
+     color:#16a34a;
+     margin-right:8px;
+}
+/* ===================================================== RESPONSIVE ===================================================== */
+ @media(max-width:1000px){
+     .page-container {
+         grid-template-columns:1fr;
+    }
+     .sidebar {
+         order:-1;
+    }
+     .passenger-form-grid {
+         grid-template-columns:1fr;
+    }
+}

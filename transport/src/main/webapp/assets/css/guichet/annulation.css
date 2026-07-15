@@ -1,0 +1,362 @@
+@import url("./reservation.css");
+
+
+/* ================= STATS ================= */
+
+.stats-grid {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:28px;
+}
+
+
+.stat-card {
+    background:white;
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px;
+    box-shadow:var(--shadow-sm);
+}
+
+
+.stat-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+
+.stat-label {
+    font-size:11px;
+    font-weight:800;
+    color:var(--text-secondary);
+    letter-spacing:.5px;
+}
+
+
+.stat-icon {
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+}
+
+
+.icon-blue {
+    background:#dbeafe;
+    color:#2563eb;
+}
+
+
+.icon-green {
+    background:#dcfce7;
+    color:#15803d;
+}
+
+
+.icon-yellow {
+    background:#fef3c7;
+    color:#b45309;
+}
+
+
+.icon-purple {
+    background:#ede9fe;
+    color:#7c3aed;
+}
+
+
+.stat-value {
+    margin-top:15px;
+    font-size:24px;
+    font-weight:800;
+    color:var(--text-main);
+}
+
+
+.stat-sub {
+    margin-top:5px;
+    font-size:13px;
+    color:var(--text-secondary);
+}
+
+
+
+
+/* ================= FORMULAIRE ================= */
+
+.form-grid {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+}
+
+
+.form-group {
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+
+.form-group label {
+    font-size:13px;
+    font-weight:700;
+    color:var(--text-secondary);
+}
+
+
+.form-group input {
+    height:44px;
+    padding:0 14px;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background:white;
+}
+
+
+.form-group input:focus {
+    outline:none;
+    border-color:var(--primary);
+}
+
+
+
+
+/* ================= ALERT ================= */
+
+.alert-danger {
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding:15px;
+    margin-bottom:20px;
+
+    border-radius:12px;
+
+    background:#fee2e2;
+    color:#b91c1c;
+
+    font-weight:600;
+}
+
+
+
+/* ================= REMBOURSEMENT ================= */
+
+
+.summary-card {
+
+    margin-top:25px;
+
+    border-radius:14px;
+
+    border:1px solid var(--border);
+
+    background:#f8fafc;
+
+    overflow:hidden;
+}
+
+
+.summary-header {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:15px 20px;
+
+    background:#f1f5f9;
+
+    font-weight:800;
+
+    color:var(--text-main);
+}
+
+
+
+.summary-content {
+
+    padding:20px;
+
+}
+
+
+
+.summary-item {
+
+    display:flex;
+
+    justify-content:space-between;
+
+    padding:12px 0;
+
+    color:var(--text-secondary);
+
+    border-bottom:1px solid var(--border);
+
+}
+
+
+
+.summary-item strong {
+
+    color:var(--text-main);
+
+}
+
+
+
+.summary-item.total {
+
+    margin-top:10px;
+
+    padding-top:18px;
+
+    font-size:16px;
+
+}
+
+
+
+.summary-item.total strong {
+
+    color:var(--primary);
+
+    font-size:20px;
+
+}
+
+
+
+/* ================= WARNING ================= */
+
+
+.form-warning {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-top:20px;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    background:#fff7ed;
+
+    color:#c2410c;
+
+    font-weight:600;
+
+}
+
+
+
+/* ================= ACTIONS ================= */
+
+
+.form-actions {
+
+    margin-top:30px;
+
+    padding-top:20px;
+
+    border-top:1px solid var(--border);
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+}
+
+
+
+.btn-danger {
+
+    padding:13px 22px;
+
+    background:var(--danger);
+
+    color:white;
+
+}
+
+
+
+.btn-danger:hover {
+
+    background:#b91c1c;
+
+}
+
+
+
+.btn-export {
+
+    padding:13px 22px;
+
+    background:#e2e8f0;
+
+    color:#334155;
+
+}
+
+
+
+.btn-export:hover {
+
+    background:#cbd5e1;
+
+}
+
+
+
+/* ================= RESPONSIVE ================= */
+
+
+@media(max-width:1200px){
+
+    .stats-grid {
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+
+
+@media(max-width:700px){
+
+    .stats-grid,
+    .form-grid {
+        grid-template-columns:1fr;
+    }
+
+
+    .form-actions {
+
+        flex-direction:column;
+
+    }
+
+
+    .form-actions .btn {
+
+        width:100%;
+
+    }
+
+}
