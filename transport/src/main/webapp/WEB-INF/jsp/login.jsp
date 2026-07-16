@@ -92,7 +92,7 @@
                                             class="fa-solid fa-user small"></i></span>
                                     <input type="text" class="form-control form-control-sm border-start-0" id="email"
                                         name="email" placeholder="Ex: jean.dupont@copérative.fr"
-                                        value="michel.chauffeur@kopv.mg" required>
+                                        value="client@gmail.com" required>
                                 </div>
                             </div>
 
@@ -104,7 +104,7 @@
                                     <span class="input-group-text bg-light border-end-0 text-muted"><i
                                             class="fa-solid fa-lock small"></i></span>
                                     <input type="password" class="form-control form-control-sm border-start-0"
-                                        id="password" name="password" placeholder="••••••••" required value="driver123">
+                                        id="password" name="password" placeholder="••••••••" required value="1234">
                                 </div>
                             </div>
 
