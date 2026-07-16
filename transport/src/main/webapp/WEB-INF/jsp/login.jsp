@@ -110,7 +110,7 @@
 
                             <!-- Bouton de connexion -->
                             <button type="submit" class="btn btn-emerald w-100 py-2 shadow-sm">
-                                <i class="fa-solid fa-right-to-bracket me-2"></i>Se connecter au guichet
+                                <i class="fa-solid fa-right-to-bracket me-2"></i>Se connecter
                             </button>
                         </form>
             </div>
