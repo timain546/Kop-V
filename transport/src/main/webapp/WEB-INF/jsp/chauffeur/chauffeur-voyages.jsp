@@ -34,6 +34,9 @@
                 <a class="nav-link active" href="/chauffeur/voyages">
                     <i class="fas fa-route"></i> Mes voyages
                 </a>
+                <a class="nav-link" href="/logout">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </a>
             </div>
         </div>
     </nav>
